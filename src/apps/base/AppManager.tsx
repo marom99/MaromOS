@@ -5,7 +5,7 @@ import { MenuBar } from "@/components/layout/MenuBar";
 import { Desktop } from "@/components/layout/Desktop";
 import { Dock } from "@/components/layout/Dock";
 import { ExposeView } from "@/components/layout/ExposeView";
-import { getAppComponent } from "@/config/appRegistry";
+import { appRegistry, getAppComponent } from "@/config/appRegistry";
 import type { AppId } from "@/config/appRegistry";
 import { useAppStoreShallow } from "@/stores/helpers";
 import { toast } from "sonner";
@@ -541,6 +541,7 @@ export function AppManager({ apps }: AppManagerProps) {
         if (exposeMode && instance.appId === "stickies") return null;
 
         const appId = instance.appId as AppId;
+        if (!appRegistry[appId]) return null;
         const zIndex = getZIndexForInstance(instance.instanceId);
         const AppComponent = getAppComponent(appId);
         const app = apps.find((registeredApp) => registeredApp.id === appId);
