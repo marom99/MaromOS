@@ -3081,6 +3081,29 @@
         "addPackComingSoon": "Add icon pack — coming soon"
       }
     },
+    "slack": {
+      "name": "Slack",
+      "title": "Slack",
+      "description": "Case study workspace",
+      "help": {
+        "browseChannels": {
+          "title": "Browse Channels",
+          "description": "Switch between case-study rooms to read each part of the project story."
+        },
+        "readDiscussion": {
+          "title": "Read the Discussion",
+          "description": "Follow the project through product, design, engineering, and client messages."
+        },
+        "reviewPins": {
+          "title": "Review Pins",
+          "description": "Use the details panel to scan artifacts, constraints, and outcomes."
+        },
+        "addNotes": {
+          "title": "Add Notes",
+          "description": "Type a reader note into the composer while reviewing the case study."
+        }
+      }
+    },
     "admin": {
       "name": "Admin",
       "description": "System administration panel",

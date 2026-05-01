@@ -165,6 +165,7 @@ const HELP_KEYS: Record<AppId, string[]> = {
     "search",
     "cloudLibrary",
   ],
+  slack: ["browseChannels", "readDiscussion", "reviewPins", "addNotes"],
 };
 
 /**
@@ -194,4 +195,3 @@ export function useTranslatedHelpItems(
     });
   }, [appId, originalHelpItems, t]);
 }
-

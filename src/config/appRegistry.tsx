@@ -157,6 +157,11 @@ const LazyCandyBarApp = createLazyComponent<unknown>(
   "candybar"
 );
 
+const LazySlackApp = createLazyComponent<unknown>(
+  () => import("@/apps/slack/components/SlackAppComponent").then(m => ({ default: m.SlackAppComponent })),
+  "slack"
+);
+
 // ============================================================================
 // APP METADATA (loaded eagerly - small, isolated from components)
 // Import from metadata.ts files to avoid eager loading of components
@@ -189,6 +194,7 @@ import { appMetadata as calendarMetadata, helpItems as calendarHelpItems } from 
 import { appMetadata as contactsMetadata, helpItems as contactsHelpItems } from "@/apps/contacts";
 import { appMetadata as dashboardMetadata, helpItems as dashboardHelpItems } from "@/apps/dashboard/metadata";
 import { appMetadata as candybarMetadata, helpItems as candybarHelpItems } from "@/apps/candybar/metadata";
+import { appMetadata as slackMetadata, helpItems as slackHelpItems } from "@/apps/slack/metadata";
 import { DEFAULT_WINDOW_SIZE_WITH_TITLEBAR as infiniteMacDefaultSize } from "@/apps/infinite-mac/hooks/useInfiniteMacLogic";
 
 // ============================================================================
@@ -515,6 +521,19 @@ export const appRegistry = {
     windowConfig: {
       defaultSize: { width: 680, height: 460 },
       minSize: { width: 500, height: 350 },
+    } as WindowConstraints,
+  },
+  ["slack"]: {
+    id: "slack",
+    name: "Slack",
+    icon: { type: "image", src: slackMetadata.icon },
+    description: "Case study workspace",
+    component: LazySlackApp,
+    helpItems: slackHelpItems,
+    metadata: slackMetadata,
+    windowConfig: {
+      defaultSize: { width: 1100, height: 720 },
+      minSize: { width: 720, height: 520 },
     } as WindowConstraints,
   },
 } as const;
