@@ -33,12 +33,28 @@ export function SlackMessages({
   );
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const previousChannelIdRef = useRef(channel.id);
+  const previousNoteCountRef = useRef(readerNotes.length);
 
   useEffect(() => {
     const node = scrollRef.current;
     if (!node) return;
-    node.scrollTop = node.scrollHeight;
+    if (previousChannelIdRef.current !== channel.id) {
+      node.scrollTop = 0;
+      previousChannelIdRef.current = channel.id;
+      previousNoteCountRef.current = readerNotes.length;
+      return;
+    }
   }, [channel.id, readerNotes.length]);
+
+  useEffect(() => {
+    const node = scrollRef.current;
+    if (!node) return;
+    if (readerNotes.length > previousNoteCountRef.current) {
+      node.scrollTop = node.scrollHeight;
+    }
+    previousNoteCountRef.current = readerNotes.length;
+  }, [readerNotes.length]);
 
   if (channel.status === "locked") {
     return (
@@ -68,6 +84,22 @@ export function SlackMessages({
           <p>{channel.description}</p>
         </div>
       </div>
+
+      <section className="slack-case-summary" aria-label="Case summary">
+        <div className="slack-case-summary-head">
+          <span className="slack-case-summary-kicker">Case summary</span>
+          <h3>{channel.pinnedSummary.title}</h3>
+        </div>
+        <p className="slack-case-summary-tldr">{channel.pinnedSummary.tldr}</p>
+        <div className="slack-case-summary-metrics">
+          {channel.pinnedSummary.metrics.map((metric) => (
+            <div className="slack-case-summary-metric" key={metric.label}>
+              <strong>{metric.value}</strong>
+              <span>{metric.label}</span>
+            </div>
+          ))}
+        </div>
+      </section>
 
       {channel.messages.map((message) => (
         <SlackMessageRow
