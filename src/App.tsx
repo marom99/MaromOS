@@ -22,6 +22,7 @@ import { useAutoCloudSync } from "@/hooks/useAutoCloudSync";
 import { AirDropListener } from "@/components/AirDropListener";
 import { useFilesStore } from "@/stores/useFilesStore";
 import { ReactScanDebug } from "@/components/ReactScanDebug";
+import { Agentation } from "agentation";
 
 // Convert registry to array
 const apps: AnyApp[] = Object.values(appRegistry);
@@ -198,6 +199,7 @@ export function App() {
       <Toaster position={toastConfig.position} offset={toastConfig.offset} />
       <AirDropListener />
       <ScreenSaverOverlay />
+      {import.meta.env.DEV && <Agentation />}
     </>
   );
 }
