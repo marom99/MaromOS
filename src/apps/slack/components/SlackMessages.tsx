@@ -85,22 +85,6 @@ export function SlackMessages({
         </div>
       </div>
 
-      <section className="slack-case-summary" aria-label="Case summary">
-        <div className="slack-case-summary-head">
-          <span className="slack-case-summary-kicker">Case summary</span>
-          <h3>{channel.pinnedSummary.title}</h3>
-        </div>
-        <p className="slack-case-summary-tldr">{channel.pinnedSummary.tldr}</p>
-        <div className="slack-case-summary-metrics">
-          {channel.pinnedSummary.metrics.map((metric) => (
-            <div className="slack-case-summary-metric" key={metric.label}>
-              <strong>{metric.value}</strong>
-              <span>{metric.label}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {channel.messages.map((message) => (
         <SlackMessageRow
           key={message.id}
