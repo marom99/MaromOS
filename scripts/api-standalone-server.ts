@@ -649,7 +649,8 @@ function validateEnv(): void {
   const required: { name: string; description: string }[] =
     redisBackend === "redis-url"
       ? [{ name: "REDIS_URL", description: "Standard Redis connection URL" }]
-      : [
+      : redisBackend === "upstash-rest"
+      ? [
           {
             name: "REDIS_KV_REST_API_URL",
             description: "Upstash Redis REST API URL",
@@ -658,7 +659,8 @@ function validateEnv(): void {
             name: "REDIS_KV_REST_API_TOKEN",
             description: "Upstash Redis REST API token",
           },
-        ];
+        ]
+      : [];
 
   const optional: { name: string; description: string }[] = [
     { name: "OPENAI_API_KEY", description: "OpenAI API key (AI + transcription)" },

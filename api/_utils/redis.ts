@@ -14,7 +14,7 @@ import IORedis from "ioredis";
 
 export type { Redis };
 
-export type RedisBackend = "upstash-rest" | "redis-url";
+export type RedisBackend = "upstash-rest" | "redis-url" | "memory";
 
 export interface RedisSetOptions {
   ex?: number;
@@ -137,9 +137,10 @@ export function getRedisBackend(): RedisBackend {
     return "upstash-rest";
   }
 
-  throw new Error(
-    "Missing Redis configuration. Set REDIS_URL for standard Redis or REDIS_KV_REST_API_URL + REDIS_KV_REST_API_TOKEN for Upstash REST."
+  console.warn(
+    "⚠️ No Redis configuration found. Falling back to ioredis-mock (in-memory). Data will be lost on restart."
   );
+  return "memory";
 }
 
 function serializeRedisValue(value: unknown): string {
@@ -410,6 +411,12 @@ class StandardRedisAdapter implements RedisLike {
 
 function getStandardRedisClient(): IORedis {
   if (!redisClientCache.__ryosStandardRedis) {
+    if (getRedisBackend() === "memory") {
+      const RedisMock = require("ioredis-mock");
+      redisClientCache.__ryosStandardRedis = new RedisMock() as unknown as IORedis;
+      return redisClientCache.__ryosStandardRedis;
+    }
+
     const redisUrl = getRedisUrl();
     if (!redisUrl) {
       throw new Error(
@@ -454,12 +461,18 @@ export function createRedis(): Redis {
 }
 
 function getSharedPubSubClient(slot: "__ryosStandardRedisPub" | "__ryosStandardRedisSub"): IORedis {
-  const redisUrl = getRedisUrl();
-  if (!redisUrl) {
-    throw new Error("REDIS_URL is required for Redis pub/sub.");
-  }
-
   if (!redisPubSubCache[slot]) {
+    if (getRedisBackend() === "memory") {
+      const RedisMock = require("ioredis-mock");
+      redisPubSubCache[slot] = new RedisMock() as unknown as IORedis;
+      return redisPubSubCache[slot];
+    }
+
+    const redisUrl = getRedisUrl();
+    if (!redisUrl) {
+      throw new Error("REDIS_URL is required for Redis pub/sub.");
+    }
+
     redisPubSubCache[slot] = new IORedis(redisUrl, {
       maxRetriesPerRequest: null,
       enableReadyCheck: true,
@@ -471,7 +484,8 @@ function getSharedPubSubClient(slot: "__ryosStandardRedisPub" | "__ryosStandardR
 }
 
 export function supportsRedisPubSub(): boolean {
-  return getRedisBackend() === "redis-url";
+  const backend = getRedisBackend();
+  return backend === "redis-url" || backend === "memory";
 }
 
 export function createRedisPublisher(): IORedis {
