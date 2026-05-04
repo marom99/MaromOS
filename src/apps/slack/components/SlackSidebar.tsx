@@ -55,7 +55,6 @@ export function SlackSidebar() {
       <div className="section">
         <div className="section-head">
           <div className="section-title">Channels</div>
-          <div className="plus">+</div>
         </div>
         <div className="list">
           <div className="channel">
@@ -79,7 +78,6 @@ export function SlackSidebar() {
       <div className="section">
         <div className="section-head">
           <div className="section-title">Direct Messages</div>
-          <div className="plus">+</div>
         </div>
         <div className="dm-list">
           <div className="dm">
