@@ -16,6 +16,9 @@ import {
   ToolInvocationMessage,
   type ToolInvocationPart,
 } from "@/components/shared/ToolInvocationMessage";
+import { MessageBubble } from "@/components/shared/MessageBubble";
+
+const MotionMessageBubble = motion(MessageBubble);
 import { getTranslatedAppName, type AppId } from "@/utils/i18n";
 import {
   Tooltip,
@@ -788,7 +791,15 @@ const ChatMessageItem = memo(function ChatMessageItem(props: ChatMessageItemProp
         })()}
 
       {!isUrlOnly(displayContent) && (
-        <motion.div
+        <MotionMessageBubble
+          colorClass={
+            showTypingDots
+              ? "bg-neutral-200 text-neutral-400"
+              : bgColorClass ||
+                (message.role === "user"
+                  ? "bg-yellow-100 text-black"
+                  : "bg-blue-100 text-black")
+          }
           initial={
             isUrgent
               ? {
@@ -828,14 +839,6 @@ const ChatMessageItem = memo(function ChatMessageItem(props: ChatMessageItemProp
                 }
               : undefined
           }
-          className={`p-1.5 px-2 chat-bubble ${
-            showTypingDots
-              ? "bg-neutral-200 text-neutral-400"
-              : bgColorClass ||
-                (message.role === "user"
-                  ? "bg-yellow-100 text-black"
-                  : "bg-blue-100 text-black")
-          } w-fit max-w-[90%] min-h-[12px] rounded leading-snug font-geneva-12 break-words select-text`}
           style={{ fontSize: `${fontSize}px` }}
         >
           {showTypingDots ? (
@@ -1026,7 +1029,7 @@ const ChatMessageItem = memo(function ChatMessageItem(props: ChatMessageItemProp
               )}
             </>
           )}
-        </motion.div>
+        </MotionMessageBubble>
       )}
 
       {(() => {
@@ -1365,8 +1368,8 @@ function ChatMessagesContent({
             transition={{ duration: 0.15 }}
             className="flex items-start gap-1"
           >
-            <div
-              className="p-1.5 px-2 chat-bubble bg-neutral-200 text-neutral-400 w-fit max-w-[90%] min-h-[12px] rounded leading-snug font-geneva-12 break-words"
+            <MessageBubble
+              colorClass="bg-neutral-200 text-neutral-400"
               style={{ fontSize: `${fontSize}px` }}
             >
               <div className="flex items-center gap-1.5">
@@ -1379,7 +1382,7 @@ function ChatMessagesContent({
                     : `${typingUsers[0]} & ${typingUsers.length - 1} others`}
                 </span>
               </div>
-            </div>
+            </MessageBubble>
           </motion.div>
         )}
       </AnimatePresence>

@@ -25,7 +25,8 @@ export type AppId =
   | "calendar"
   | "contacts"
   | "dashboard"
-  | "candybar";
+  | "candybar"
+  | "slack";
 
 /**
  * Get translated app name with theme-awareness
@@ -156,6 +157,7 @@ export function getTranslatedHelpItems(appId: AppId): Array<{
     contacts: ["browseContacts", "createContacts", "editDetails", "importVCards", "useWithRyo", "cloudSync"],
     dashboard: ["openDashboard", "clockWidget", "calendarWidget", "weatherWidget", "moveWidgets", "closeDashboard"],
     candybar: ["browseIconPacks", "iconPackDetails", "applyIconPacks", "favorites", "search", "cloudLibrary"],
+    slack: ["browseChannels", "readDiscussion", "reviewPins", "addNotes"],
   };
 
   const keys = helpKeys[appId] || [];
