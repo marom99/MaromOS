@@ -1,146 +1,132 @@
-import {
-  AlignLeft,
-  Bell,
-  CaretDown,
-  ChatCircle,
-  Hash,
-  House,
-  LockSimple,
-  MagnifyingGlass,
-  Plus,
-} from "@phosphor-icons/react";
-import { cn } from "@/lib/utils";
-import type { SlackChannel } from "../types";
-import { useSlackStore } from "@/stores/useSlackStore";
+import wsIcon from "../assets/workspace-icon.png";
+import dmAvatar from "../assets/dm-avatar.png";
 
-interface SlackSidebarProps {
-  channels: SlackChannel[];
-  activeChannelId: string;
-  onSelectChannel: (id: string) => void;
-}
-
-export function SlackSidebar({
-  channels,
-  activeChannelId,
-  onSelectChannel,
-}: SlackSidebarProps) {
-  const unreadCounts = useSlackStore((state) => state.unreadCounts);
-  const liveChannels = channels.filter((c) => c.status === "live");
-  const lockedChannels = channels.filter((c) => c.status === "locked");
-
+export function SlackSidebar() {
   return (
-    <aside className="slack-sidebar" aria-label="Slack channels">
-      <div className="slack-workspace-header">
-        <div className="slack-workspace-row">
-          <button type="button" className="slack-workspace-button">
-            <span className="slack-workspace-name">Marom Studio</span>
-            <CaretDown size={11} weight="bold" />
-          </button>
-          <button type="button" className="slack-workspace-action" aria-label="New message">
-            <Plus size={12} weight="bold" />
-          </button>
+    <aside className="sidebar">
+      <div className="ws-head">
+        <div className="ws-icon">
+          <img src={wsIcon} alt="Workspace icon" />
         </div>
-        <div className="slack-workspace-presence">
-          <span className="slack-presence-dot" aria-hidden="true" /> active
+        <div className="ws-meta">
+          <div className="ws-name">
+            Studio Workspace{" "}
+            <svg viewBox="0 0 8 5">
+              <path d="M0 0l4 5 4-5z" />
+            </svg>
+          </div>
+          <div className="ws-status">
+            <span className="ws-dot"></span> Active
+          </div>
         </div>
       </div>
 
-      <nav className="slack-sidebar-nav" aria-label="Workspace shortcuts">
-        <button type="button" className="slack-sidebar-nav-item">
-          <House size={13} weight="bold" />
-          <span>Home</span>
-        </button>
-        <button type="button" className="slack-sidebar-nav-item">
-          <ChatCircle size={13} weight="bold" />
+      <nav className="nav">
+        <div className="nav-item">
+          <svg viewBox="0 0 16 16">
+            <path d="M2 3.5A2.5 2.5 0 0 1 4.5 1h7A2.5 0 0 1 14 3.5v4A2.5 0 0 1 11.5 10H8l-3.5 3v-3H4.5A2.5 0 0 1 2 7.5v-4z" />
+          </svg>
           <span>Threads</span>
-        </button>
-        <button type="button" className="slack-sidebar-nav-item">
-          <AlignLeft size={13} weight="bold" />
-          <span>All DMs</span>
-        </button>
-        <button type="button" className="slack-sidebar-nav-item">
-          <Bell size={13} weight="bold" />
-          <span>Activity</span>
-        </button>
-        <button type="button" className="slack-sidebar-nav-item">
-          <MagnifyingGlass size={13} weight="bold" />
-          <span>Search</span>
-        </button>
+        </div>
+        <div className="nav-item">
+          <svg viewBox="0 0 16 16">
+            <circle cx="8" cy="8" r="5.5" />
+            <text x="4.2" y="11.5" fontSize="9" fontFamily="Arial" fill="none" stroke="currentColor" strokeWidth="1.2">
+              @
+            </text>
+          </svg>
+          <span>Mentions</span>
+        </div>
+        <div className="nav-item">
+          <svg viewBox="0 0 16 16">
+            <path d="M4 2.5v11l4-2.5 4 2.5v-11z" />
+          </svg>
+          <span>Bookmarks</span>
+        </div>
+        <div className="nav-item">
+          <svg viewBox="0 0 16 16">
+            <rect x="3.5" y="2" width="9" height="12" rx="1" />
+            <path d="M6 5h4M6 8h4M6 11h3" />
+          </svg>
+          <span>Drafts</span>
+        </div>
+        <div className="nav-item">
+          <svg viewBox="0 0 16 16">
+            <circle cx="3.5" cy="8" r="1.2" />
+            <circle cx="8" cy="8" r="1.2" />
+            <circle cx="12.5" cy="8" r="1.2" />
+          </svg>
+          <span>More</span>
+        </div>
       </nav>
 
-      <div className="slack-sidebar-section">
-        <div className="slack-sidebar-section-head">
-          <CaretDown size={11} weight="bold" />
-          <span>Channels</span>
+      <div className="section">
+        <div className="section-head">
+          <div className="section-title">Channels</div>
+          <div className="plus">+</div>
         </div>
-        <ul className="slack-channel-list">
-          {liveChannels.map((channel) => {
-            const unread = unreadCounts[channel.id] ?? 0;
-            const active = channel.id === activeChannelId;
-            return (
-              <li key={channel.id}>
-                <button
-                  type="button"
-                  className={cn(
-                    "slack-channel-row",
-                    active && "is-active",
-                    unread > 0 && !active && "has-unread"
-                  )}
-                  onClick={() => onSelectChannel(channel.id)}
-                  aria-current={active ? "page" : undefined}
-                >
-                  <span className="slack-channel-row-icon" aria-hidden="true">
-                    <Hash size={12} weight="bold" />
-                  </span>
-                  <span className="slack-channel-row-name">{channel.name}</span>
-                  {unread > 0 && (
-                    <span className="slack-channel-row-badge">{unread}</span>
-                  )}
-                </button>
-              </li>
-            );
-          })}
-        </ul>
+        <div className="list">
+          <div className="channel">
+            <span className="hash">#</span> announcements
+          </div>
+          <div className="channel">
+            <span className="hash">#</span> general
+          </div>
+          <div className="channel active">
+            <span className="hash">#</span> design-lab
+          </div>
+          <div className="channel">
+            <span className="hash">#</span> feedback
+          </div>
+          <div className="channel">
+            <span className="hash">#</span> random
+          </div>
+        </div>
       </div>
 
-      {lockedChannels.length > 0 && (
-        <div className="slack-sidebar-section">
-          <div className="slack-sidebar-section-head">
-            <CaretDown size={11} weight="bold" />
-            <span>Coming soon</span>
-          </div>
-          <ul className="slack-channel-list">
-            {lockedChannels.map((channel) => {
-              const active = channel.id === activeChannelId;
-              return (
-                <li key={channel.id}>
-                  <button
-                    type="button"
-                    className={cn(
-                      "slack-channel-row",
-                      "is-locked",
-                      active && "is-active"
-                    )}
-                    onClick={() => onSelectChannel(channel.id)}
-                    aria-current={active ? "page" : undefined}
-                  >
-                    <span className="slack-channel-row-icon" aria-hidden="true">
-                      <LockSimple size={11} weight="bold" />
-                    </span>
-                    <span className="slack-channel-row-name">{channel.name}</span>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
+      <div className="section">
+        <div className="section-head">
+          <div className="section-title">Direct Messages</div>
+          <div className="plus">+</div>
         </div>
-      )}
+        <div className="dm-list">
+          <div className="dm">
+            <div className="dm-avatar">
+              <img src={dmAvatar} alt="Jordan Ellis" />
+              <div className="presence"></div>
+            </div>
+            <div className="dm-name">Jordan Ellis</div>
+          </div>
+          <div className="dm">
+            <div className="dm-avatar">
+              <img src={dmAvatar} alt="Taylor Kim" />
+              <div className="presence"></div>
+            </div>
+            <div className="dm-name">Taylor Kim</div>
+          </div>
+          <div className="dm">
+            <div className="dm-avatar">
+              <img src={dmAvatar} alt="Casey Park" />
+              <div className="presence"></div>
+            </div>
+            <div className="dm-name">Casey Park</div>
+          </div>
+          <div className="dm">
+            <div className="dm-avatar">
+              <img src={dmAvatar} alt="Morgan Liu" />
+              <div className="presence"></div>
+            </div>
+            <div className="dm-name">Morgan Liu</div>
+          </div>
+        </div>
+      </div>
 
-      <div className="slack-sidebar-footer">
-        <button type="button" className="slack-sidebar-footer-btn">
-          <Plus size={12} weight="bold" />
-          <span>Add channel</span>
-        </button>
+      <div className="invite">
+        <svg viewBox="0 0 16 16">
+          <circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" strokeWidth="1.3" />
+          <path d="M8 5v6M5 8h6" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+        </svg>
+        <span>Invite People</span>
       </div>
     </aside>
   );

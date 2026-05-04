@@ -1,96 +1,29 @@
-import {
-  CaretDown,
-  Hash,
-  Headphones,
-  LockSimple,
-  PushPin,
-  SidebarSimple,
-  UsersThree,
-} from "@phosphor-icons/react";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import type { SlackChannel } from "../types";
-
-interface SlackChannelHeaderProps {
-  channel: SlackChannel;
-  isDetailsOpen: boolean;
-  onToggleDetails: () => void;
-  onToggleSidebar?: () => void;
-  showSidebarToggle?: boolean;
-}
-
-export function SlackChannelHeader({
-  channel,
-  isDetailsOpen,
-  onToggleDetails,
-  onToggleSidebar,
-  showSidebarToggle,
-}: SlackChannelHeaderProps) {
-  const memberCount = channel.members.length;
-  const isLocked = channel.status === "locked";
-
+export function SlackChannelHeader() {
   return (
-    <header className="slack-channel-header">
-      <div className="slack-channel-header-left">
-        {showSidebarToggle && onToggleSidebar && (
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="slack-icon-button"
-            onClick={onToggleSidebar}
-            aria-label="Toggle sidebar"
-          >
-            <SidebarSimple size={14} weight="bold" />
-          </Button>
-        )}
-        <div className="slack-channel-heading">
-          <span className="slack-channel-icon" aria-hidden="true">
-            {isLocked ? <LockSimple size={14} weight="bold" /> : <Hash size={14} weight="bold" />}
-          </span>
-          <span className="slack-channel-title">{channel.name}</span>
-          <CaretDown size={11} weight="bold" className="slack-channel-caret" />
-        </div>
-        <div className="slack-channel-topic">
-          <span className="slack-channel-topic-text">{channel.topic}</span>
+    <header className="main-head">
+      <div>
+        <div className="ch-title"># design-lab</div>
+        <div className="ch-sub">
+          <span className="play"></span> Ideas, UI explorations, and design feedback
         </div>
       </div>
-
-      <div className="slack-channel-header-right">
-        <div className="slack-member-pills" aria-label={`${memberCount} members`}>
-          <UsersThree size={13} weight="bold" />
-          <span>{memberCount}</span>
+      <div className="head-right">
+        <div className="head-stat">
+          <svg viewBox="0 0 16 16">
+            <circle cx="5.5" cy="6" r="2.3" />
+            <circle cx="10.5" cy="6" r="2.3" />
+            <path d="M2 13c0-2.2 1.8-3.5 3.5-3.5h1c1.7 0 3.5 1.3 3.5 3.5M8 13c0-2.2 1.8-3.5 3.5-3.5h1c1.2 0 2.5.7 3 2" />
+          </svg>
+          12
         </div>
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          className="slack-icon-button"
-          aria-label="Pinned items"
-        >
-          <PushPin size={14} weight="bold" />
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          className="slack-icon-button"
-          aria-label="Channel call"
-          disabled
-        >
-          <Headphones size={14} weight="bold" />
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          className={cn("slack-icon-button", isDetailsOpen && "is-active")}
-          onClick={onToggleDetails}
-          aria-label={isDetailsOpen ? "Hide details" : "Show details"}
-          aria-pressed={isDetailsOpen}
-        >
-          <SidebarSimple size={14} weight="bold" />
-        </Button>
+        <div className="info-btn">i</div>
+        <div className="search-wrap">
+          <input type="text" placeholder="Search" />
+          <svg viewBox="0 0 16 16">
+            <circle cx="6.5" cy="6.5" r="4.5" />
+            <path d="M10 10l3.5 3.5" />
+          </svg>
+        </div>
       </div>
     </header>
   );

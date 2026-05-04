@@ -1,6 +1,6 @@
 export const appMetadata = {
   name: "Slack",
-  version: "1.0.0",
+  version: "2.0.0",
   creator: {
     name: "Marom",
     url: "https://marom.com",
@@ -12,22 +12,14 @@ export const appMetadata = {
 export const helpItems = [
   {
     icon: "#",
-    title: "Browse Channels",
-    description: "Switch between case-study rooms to read each part of the project story.",
+    title: "Browse the Workspace",
+    description:
+      "Explore the design-lab channel to see the case study discussion with file attachments and reactions.",
   },
   {
     icon: "💬",
-    title: "Read the Discussion",
-    description: "Follow the project through product, design, engineering, and client messages.",
-  },
-  {
-    icon: "📌",
-    title: "Review Pins",
-    description: "Use the details panel to scan artifacts, constraints, and outcomes.",
-  },
-  {
-    icon: "✍️",
-    title: "Add Notes",
-    description: "Type a reader note into the composer while reviewing the case study.",
+    title: "Read Messages",
+    description:
+      "Follow the product and design discussion through the message stream and threaded replies.",
   },
 ];
