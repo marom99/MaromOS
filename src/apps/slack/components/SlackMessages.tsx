@@ -3,6 +3,7 @@ import avatarJamie from "../assets/avatar-jamie.png";
 import avatarRiley from "../assets/avatar-riley.png";
 import avatarSamira from "../assets/avatar-samira.png";
 import fileIcon from "../assets/file-icon.png";
+import { MessageBubble } from "@/components/shared/MessageBubble";
 
 export function SlackMessages() {
   return (
@@ -25,7 +26,9 @@ export function SlackMessages() {
             <div className="msg-name">Alex Turner</div>
             <div className="msg-time">9:41 AM</div>
           </div>
-          <div className="msg-text">Morning team! Sharing the latest mockup for the dashboard.</div>
+          <MessageBubble className="mt-1">
+            Morning team! Sharing the latest mockup for the dashboard.
+          </MessageBubble>
           <div className="file">
             <div className="file-ic">
               <img src={fileIcon} alt="File icon" />
@@ -57,9 +60,9 @@ export function SlackMessages() {
             <div className="msg-name">Jamie Lin</div>
             <div className="msg-time">9:47 AM</div>
           </div>
-          <div className="msg-text">
+          <MessageBubble className="mt-1">
             This is looking great! I especially like the new activity timeline.
-          </div>
+          </MessageBubble>
         </div>
       </div>
 
@@ -72,11 +75,9 @@ export function SlackMessages() {
             <div className="msg-name">Riley Morgan</div>
             <div className="msg-time">10:02 AM</div>
           </div>
-        </div>
-      </div>
-      <div className="bubble-wrap">
-        <div className="bubble">
-          Agreed! One thought: should we surface the filter controls more prominently on the first screen?
+          <MessageBubble className="mt-1">
+            Agreed! One thought: should we surface the filter controls more prominently on the first screen?
+          </MessageBubble>
         </div>
       </div>
 
@@ -89,7 +90,9 @@ export function SlackMessages() {
             <div className="msg-name">Samira Patel</div>
             <div className="msg-time">10:15 AM</div>
           </div>
-          <div className="msg-text">Good call. I&apos;ll draft a variation and share it here shortly.</div>
+          <MessageBubble className="mt-1">
+            Good call. I&apos;ll draft a variation and share it here shortly.
+          </MessageBubble>
         </div>
       </div>
     </div>

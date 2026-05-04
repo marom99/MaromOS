@@ -121,9 +121,7 @@
 .nav-item svg {
   width: 16px;
   height: 16px;
-  stroke: #4a4e52;
-  stroke-width: 1.6;
-  fill: none;
+  color: #4a4e52;
   opacity: 0.85;
   flex-shrink: 0;
 }
@@ -274,9 +272,7 @@
 .invite svg {
   width: 16px;
   height: 16px;
-  stroke: #555;
-  fill: none;
-  stroke-width: 1.6;
+  color: #555;
   opacity: 0.85;
 }
 
@@ -490,13 +486,6 @@
   font-weight: 400;
 }
 
-.msg-text {
-  font-size: 13px;
-  line-height: 18px;
-  color: #333;
-  margin-top: 1px;
-}
-
 /* ---- File attachment card ----------------------------------------- */
 
 .file {
@@ -603,32 +592,6 @@
   margin-bottom: 24px;
 }
 
-.bubble {
-  display: inline-block;
-  max-width: 586px;
-  background: linear-gradient(to bottom, #e7f2ff 0%, #d9eaff 50%, #cfe2ff 100%);
-  border: 1px solid #a7c6ec;
-  border-radius: 8px;
-  padding: 9px 13px;
-  font-size: 13px;
-  line-height: 18px;
-  color: #1d3658;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 1px 1px rgba(0, 0, 0, 0.03);
-  position: relative;
-}
-
-.bubble::before {
-  content: "";
-  position: absolute;
-  left: -6px;
-  top: 11px;
-  width: 10px;
-  height: 10px;
-  background: linear-gradient(135deg, #e7f2ff, #d8e8ff);
-  border-left: 1px solid #a7c6ec;
-  border-bottom: 1px solid #a7c6ec;
-  transform: rotate(45deg);
-}
 
 /* ---- Composer ----------------------------------------------------- */
 
@@ -733,36 +696,5 @@
 
 .send {
   display: flex;
-  height: 24px;
-  border-radius: 5px;
-  overflow: hidden;
-  background: linear-gradient(to bottom, #6aa2f5 0%, #3f7fe3 50%, #2a67c9 51%, #1d54ad 100%);
-  border: 1px solid #1a4a96;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 1px 1px rgba(0, 0, 0, 0.12);
-}
-
-.send-main {
-  padding: 0 14px;
-  color: #fff;
-  font-size: 13px;
-  font-weight: 500;
-  display: flex;
   align-items: center;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.35);
-  border-right: 1px solid rgba(0, 0, 0, 0.2);
-}
-
-.send-drop {
-  width: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-}
-
-.send-drop svg {
-  width: 8px;
-  height: 8px;
-  fill: #fff;
-  opacity: 0.9;
 }

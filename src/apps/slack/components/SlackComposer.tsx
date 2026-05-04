@@ -1,3 +1,5 @@
+import { Button } from "@/components/ui/button";
+
 export function SlackComposer() {
   return (
     <div className="composer">
@@ -65,12 +67,7 @@ export function SlackComposer() {
           </div>
           <div className="spacer"></div>
           <div className="send">
-            <div className="send-main">Send</div>
-            <div className="send-drop">
-              <svg viewBox="0 0 8 5">
-                <path d="M0 0l4 5 4-5z" />
-              </svg>
-            </div>
+            <Button variant="default" size="sm">Send</Button>
           </div>
         </div>
       </div>
