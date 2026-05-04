@@ -4,17 +4,20 @@ import avatarRiley from "../assets/avatar-riley.png";
 import avatarSamira from "../assets/avatar-samira.png";
 import fileIcon from "../assets/file-icon.png";
 import { MessageBubble } from "@/components/shared/MessageBubble";
+import { Badge } from "@/components/ui/badge";
+import { CaretDown } from "@phosphor-icons/react";
 
 export function SlackMessages() {
   return (
     <div className="messages">
       <div className="date-sep">
-        <div className="date-pill">
-          Today, May 18{" "}
-          <svg viewBox="0 0 8 5">
-            <path d="M0 0l4 5 4-5z" />
-          </svg>
-        </div>
+        <Badge 
+          variant="outline" 
+          className="date-pill bg-gradient-to-b from-[#fdfdfd] to-[#eeeeee] border-[#bdbfc3] text-[#555] font-normal h-6 px-3 rounded-full shadow-[0_1px_0_rgba(0,0,0,0.04),inset_0_1px_0_#fff] gap-1.5"
+        >
+          Today, May 18
+          <CaretDown size={10} weight="fill" className="text-[#666]" />
+        </Badge>
       </div>
 
       <div className="msg">

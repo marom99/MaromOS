@@ -1,4 +1,12 @@
+import { SearchInput } from "@/components/ui/search-input";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Users, Info } from "@phosphor-icons/react";
+import { useState } from "react";
+
 export function SlackChannelHeader() {
+  const [search, setSearch] = useState("");
+
   return (
     <header className="main-head">
       <div>
@@ -8,21 +16,27 @@ export function SlackChannelHeader() {
         </div>
       </div>
       <div className="head-right">
-        <div className="head-stat">
-          <svg viewBox="0 0 16 16">
-            <circle cx="5.5" cy="6" r="2.3" />
-            <circle cx="10.5" cy="6" r="2.3" />
-            <path d="M2 13c0-2.2 1.8-3.5 3.5-3.5h1c1.7 0 3.5 1.3 3.5 3.5M8 13c0-2.2 1.8-3.5 3.5-3.5h1c1.2 0 2.5.7 3 2" />
-          </svg>
+        <Badge variant="outline" className="head-stat border-[#bdbfc3] bg-transparent text-[#5a5c5f] font-normal gap-1.5 h-6 px-2">
+          <Users size={16} weight="regular" />
           12
-        </div>
-        <div className="info-btn">i</div>
+        </Badge>
+        
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="info-btn h-5 w-5 rounded-full border border-[#c5c7ca] bg-gradient-to-b from-white to-[#f0f1f2] shadow-[inset_0_1px_0_#fff] p-0 flex items-center justify-center"
+        >
+          <Info size={14} weight="bold" />
+        </Button>
+
         <div className="search-wrap">
-          <input type="text" placeholder="Search" />
-          <svg viewBox="0 0 16 16">
-            <circle cx="6.5" cy="6.5" r="4.5" />
-            <path d="M10 10l3.5 3.5" />
-          </svg>
+          <SearchInput
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onClear={() => setSearch("")}
+            placeholder="Search"
+            className="w-[176px]"
+          />
         </div>
       </div>
     </header>
