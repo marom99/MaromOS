@@ -1,4 +1,10 @@
+import { SearchInput } from "@/components/ui/search-input";
+import { Users, Info } from "@phosphor-icons/react";
+import { useState } from "react";
+
 export function SlackChannelHeader() {
+  const [search, setSearch] = useState("");
+
   return (
     <header className="main-head">
       <div>
@@ -9,20 +15,20 @@ export function SlackChannelHeader() {
       </div>
       <div className="head-right">
         <div className="head-stat">
-          <svg viewBox="0 0 16 16">
-            <circle cx="5.5" cy="6" r="2.3" />
-            <circle cx="10.5" cy="6" r="2.3" />
-            <path d="M2 13c0-2.2 1.8-3.5 3.5-3.5h1c1.7 0 3.5 1.3 3.5 3.5M8 13c0-2.2 1.8-3.5 3.5-3.5h1c1.2 0 2.5.7 3 2" />
-          </svg>
+          <Users size={12} weight="regular" />
           12
         </div>
-        <div className="info-btn">i</div>
+        <button className="info-btn" title="Channel info">
+          <Info size={10} weight="bold" />
+        </button>
         <div className="search-wrap">
-          <input type="text" placeholder="Search" />
-          <svg viewBox="0 0 16 16">
-            <circle cx="6.5" cy="6.5" r="4.5" />
-            <path d="M10 10l3.5 3.5" />
-          </svg>
+          <SearchInput
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onClear={() => setSearch("")}
+            placeholder="Search"
+            className="w-[168px]"
+          />
         </div>
       </div>
     </header>

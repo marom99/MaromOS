@@ -325,57 +325,65 @@ export function AdminAppComponent({
           />
 
           {/* Main Content */}
-          <div className="flex-1 flex flex-col bg-white overflow-hidden">
-            {/* Toolbar */}
-            {!selectedUserProfile &&
-              !selectedSongId &&
-              activeSection !== "server" &&
-              activeSection !== "dashboard" && (
-              <div
-                className={cn(
-                  "flex items-center gap-2 px-2 py-1.5 border-b",
-                  isXpTheme
-                    ? "border-[#919b9c]"
-                    : currentTheme === "macosx"
-                    ? "border-black/10"
-                    : "border-black/20"
-                )}
-                style={
-                  currentTheme === "macosx"
-                    ? { backgroundImage: "var(--os-pinstripe-window)" }
-                    : undefined
-                }
-              >
-                {activeSection === "users" && !selectedRoomId && (
-                  <div className="relative flex-1">
-                    <MagnifyingGlass
-                      className="absolute left-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-neutral-400"
-                      weight="bold"
-                    />
-                    <Input
-                      placeholder={t("apps.admin.search.placeholder")}
-                      value={userSearch}
-                      onChange={(e) => setUserSearch(e.target.value)}
-                      className="pl-7 h-7 text-[12px]"
-                    />
-                  </div>
-                )}
+          <div data-impeccable-variants="58c2a31c" data-impeccable-variant-count="3" style={{ display: "contents" }}>
+            {/* impeccable-variants-start 58c2a31c */}
+            {/* Original */}
+            <div data-impeccable-variant="original">
+              <div className="flex-1 flex flex-col bg-white overflow-hidden">
+                {/* Toolbar */}
+                {!selectedUserProfile &&
+                  !selectedSongId &&
+                  activeSection !== "server" &&
+                  activeSection !== "dashboard" && (
+                  <div
+                    className={cn(
+                      "flex items-center gap-2 px-2 py-1.5 border-b",
+                      isXpTheme
+                        ? "border-[#919b9c]"
+                        : currentTheme === "macosx"
+                        ? "border-black/10"
+                        : "border-black/20"
+                    )}
+                    style={
+                      currentTheme === "macosx"
+                        ? { backgroundImage: "var(--os-pinstripe-window)" }
+                        : undefined
+                    }
+                  >
+                    {activeSection === "users" && !selectedRoomId && (
+                      <div className="relative flex-1">
+                        <MagnifyingGlass
+                          className="absolute left-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-neutral-400"
+                          weight="bold"
+                        />
+                        <Input
+                          placeholder={t("apps.admin.search.placeholder")}
+                          value={userSearch}
+                          onChange={(e) => setUserSearch(e.target.value)}
+                          className="pl-7 h-7 text-[12px]"
+                        />
+                      </div>
+                    )}
 
-                {activeSection === "songs" && !selectedRoomId && (
-                  <>
-                    <div className="relative flex-1">
-                      <MagnifyingGlass
-                        className="absolute left-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-neutral-400"
-                        weight="bold"
-                      />
-                      <Input
-                        placeholder={t(
-                          "apps.admin.search.songsPlaceholder",
-                          "Search songs..."
-                        )}
-                        value={songSearch}
-                        onChange={(e) => setSongSearch(e.target.value)}
-                        className="pl-7 h-7 text-[12px]"
+                    {activeSection === "songs" && !selectedRoomId && (
+                      <>
+                        <div className="relative flex-1">
+                          <MagnifyingGlass
+                            className="absolute left-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-neutral-400"
+                            weight="bold"
+                          />
+                          <Input
+                            placeholder={t(
+                              "apps.admin.search.songsPlaceholder",
+                              "Search songs..."
+                            )}
+                            value={songSearch}
+                            onChange={(e) => setSongSearch(e.target.value)}
+                            className="pl-7 h-7 text-[12px]"
+            </div>
+            {/* Variants: insert below this line */}
+            {/* impeccable-variants-end 58c2a31c */}
+          </div>
                       />
                     </div>
                     <Button

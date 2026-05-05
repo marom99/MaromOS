@@ -1,6 +1,10 @@
-## Design Context
+# Product
 
-### Users
+## Register
+
+product
+
+## Users
 ryOS primarily serves creative tinkerers and retro fans. They use it to explore a nostalgic desktop environment, play with built-in apps, and create things inside the system rather than just consume static content. The core jobs to be done are exploring nostalgia and creating or playing within a polished browser-based OS.
 
 ### Brand Personality
