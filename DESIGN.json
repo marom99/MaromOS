@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-05-04T00:00:00Z",
+  "title": "Design System: ryOS",
+  "extensions": {
+    "colorMeta": {
+      "aqua-window-bg": { "role": "neutral", "displayName": "Aqua Window Gray", "canonical": "#ececec", "tonalRamp": ["#1a1a1a", "#333333", "#4d4d4d", "#666666", "#808080", "#999999", "#b3b3b3", "#cccccc", "#ececec", "#f5f5f5"] },
+      "aqua-selection-bg": { "role": "primary", "displayName": "Aqua Selection Blue", "canonical": "#2765ca", "tonalRamp": ["#0d2244", "#143366", "#1b4488", "#2255aa", "#2765ca", "#3d7ad4", "#5c90de", "#7ba5e8", "#9abbf2", "#b9d1fc"] },
+      "aqua-input-focus-border": { "role": "primary", "displayName": "Aqua Focus Blue", "canonical": "#346ae3", "tonalRamp": ["#102244", "#183366", "#204488", "#2855aa", "#346ae3", "#5080e8", "#7098ed", "#90b0f2", "#b0c8f7", "#d0e0fc"] },
+      "xp-window-bg": { "role": "neutral", "displayName": "XP Luna Cream", "canonical": "#ece9d8", "tonalRamp": ["#2d2b28", "#47443f", "#615d56", "#7b766d", "#958f84", "#afa89b", "#c9c1b2", "#ece9d8", "#f5f3e8", "#faf9f4"] },
+      "xp-window-border": { "role": "primary", "displayName": "XP Luna Blue", "canonical": "#0054e3", "tonalRamp": ["#001840", "#002660", "#003480", "#0042a0", "#0054e3", "#2670e8", "#4c8ced", "#72a8f2", "#98c4f7", "#bee0fc"] },
+      "win98-window-bg": { "role": "neutral", "displayName": "Win98 Silver", "canonical": "#c0c0c0", "tonalRamp": ["#1a1a1a", "#333333", "#4d4d4d", "#666666", "#808080", "#999999", "#b3b3b3", "#c0c0c0", "#d9d9d9", "#f2f2f2"] },
+      "win98-titlebar-active-bg-left": { "role": "primary", "displayName": "Win98 Navy", "canonical": "#000084", "tonalRamp": ["#000010", "#00002a", "#000044", "#000064", "#000084", "#0000a4", "#0000cc", "#2020e4", "#5050f4", "#8080ff"] },
+      "system7-window-bg": { "role": "neutral", "displayName": "System 7 White", "canonical": "#ffffff", "tonalRamp": ["#1a1a1a", "#333333", "#4d4d4d", "#666666", "#808080", "#999999", "#b3b3b3", "#cccccc", "#e6e6e6", "#ffffff"] },
+      "system7-selection-bg": { "role": "primary", "displayName": "System 7 Black", "canonical": "#000000", "tonalRamp": ["#000000", "#1a1a1a", "#333333", "#4d4d4d", "#666666", "#808080", "#999999", "#b3b3b3", "#cccccc", "#e6e6e6"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "System 7 Display", "purpose": "Window titles, primary headings in System 7 theme." },
+      "body": { "displayName": "Geneva Body", "purpose": "Default body text in System 7 theme. 12px bitmap font." },
+      "mono": { "displayName": "Monaco Mono", "purpose": "Code, terminal, file paths across all themes." },
+      "aqua-ui": { "displayName": "Lucida Grande UI", "purpose": "Primary UI font in macOS Aqua theme. 13px with antialiasing." },
+      "win98-ui": { "displayName": "MS Sans Serif UI", "purpose": "Primary UI font in Windows 98 theme. 11px pixel font." },
+      "xp-ui": { "displayName": "Tahoma UI", "purpose": "Primary UI font in Windows XP theme. 11px." }
+    },
+    "shadows": [
+      { "name": "aqua-window", "value": "0 3px 10px rgba(0, 0, 0, 0.3)", "purpose": "macOS Aqua window drop shadow. Soft, diffuse." },
+      { "name": "system7-window", "value": "2px 2px 0px 0px rgba(0, 0, 0, 0.5)", "purpose": "System 7 window drop shadow. Hard offset, zero blur." },
+      { "name": "xp-window", "value": "0 4px 8px rgba(0, 0, 0, 0.25)", "purpose": "Windows XP window drop shadow. Moderate blur and offset." },
+      { "name": "aqua-input-inset", "value": "inset 0 1px 2px rgba(0, 0, 0, 0.12)", "purpose": "Aqua input field inner depth." },
+      { "name": "aqua-button-inner-glow", "value": "inset 0 0 1px rgba(255, 255, 255, 0.5)", "purpose": "Aqua primary button inner highlight for glass effect." },
+      { "name": "aqua-focus-ring", "value": "0 0 0 3px rgba(52, 106, 227, 0.25)", "purpose": "Aqua input/button focus ring glow." },
+      { "name": "win98-button-raised", "value": "inset 1px 1px 0 #fff, inset -1px -1px 0 #808080", "purpose": "Win98 3D raised button bevel." },
+      { "name": "win98-button-sunken", "value": "inset -1px -1px 0 #fff, inset 1px 1px 0 #808080", "purpose": "Win98 3D sunken button bevel (pressed state)." }
+    ],
+    "motion": [
+      { "name": "accordion", "value": "0.2s ease-out", "purpose": "Accordion expand/collapse." },
+      { "name": "shake", "value": "translateX(±5px) shake", "purpose": "Error feedback shake animation." },
+      { "name": "aqua-pulse", "value": "1.5s infinite opacity pulse", "purpose": "Aqua primary button default-state attention pulse." },
+      { "name": "shimmer", "value": "background-position 2s linear infinite 200% to -200%", "purpose": "Loading skeleton shimmer." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" },
+      { "name": "2xl", "value": "1400px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "System 7 Button",
+      "kind": "button",
+      "refersTo": "button-retro",
+      "description": "Classic Mac System 7 3D beveled button with 9-slice border-image.",
+      "html": "<button class=\"ds-btn-retro\">OK</button>",
+      "css": ".ds-btn-retro { background: #ffffff; color: #000000; font-family: 'ChicagoKare', 'ArkPixel', system-ui, sans-serif; font-size: 12px; -webkit-font-smoothing: none; font-smooth: never; padding: 4px 12px; border: 2px solid #000000; border-radius: 0; cursor: pointer; outline-offset: 2px; } .ds-btn-retro:hover { filter: brightness(0.95); } .ds-btn-retro:active { background: #cccccc; } .ds-btn-retro:focus-visible { outline: 2px solid #000000; outline-offset: 1px; }"
+    },
+    {
+      "name": "Aqua Primary Button",
+      "kind": "button",
+      "refersTo": "button-aqua-primary",
+      "description": "macOS Aqua glass capsule button with subtle pulse animation.",
+      "html": "<button class=\"ds-btn-aqua-primary\">OK</button>",
+      "css": ".ds-btn-aqua-primary { position: relative; height: 28px; padding: 0 16px; background: linear-gradient(to bottom, #4a90d9, #2565b8); color: #ffffff; font-family: 'LucidaGrande', 'Lucida Grande', system-ui, sans-serif; font-size: 13px; font-weight: 400; -webkit-font-smoothing: antialiased; border: none; border-radius: 14px; cursor: pointer; overflow: hidden; box-shadow: 0 0 1px rgba(255,255,255,0.3) inset, 0 1px 2px rgba(0,0,0,0.12); animation: ds-aqua-pulse 1.5s ease-in-out infinite; } .ds-btn-aqua-primary::before { content: ''; position: absolute; top: 1px; left: 4px; right: 4px; height: 40%; background: linear-gradient(to bottom, rgba(255,255,255,0.35), transparent); border-radius: 12px 12px 0 0; pointer-events: none; } .ds-btn-aqua-primary:hover { background: linear-gradient(to bottom, #5a9de6, #3070c4); } .ds-btn-aqua-primary:active { background: linear-gradient(to bottom, #2565b8, #1a4d91); box-shadow: 0 0 1px rgba(0,0,0,0.2) inset, 0 1px 1px rgba(0,0,0,0.1); } .ds-btn-aqua-primary:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(52, 106, 227, 0.25), 0 0 1px rgba(255,255,255,0.3) inset; } @keyframes ds-aqua-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.92; } }"
+    },
+    {
+      "name": "Aqua Secondary Button",
+      "kind": "button",
+      "refersTo": "button-aqua-secondary",
+      "description": "macOS Aqua subtle gray secondary button.",
+      "html": "<button class=\"ds-btn-aqua-secondary\">Cancel</button>",
+      "css": ".ds-btn-aqua-secondary { position: relative; height: 28px; padding: 0 16px; background: linear-gradient(to bottom, #ffffff, #e8e8e8); color: #000000; font-family: 'LucidaGrande', 'Lucida Grande', system-ui, sans-serif; font-size: 13px; -webkit-font-smoothing: antialiased; border: 0.5px solid rgba(0,0,0,0.2); border-radius: 14px; cursor: pointer; overflow: hidden; } .ds-btn-aqua-secondary::before { content: ''; position: absolute; top: 1px; left: 3px; right: 3px; height: 40%; background: linear-gradient(to bottom, rgba(255,255,255,0.5), transparent); border-radius: 11px 11px 0 0; pointer-events: none; } .ds-btn-aqua-secondary:hover { background: linear-gradient(to bottom, #f8f8f8, #dddddd); } .ds-btn-aqua-secondary:active { background: linear-gradient(to bottom, #dddddd, #cccccc); } .ds-btn-aqua-secondary:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(52, 106, 227, 0.25); }"
+    },
+    {
+      "name": "Win98 Button",
+      "kind": "button",
+      "refersTo": "button-win98",
+      "description": "Windows 98 3D beveled button with raised/sunken states.",
+      "html": "<button class=\"ds-btn-win98\">OK</button>",
+      "css": ".ds-btn-win98 { background: #c0c0c0; color: #000000; font-family: 'Pixelated MS Sans Serif', 'MS Sans Serif', sans-serif; font-size: 11px; -webkit-font-smoothing: none; font-smooth: never; padding: 4px 12px; border: none; border-radius: 0; cursor: pointer; box-shadow: inset 1px 1px 0 #ffffff, inset -1px -1px 0 #808080, 1px 1px 0 #0a0a0a; outline: 1px solid #0a0a0a; } .ds-btn-win98:hover { filter: brightness(1.02); } .ds-btn-win98:active { box-shadow: inset -1px -1px 0 #ffffff, inset 1px 1px 0 #808080; padding: 5px 11px 3px 13px; } .ds-btn-win98:focus-visible { outline: 1px dotted #000000; outline-offset: -4px; }"
+    },
+    {
+      "name": "Aqua Input",
+      "kind": "input",
+      "refersTo": "input-aqua",
+      "description": "macOS Aqua text input with inset shadow and blue focus ring.",
+      "html": "<input class=\"ds-input-aqua\" type=\"text\" placeholder=\"Search\"/>",
+      "css": ".ds-input-aqua { width: 100%; height: 28px; padding: 4px 8px; background: #ffffff; color: #000000; font-family: 'LucidaGrande', 'Lucida Grande', system-ui, sans-serif; font-size: 13px; -webkit-font-smoothing: antialiased; border: 1px solid rgba(0,0,0,0.2); border-radius: 6px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.08); transition: border-color 0.15s ease, box-shadow 0.15s ease; } .ds-input-aqua:focus { outline: none; border-color: #346ae3; box-shadow: inset 0 1px 2px rgba(0,0,0,0.08), 0 0 0 3px rgba(52, 106, 227, 0.25); } .ds-input-aqua::placeholder { color: #999999; }"
+    },
+    {
+      "name": "System 7 Input",
+      "kind": "input",
+      "refersTo": "input-retro",
+      "description": "System 7 square text input with hard black border.",
+      "html": "<input class=\"ds-input-retro\" type=\"text\" placeholder=\"Name\"/>",
+      "css": ".ds-input-retro { width: 100%; height: 24px; padding: 2px 6px; background: #ffffff; color: #000000; font-family: 'Geneva-12', 'ArkPixel', system-ui, sans-serif; font-size: 12px; -webkit-font-smoothing: none; font-smooth: never; border: 2px solid #000000; border-radius: 0; } .ds-input-retro:focus { outline: 2px solid #000000; outline-offset: -2px; } .ds-input-retro::placeholder { color: #999999; }"
+    },
+    {
+      "name": "Aqua Dialog",
+      "kind": "custom",
+      "refersTo": "dialog-aqua",
+      "description": "macOS Aqua dialog window with pinstripe background and traffic light controls.",
+      "html": "<div class=\"ds-dialog-aqua\"><div class=\"ds-dialog-aqua-header\"><div class=\"ds-traffic-light close\"></div><div class=\"ds-traffic-light minimize\"></div><div class=\"ds-traffic-light maximize\"></div><span class=\"ds-dialog-aqua-title\">Dialog Title</span></div><div class=\"ds-dialog-aqua-body\">Content goes here</div></div>",
+      "css": ".ds-dialog-aqua { background: #ececec; border: 0.5px solid rgba(0,0,0,0.4); border-radius: 0.45rem; box-shadow: 0 3px 10px rgba(0,0,0,0.3); overflow: hidden; } .ds-dialog-aqua-header { display: flex; align-items: center; padding: 4px 8px; background: linear-gradient(to bottom, #e8e8e8, #d0d0d0); border-bottom: 1px solid rgba(0,0,0,0.08); position: relative; } .ds-traffic-light { width: 12px; height: 12px; border-radius: 50%; margin-right: 6px; flex-shrink: 0; } .ds-traffic-light.close { background: #ff6057; } .ds-traffic-light.minimize { background: #ffbd2e; } .ds-traffic-light.maximize { background: #27c93f; } .ds-dialog-aqua-title { flex: 1; text-align: center; font-family: 'LucidaGrande', 'Lucida Grande', system-ui, sans-serif; font-size: 13px; font-weight: 700; color: #000000; text-shadow: 0 1px 0 rgba(255,255,255,0.7); -webkit-font-smoothing: antialiased; } .ds-dialog-aqua-body { padding: 20px; font-family: 'LucidaGrande', 'Lucida Grande', system-ui, sans-serif; font-size: 13px; color: #000000; -webkit-font-smoothing: antialiased; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Nostalgic Workbench",
+    "overview": "ryOS is a browser-based desktop operating system that spans four eras of personal computing: System 7, macOS X Aqua, Windows 98, and Windows XP. Each theme is a self-contained visual language — the design system does not unify them, it faithfully reproduces them. The coherence across themes is in behavior and spatial organization, not in look. Every pixel, bevel, gradient, and bitmap font is chosen because the source OS chose it first. Polish means getting the details right, not making them consistent.\n\nThe system is playful, crafted, and nostalgic. It treats UI chrome as material: buttons depress, titlebars shade, surfaces cast shadows or don't — depending on which computer you sat down at. This is a workbench, not a museum. Every component is interactive and functional.",
+    "keyCharacteristics": [
+      "Four period-accurate visual languages, no forced cross-theme unification",
+      "Materially honest components: buttons feel like real objects",
+      "Bitmap pixel fonts with no antialiasing in retro themes; smooth anti-aliased text in Aqua",
+      "Monochrome body with OS-specific chromatic accents",
+      "Accessibility: WCAG AA target, reduced-motion support, keyboard navigation"
+    ],
+    "rules": [
+      { "name": "The No Global Color Rule", "body": "Never apply one theme's color to another. Aqua selection blue must not appear in System 7 chrome. Each theme is self-contained.", "section": "colors" },
+      { "name": "The Respect the Bitmap Grid Rule", "body": "Retro theme fonts (ChicagoKare, Pixelated MS Sans Serif) must render at their native pixel sizes. Never scale them by non-integer factors. Never apply letter-spacing, transform, or subpixel positioning.", "section": "typography" },
+      { "name": "The Source OS First Rule", "body": "When choosing how a component conveys depth, look up what the source OS did. If System 7 had no shadows, the System 7 theme must not have them.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do use --os-color-* and --os-font-ui tokens. Never hardcode a color or font that should be theme-aware.",
+      "Do design macOS Aqua first, then validate across System 7, XP, and Win98.",
+      "Do respect bitmap font pixel grids with -webkit-font-smoothing: none and font-smooth: never.",
+      "Do use the shared z-index scale for layering across themes.",
+      "Do make components materially honest. If a button depresses in the source OS, it should depress here too.",
+      "Do target WCAG AA contrast ratios and support reduced motion."
+    ],
+    "donts": [
+      "Don't mix theme colors across OS boundaries.",
+      "Don't apply antialiasing to retro theme fonts.",
+      "Don't use border-left or border-right greater than 1px as a colored accent stripe.",
+      "Don't use background-clip: text with gradient backgrounds.",
+      "Don't use glassmorphism, blur effects, or decorative transparency beyond source OS fidelity.",
+      "Don't default to modals. Use inline editing and progressive disclosure first.",
+      "Don't add shadows to System 7 or Win98 chrome.",
+      "Don't invent new visual conventions. Every decision should trace back to a source OS behavior."
+    ]
+  }
+}

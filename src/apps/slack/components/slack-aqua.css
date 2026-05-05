@@ -289,13 +289,13 @@
 /* ---- Channel header ----------------------------------------------- */
 
 .main-head {
-  height: 62px;
+  height: 58px;
   flex-shrink: 0;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  padding: 10px 18px 0;
-  border-bottom: 1px solid #d7d7d7;
+  padding: 0 18px;
+  border-bottom: 1px solid #cfd1d4;
   background: linear-gradient(to bottom, #ffffff, #fbfbfb);
 }
 
@@ -328,7 +328,6 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-top: 7px;
 }
 
 .head-stat {
