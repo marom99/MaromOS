@@ -2,8 +2,8 @@ import avatarAlex from "../assets/avatar-alex.png";
 import avatarJamie from "../assets/avatar-jamie.png";
 import avatarRiley from "../assets/avatar-riley.png";
 import avatarSamira from "../assets/avatar-samira.png";
-import fileIcon from "../assets/file-icon.png";
 import { MessageBubble } from "@/components/shared/MessageBubble";
+import { ImageAttachment } from "@/components/shared/ImageAttachment";
 import { Badge } from "@/components/ui/badge";
 import { CaretDown } from "@phosphor-icons/react";
 
@@ -32,19 +32,11 @@ export function SlackMessages() {
           <MessageBubble className="mt-1">
             Morning team! Sharing the latest mockup for the dashboard.
           </MessageBubble>
-          <div className="file">
-            <div className="file-ic">
-              <img src={fileIcon} alt="File icon" />
-            </div>
-            <div className="file-meta">
-              <div className="file-name">dashboard-v3.png</div>
-              <div className="file-size">2.4 MB</div>
-            </div>
-            <div className="file-btn">
-              <svg viewBox="0 0 16 16">
-                <path d="M8 3v8M5 8l3 3 3-3M4 13h8" />
-              </svg>
-            </div>
+          <div className="mt-2 mb-1">
+            <ImageAttachment 
+              src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=400" 
+              alt="dashboard-v3.png"
+            />
           </div>
           <div className="reactions">
             <div className="react">👍 3</div>
