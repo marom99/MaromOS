@@ -1,5 +1,6 @@
 import React from "react";
 import { WindowFrame } from "@/components/layout/WindowFrame";
+import { ProfileAvatar } from "@/components/shared/ProfileAvatar";
 import { ControlPanelsMenuBar } from "./ControlPanelsMenuBar";
 import { HelpDialog } from "@/components/dialogs/HelpDialog";
 import { AboutDialog } from "@/components/dialogs/AboutDialog";
@@ -966,32 +967,14 @@ export function ControlPanelsAppComponent({
                       <div className="flex items-center justify-between gap-3">
                         <div className="flex items-center gap-3 min-w-0">
                           <div className="relative shrink-0">
-                            <div
-                              className={cn(
-                                controlPanelItemIconShell,
-                                "rounded-full shadow-[inset_0_0_0_1px_rgba(0,0,0,0.15)] flex items-center justify-center text-[11px] font-semibold text-white overflow-hidden"
-                              )}
-                              style={
-                                myContact?.picture
-                                  ? { background: "rgba(255, 255, 255, 0.72)" }
-                                  : {
-                                      background:
-                                        "linear-gradient(to bottom, #dcdcdc, #b8b8b8)",
-                                      textShadow: userAvatarInitialsTextShadow,
-                                    }
-                              }
-                              aria-label={accountAvatarLabel}
-                            >
-                              {myContact?.picture ? (
-                                <img
-                                  src={myContact.picture}
-                                  alt={accountAvatarLabel}
-                                  className="w-full h-full object-contain"
-                                />
-                              ) : (
-                                accountAvatarInitials
-                              )}
-                            </div>
+                            <ProfileAvatar
+                              picture={myContact?.picture}
+                              fallback={accountAvatarInitials}
+                              label={accountAvatarLabel}
+                              className={cn(controlPanelItemIconShell, "text-[11px]")}
+                              initialsClassName="text-[11px]"
+                              textShadow={userAvatarInitialsTextShadow}
+                            />
                             <span
                               className={cn(
                                 "absolute -bottom-px -right-px block h-[10px] w-[10px] rounded-full border-[1.5px] border-white",
