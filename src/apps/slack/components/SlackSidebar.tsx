@@ -8,8 +8,14 @@ import {
 } from "@phosphor-icons/react";
 import wsIcon from "../assets/workspace-icon.png";
 import dmAvatar from "../assets/dm-avatar.png";
+import { slackChannels, type SlackChannelId } from "../data/channelContent";
 
-export function SlackSidebar() {
+interface SlackSidebarProps {
+  activeChannelId: SlackChannelId;
+  onSelectChannel: (channelId: SlackChannelId) => void;
+}
+
+export function SlackSidebar({ activeChannelId, onSelectChannel }: SlackSidebarProps) {
   return (
     <aside className="sidebar">
       <div className="ws-head">
@@ -57,21 +63,17 @@ export function SlackSidebar() {
           <div className="section-title">Channels</div>
         </div>
         <div className="list">
-          <div className="channel">
-            <span className="hash">#</span> announcements
-          </div>
-          <div className="channel">
-            <span className="hash">#</span> general
-          </div>
-          <div className="channel active">
-            <span className="hash">#</span> design-lab
-          </div>
-          <div className="channel">
-            <span className="hash">#</span> feedback
-          </div>
-          <div className="channel">
-            <span className="hash">#</span> random
-          </div>
+          {slackChannels.map((channel) => (
+            <button
+              key={channel.id}
+              type="button"
+              className={`channel${channel.id === activeChannelId ? " active" : ""}`}
+              onClick={() => onSelectChannel(channel.id)}
+              aria-pressed={channel.id === activeChannelId}
+            >
+              <span className="hash">#</span> {channel.name}
+            </button>
+          ))}
         </div>
       </div>
 

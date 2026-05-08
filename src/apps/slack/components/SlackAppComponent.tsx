@@ -11,6 +11,7 @@ import { SlackSidebar } from "./SlackSidebar";
 import { SlackChannelHeader } from "./SlackChannelHeader";
 import { SlackMessages } from "./SlackMessages";
 import { SlackComposer } from "./SlackComposer";
+import { getSlackChannel, type SlackChannelId } from "../data/channelContent";
 import "./slack-aqua.css";
 
 export function SlackAppComponent({
@@ -30,8 +31,11 @@ export function SlackAppComponent({
 
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
+  const [activeChannelId, setActiveChannelId] = useState<SlackChannelId>("design-lab");
 
   if (!isWindowOpen) return null;
+
+  const activeChannel = getSlackChannel(activeChannelId);
 
   const menuBar = (
     <SlackMenuBar
@@ -45,7 +49,7 @@ export function SlackAppComponent({
     <>
       {!isXpTheme && isForeground && menuBar}
       <WindowFrame
-        title="Slack — #design-lab"
+        title={`Slack — #${activeChannel.name}`}
         onClose={onClose}
         isForeground={isForeground}
         appId="slack"
@@ -57,11 +61,14 @@ export function SlackAppComponent({
         menuBar={isXpTheme ? menuBar : undefined}
       >
         <div className="app">
-          <SlackSidebar />
+          <SlackSidebar
+            activeChannelId={activeChannelId}
+            onSelectChannel={setActiveChannelId}
+          />
           <main className="main">
-            <SlackChannelHeader />
-            <SlackMessages />
-            <SlackComposer />
+            <SlackChannelHeader channel={activeChannel} />
+            <SlackMessages channel={activeChannel} />
+            <SlackComposer channel={activeChannel} />
           </main>
         </div>
 

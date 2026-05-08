@@ -3,7 +3,7 @@ import { ImageAttachment } from "@/components/shared/ImageAttachment";
 import { ProfileAvatar } from "@/components/shared/ProfileAvatar";
 import { Badge } from "@/components/ui/badge";
 import { CaretDown, Plus } from "@phosphor-icons/react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { ALL_USER_PICTURES } from "@/utils/userPictures";
 import {
@@ -11,23 +11,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-
-interface Reaction {
-  emoji: string;
-  count: number;
-  hasReacted: boolean;
-}
-
-interface Message {
-  id: string;
-  user: string;
-  avatar?: string;
-  time: string;
-  content: string;
-  hasImage?: boolean;
-  isSelf?: boolean;
-  reactions: Reaction[];
-}
+import type { SlackChannelContent, SlackMessageItem } from "../data/channelContent";
 
 const COMMON_EMOJIS = ["👍", "❤️", "😂", "😮", "😢", "🔥", "🙏", "👀"];
 const SLACK_PROFILE_PICTURES = [
@@ -44,85 +28,65 @@ function getInitials(name: string) {
   return `${parts[0][0] ?? ""}${parts[parts.length - 1][0] ?? ""}`.toUpperCase();
 }
 
-export function SlackMessages() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "1",
-      user: "Alex Turner",
-      avatar: SLACK_PROFILE_PICTURES[0],
-      time: "9:41 AM",
-      content: "Morning team! Sharing the latest mockup for the dashboard.",
-      hasImage: true,
-      reactions: [
-        { emoji: "👍", count: 3, hasReacted: false },
-        { emoji: "❤️", count: 2, hasReacted: false },
-      ],
-    },
-    {
-      id: "2",
-      user: "Jamie Lin",
-      avatar: SLACK_PROFILE_PICTURES[1],
-      time: "9:47 AM",
-      content: "This is looking great! I especially like the new activity timeline.",
-      reactions: [],
-    },
-    {
-      id: "3",
-      user: "Riley Morgan",
-      avatar: SLACK_PROFILE_PICTURES[2],
-      time: "10:02 AM",
-      content: "Agreed! One thought: should we surface the filter controls more prominently on the first screen?",
-      reactions: [],
-    },
-    {
-      id: "4",
-      user: "You",
-      avatar: SLACK_PROFILE_PICTURES[3],
-      time: "10:15 AM",
-      content: "I drafted a cleaner variation with the filters pulled higher, the first scan feels faster now.",
-      reactions: [],
-      isSelf: true,
-    },
-  ]);
+interface SlackMessagesProps {
+  channel: SlackChannelContent;
+}
+
+export function SlackMessages({ channel }: SlackMessagesProps) {
+  const messagesRef = useRef<HTMLDivElement>(null);
+  const [channelMessages, setChannelMessages] = useState<Record<string, SlackMessageItem[]>>(() => ({
+    [channel.id]: channel.messages,
+  }));
+
+  const messages = channelMessages[channel.id] ?? channel.messages;
+
+  useEffect(() => {
+    messagesRef.current?.scrollTo({ top: 0 });
+  }, [channel.id]);
 
   const toggleReaction = (messageId: string, emoji: string) => {
-    setMessages((prev) =>
-      prev.map((msg) => {
-        if (msg.id !== messageId) return msg;
+    setChannelMessages((prev) => {
+      const current = prev[channel.id] ?? channel.messages;
 
-        const existingIdx = msg.reactions.findIndex((r) => r.emoji === emoji);
-        let newReactions = [...msg.reactions];
+      return {
+        ...prev,
+        [channel.id]: current.map((msg) => {
+          if (msg.id !== messageId) return msg;
 
-        if (existingIdx > -1) {
-          const reaction = newReactions[existingIdx];
-          if (reaction.hasReacted) {
-            if (reaction.count === 1) {
-              newReactions.splice(existingIdx, 1);
+          const existingIdx = msg.reactions.findIndex((r) => r.emoji === emoji);
+          const newReactions = [...msg.reactions];
+
+          if (existingIdx > -1) {
+            const reaction = newReactions[existingIdx];
+            if (reaction.hasReacted) {
+              if (reaction.count === 1) {
+                newReactions.splice(existingIdx, 1);
+              } else {
+                newReactions[existingIdx] = {
+                  ...reaction,
+                  count: reaction.count - 1,
+                  hasReacted: false,
+                };
+              }
             } else {
               newReactions[existingIdx] = {
                 ...reaction,
-                count: reaction.count - 1,
-                hasReacted: false,
+                count: reaction.count + 1,
+                hasReacted: true,
               };
             }
           } else {
-            newReactions[existingIdx] = {
-              ...reaction,
-              count: reaction.count + 1,
-              hasReacted: true,
-            };
+            newReactions.push({ emoji, count: 1, hasReacted: true });
           }
-        } else {
-          newReactions.push({ emoji, count: 1, hasReacted: true });
-        }
 
-        return { ...msg, reactions: newReactions };
-      })
-    );
+          return { ...msg, reactions: newReactions };
+        }),
+      };
+    });
   };
 
   return (
-    <div className="messages">
+    <div ref={messagesRef} className="messages">
       <div className="date-sep">
         <Badge
           variant="outline"
@@ -137,7 +101,7 @@ export function SlackMessages() {
         <div key={msg.id} className="msg group" data-self={msg.isSelf ? "true" : undefined}>
           <div className="avatar">
             <ProfileAvatar
-              picture={msg.avatar}
+              picture={SLACK_PROFILE_PICTURES[msg.avatarIndex ?? 0]}
               fallback={getInitials(msg.user)}
               label={msg.user}
               className="w-full h-full"
@@ -157,8 +121,8 @@ export function SlackMessages() {
             {msg.hasImage && (
               <div className="msg-attachment mt-2 mb-1">
                 <ImageAttachment
-                  src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=400"
-                  alt="dashboard-v3.png"
+                  src={msg.imageSrc ?? ""}
+                  alt={msg.imageAlt ?? "attachment"}
                 />
               </div>
             )}
