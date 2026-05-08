@@ -2,8 +2,13 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ToolbarButtonGroup, ToolbarButton } from "@/components/ui/toolbar-button";
+import type { SlackChannelContent } from "../data/channelContent";
 
-export function SlackComposer() {
+interface SlackComposerProps {
+  channel: SlackChannelContent;
+}
+
+export function SlackComposer({ channel }: SlackComposerProps) {
   const [message, setMessage] = useState("");
 
   const handleSend = () => {
@@ -18,7 +23,7 @@ export function SlackComposer() {
       <div className="input">
         <Textarea
           className="input-field w-full outline-none resize-none bg-transparent placeholder:text-[#9b9ea2] text-[#222] border-none focus-visible:ring-0 min-h-[42px]"
-          placeholder="Message #design-lab"
+          placeholder={channel.composerPlaceholder}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={(e) => {
