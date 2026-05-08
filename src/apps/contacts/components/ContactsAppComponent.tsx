@@ -4,6 +4,7 @@ import { AboutDialog } from "@/components/dialogs/AboutDialog";
 import { HelpDialog } from "@/components/dialogs/HelpDialog";
 import { WindowFrame } from "@/components/layout/WindowFrame";
 import { AppSidebarPanel } from "@/components/layout/AppSidebarPanel";
+import { ProfileAvatar } from "@/components/shared/ProfileAvatar";
 import { ContactsMenuBar } from "./ContactsMenuBar";
 import { UserPicturePicker } from "./UserPicturePicker";
 import { useContactsLogic } from "../hooks/useContactsLogic";
@@ -57,20 +58,14 @@ function ContactListItem({
       )}
       data-selected={isSelected ? "true" : undefined}
     >
-      {contact.picture ? (
-        <img
-          src={contact.picture}
-          alt=""
-          className="shrink-0 w-5 h-5 rounded-full bg-white/70 shadow-[inset_0_0_0_1px_rgba(0,0,0,0.15)] object-contain"
-        />
-      ) : (
-        <div
-          className="shrink-0 w-5 h-5 rounded-full shadow-[inset_0_0_0_1px_rgba(0,0,0,0.15)] bg-[linear-gradient(to_bottom,#e0e0e0,#c8c8c8)] flex items-center justify-center text-[8px] font-semibold text-white"
-          style={{ textShadow: smallAvatarInitialsTextShadow }}
-        >
-          {getContactInitials(contact)}
-        </div>
-      )}
+      <ProfileAvatar
+        picture={contact.picture}
+        fallback={getContactInitials(contact)}
+        label={contact.displayName}
+        className="shrink-0 w-5 h-5"
+        initialsClassName="text-[8px]"
+        textShadow={smallAvatarInitialsTextShadow}
+      />
       <div className="min-w-0 flex-1 flex items-center gap-2">
         <div className="text-[12px] leading-tight truncate flex-1">{contact.displayName}</div>
         {isMine ? (
@@ -546,26 +541,17 @@ export function ContactsAppComponent({
                     <button
                       type="button"
                       onClick={() => setIsPicturePickerOpen(true)}
-                      className="w-12 h-12 shrink-0 rounded-full shadow-[inset_0_0_0_1px_rgba(0,0,0,0.15)] flex items-center justify-center text-base font-semibold text-white overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                      style={
-                        selectedContact.picture
-                          ? { background: "rgba(255, 255, 255, 0.72)" }
-                          : {
-                              background: "linear-gradient(to bottom, #dcdcdc, #b8b8b8)",
-                              textShadow: avatarInitialsTextShadow,
-                            }
-                      }
+                      className="w-12 h-12 shrink-0 rounded-full overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
                       title={t("apps.contacts.changePicture")}
                     >
-                      {selectedContact.picture ? (
-                        <img
-                          src={selectedContact.picture}
-                          alt={selectedContact.displayName}
-                          className="w-full h-full object-contain"
-                        />
-                      ) : (
-                        getContactInitials(selectedContact)
-                      )}
+                      <ProfileAvatar
+                        picture={selectedContact.picture}
+                        fallback={getContactInitials(selectedContact)}
+                        label={selectedContact.displayName}
+                        className="w-full h-full"
+                        initialsClassName="text-base"
+                        textShadow={avatarInitialsTextShadow}
+                      />
                     </button>
                     <div className="min-w-0 flex-1 pt-0.5 space-y-1">
                       {isEditing ? (
