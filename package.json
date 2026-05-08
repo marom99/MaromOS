@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "bun run scripts/dev-with-api.ts",
+    "dev:check": "bun run scripts/check-dev-readiness.ts",
     "dev:vite": "NODE_OPTIONS='--max-old-space-size=4096' vite --port ${PORT:-5173}",
     "dev:api": "bun --watch scripts/api-standalone-server.ts",
     "api:start": "NODE_ENV=production bun run scripts/api-standalone-server.ts",

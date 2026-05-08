@@ -325,11 +325,7 @@ export function AdminAppComponent({
           />
 
           {/* Main Content */}
-          <div data-impeccable-variants="58c2a31c" data-impeccable-variant-count="3" style={{ display: "contents" }}>
-            {/* impeccable-variants-start 58c2a31c */}
-            {/* Original */}
-            <div data-impeccable-variant="original">
-              <div className="flex-1 flex flex-col bg-white overflow-hidden">
+          <div className="flex-1 flex flex-col bg-white overflow-hidden">
                 {/* Toolbar */}
                 {!selectedUserProfile &&
                   !selectedSongId &&
@@ -380,12 +376,8 @@ export function AdminAppComponent({
                             value={songSearch}
                             onChange={(e) => setSongSearch(e.target.value)}
                             className="pl-7 h-7 text-[12px]"
-            </div>
-            {/* Variants: insert below this line */}
-            {/* impeccable-variants-end 58c2a31c */}
-          </div>
-                      />
-                    </div>
+                          />
+                        </div>
                     <Button
                       variant="ghost"
                       size="sm"

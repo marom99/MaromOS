@@ -93,6 +93,7 @@ bun run scripts/machine-translate.ts
 - `src/apps/` - Individual application modules (Finder, TextEdit, Chats, etc.)
 - `public/` - Static assets (fonts, icons, wallpapers, sounds)
 - `scripts/` - Build and maintenance scripts
+- `docs/solutions/` - documented solutions to past problems (bugs, workflow issues, best practices), organized by category with YAML frontmatter such as `module`, `tags`, and `problem_type`; relevant when implementing or debugging in documented areas.
 
 ## Testing
 

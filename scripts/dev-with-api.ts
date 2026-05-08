@@ -7,6 +7,10 @@
  * Exits both processes on Ctrl+C.
  */
 
+import { runDevReadinessCheck } from "./check-dev-readiness";
+
+await runDevReadinessCheck();
+
 const API_PORT = process.env.API_PORT ?? "3000";
 // Bun auto-loads .env.local which may set PORT=3000 (used by the API).
 // The Vite dev server needs a separate port to avoid conflicts.

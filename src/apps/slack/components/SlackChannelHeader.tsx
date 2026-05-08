@@ -24,8 +24,7 @@ export function SlackChannelHeader() {
         <div className="search-wrap">
           <SearchInput
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            onClear={() => setSearch("")}
+            onChange={setSearch}
             placeholder="Search"
             className="w-[168px]"
           />
