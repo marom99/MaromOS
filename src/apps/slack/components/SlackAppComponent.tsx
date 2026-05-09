@@ -11,8 +11,27 @@ import { SlackSidebar } from "./SlackSidebar";
 import { SlackChannelHeader } from "./SlackChannelHeader";
 import { SlackMessages } from "./SlackMessages";
 import { SlackComposer } from "./SlackComposer";
-import { getSlackChannel, type SlackChannelId } from "../data/channelContent";
+import {
+  getSlackChannel,
+  slackChannels,
+  type SlackChannelId,
+  type SlackMessageItem,
+} from "../data/channelContent";
 import "./slack-aqua.css";
+
+function createInitialChannelMessages() {
+  return Object.fromEntries(
+    slackChannels.map((channel) => [channel.id, channel.messages])
+  ) as Record<SlackChannelId, SlackMessageItem[]>;
+}
+
+function formatSlackTime(date: Date) {
+  return date.toLocaleTimeString([], {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+}
 
 export function SlackAppComponent({
   isWindowOpen,
@@ -32,10 +51,47 @@ export function SlackAppComponent({
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
   const [activeChannelId, setActiveChannelId] = useState<SlackChannelId>("design-lab");
+  const [channelMessages, setChannelMessages] = useState(createInitialChannelMessages);
 
   if (!isWindowOpen) return null;
 
-  const activeChannel = getSlackChannel(activeChannelId);
+  const baseActiveChannel = getSlackChannel(activeChannelId);
+  const activeChannel = {
+    ...baseActiveChannel,
+    messages: channelMessages[activeChannelId] ?? baseActiveChannel.messages,
+  };
+
+  const updateChannelMessages = (
+    updater: (messages: SlackMessageItem[]) => SlackMessageItem[]
+  ) => {
+    setChannelMessages((prev) => ({
+      ...prev,
+      [activeChannelId]: updater(prev[activeChannelId] ?? baseActiveChannel.messages),
+    }));
+  };
+
+  const handleSendMessage = (content: string, imageData?: string | null) => {
+    const trimmedContent = content.trim();
+    if (!trimmedContent && !imageData) return false;
+
+    updateChannelMessages((messages) => [
+      ...messages,
+      {
+        id: `${activeChannelId}-visitor-${Date.now()}-${messages.length}`,
+        user: "You",
+        time: formatSlackTime(new Date()),
+        content: trimmedContent || "Shared an image.",
+        reactions: [],
+        isSelf: true,
+        avatarIndex: 3,
+        hasImage: Boolean(imageData),
+        imageSrc: imageData ?? undefined,
+        imageAlt: "Shared image",
+      },
+    ]);
+
+    return true;
+  };
 
   const menuBar = (
     <SlackMenuBar
@@ -67,8 +123,14 @@ export function SlackAppComponent({
           />
           <main className="main">
             <SlackChannelHeader channel={activeChannel} />
-            <SlackMessages channel={activeChannel} />
-            <SlackComposer channel={activeChannel} />
+            <SlackMessages
+              channel={activeChannel}
+              onMessagesChange={updateChannelMessages}
+            />
+            <SlackComposer
+              isForeground={!!isForeground}
+              onSendMessage={handleSendMessage}
+            />
           </main>
         </div>
 
