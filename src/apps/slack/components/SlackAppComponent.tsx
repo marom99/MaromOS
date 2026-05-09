@@ -11,11 +11,13 @@ import { SlackSidebar } from "./SlackSidebar";
 import { SlackChannelHeader } from "./SlackChannelHeader";
 import { SlackMessages } from "./SlackMessages";
 import { SlackComposer } from "./SlackComposer";
+import { SlackThreadPanel } from "./SlackThreadPanel";
 import {
   getSlackChannel,
   slackChannels,
   type SlackChannelId,
   type SlackMessageItem,
+  type SlackThreadReplyItem,
 } from "../data/channelContent";
 import "./slack-aqua.css";
 
@@ -52,6 +54,7 @@ export function SlackAppComponent({
   const [isAboutOpen, setIsAboutOpen] = useState(false);
   const [activeChannelId, setActiveChannelId] = useState<SlackChannelId>("design-lab");
   const [channelMessages, setChannelMessages] = useState(createInitialChannelMessages);
+  const [selectedThreadMessageId, setSelectedThreadMessageId] = useState<string | null>(null);
 
   if (!isWindowOpen) return null;
 
@@ -59,6 +62,15 @@ export function SlackAppComponent({
   const activeChannel = {
     ...baseActiveChannel,
     messages: channelMessages[activeChannelId] ?? baseActiveChannel.messages,
+  };
+
+  const selectedThreadMessage =
+    activeChannel.messages.find((message) => message.id === selectedThreadMessageId && message.thread) ??
+    null;
+
+  const handleSelectChannel = (channelId: SlackChannelId) => {
+    setActiveChannelId(channelId);
+    setSelectedThreadMessageId(null);
   };
 
   const updateChannelMessages = (
@@ -93,6 +105,39 @@ export function SlackAppComponent({
     return true;
   };
 
+  const handleAddThreadReply = (messageId: string, content: string) => {
+    const trimmedContent = content.trim();
+    if (!trimmedContent) return;
+
+    const newReply: SlackThreadReplyItem = {
+      id: `${messageId}-visitor-${Date.now()}`,
+      user: "You",
+      time: formatSlackTime(new Date()),
+      content: trimmedContent,
+      avatarIndex: 3,
+      isSelf: true,
+    };
+
+    updateChannelMessages((messages) =>
+      messages.map((message) => {
+        if (message.id !== messageId || !message.thread) return message;
+
+        return {
+          ...message,
+          thread: {
+            ...message.thread,
+            replyCount: message.thread.replyCount + 1,
+            lastReplyLabel: "Last reply just now",
+            participantAvatarIndexes: [3, ...message.thread.participantAvatarIndexes]
+              .filter((avatarIndex, index, avatarIndexes) => avatarIndexes.indexOf(avatarIndex) === index)
+              .slice(0, 4),
+            replies: [...message.thread.replies, newReply],
+          },
+        };
+      })
+    );
+  };
+
   const menuBar = (
     <SlackMenuBar
       onClose={onClose}
@@ -119,12 +164,14 @@ export function SlackAppComponent({
         <div className="app">
           <SlackSidebar
             activeChannelId={activeChannelId}
-            onSelectChannel={setActiveChannelId}
+            onSelectChannel={handleSelectChannel}
           />
           <main className="main">
             <SlackChannelHeader channel={activeChannel} />
             <SlackMessages
               channel={activeChannel}
+              selectedThreadMessageId={selectedThreadMessageId}
+              onOpenThread={setSelectedThreadMessageId}
               onMessagesChange={updateChannelMessages}
             />
             <SlackComposer
@@ -132,6 +179,14 @@ export function SlackAppComponent({
               onSendMessage={handleSendMessage}
             />
           </main>
+          {selectedThreadMessage && (
+            <SlackThreadPanel
+              channel={activeChannel}
+              message={selectedThreadMessage}
+              onClose={() => setSelectedThreadMessageId(null)}
+              onAddReply={(content) => handleAddThreadReply(selectedThreadMessage.id, content)}
+            />
+          )}
         </div>
 
         <SlackDialogs

@@ -69,6 +69,7 @@ interface ChatInputProps {
   selectedImage?: string | null;
   onImageChange?: (imageData: string | null) => void;
   onTyping?: () => void;
+  placeholderOverride?: string;
 }
 
 export function ChatInput({
@@ -91,6 +92,7 @@ export function ChatInput({
   selectedImage,
   onImageChange,
   onTyping,
+  placeholderOverride,
 }: ChatInputProps) {
   const { t } = useTranslation();
   const [isFocused, setIsFocused] = useState(false);
@@ -621,7 +623,9 @@ export function ChatInput({
                   value={input}
                   onChange={handleInputChangeWithSound}
                   placeholder={
-                    isLoading
+                    placeholderOverride
+                      ? placeholderOverride
+                      : isLoading
                       ? ""
                       : isTranscribing
                       ? t("apps.chats.status.transcribing")

@@ -11,6 +11,22 @@ export interface SlackReactionItem {
   hasReacted: boolean;
 }
 
+export interface SlackThreadReplyItem {
+  id: string;
+  user: string;
+  time: string;
+  content: string;
+  avatarIndex?: number;
+  isSelf?: boolean;
+}
+
+export interface SlackThreadItem {
+  replyCount: number;
+  lastReplyLabel: string;
+  participantAvatarIndexes: number[];
+  replies: SlackThreadReplyItem[];
+}
+
 export interface SlackMessageItem {
   id: string;
   user: string;
@@ -22,6 +38,7 @@ export interface SlackMessageItem {
   imageSrc?: string;
   imageAlt?: string;
   isSelf?: boolean;
+  thread?: SlackThreadItem;
 }
 
 export interface SlackChannelContent {
@@ -105,16 +122,75 @@ export const slackChannels: SlackChannelContent[] = [
         id: "design-1",
         user: "Alex Turner",
         time: "9:41 AM",
-        content: "Morning team! Sharing the latest mockup for the dashboard.",
-        hasImage: true,
-        imageSrc:
-          "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=400",
-        imageAlt: "dashboard-v3.png",
+        content: "Any opinions on Claude Design?",
         reactions: [
           { emoji: "👍", count: 3, hasReacted: false },
           { emoji: "❤️", count: 2, hasReacted: false },
         ],
         avatarIndex: 0,
+        thread: {
+          replyCount: 7,
+          lastReplyLabel: "Last reply 8 days ago",
+          participantAvatarIndexes: [1, 2, 3, 0],
+          replies: [
+            {
+              id: "design-1-thread-1",
+              user: "Jamie Lin",
+              time: "9:44 AM",
+              content:
+                "Promising for quick visual exploration. I still want the final interaction model shaped by the product story, not by whatever the mock happened to generate.",
+              avatarIndex: 1,
+            },
+            {
+              id: "design-1-thread-2",
+              user: "Riley Morgan",
+              time: "9:48 AM",
+              content:
+                "Useful as a sketch partner. The risk is mistaking a polished surface for a solved interface. We should keep the critique loop strict.",
+              avatarIndex: 2,
+            },
+            {
+              id: "design-1-thread-3",
+              user: "Marom",
+              time: "10:04 AM",
+              content:
+                "I would use it for direction probes, then rebuild the real UI in ryOS components so the behavior, accessibility, and theme fidelity survive.",
+              avatarIndex: 3,
+            },
+            {
+              id: "design-1-thread-4",
+              user: "Alex Turner",
+              time: "10:07 AM",
+              content:
+                "That distinction helps. Treat the image as a conversation starter, not the shipped source of truth.",
+              avatarIndex: 0,
+            },
+            {
+              id: "design-1-thread-5",
+              user: "Jamie Lin",
+              time: "10:11 AM",
+              content:
+                "Exactly. The useful part is comparing directions quickly, then deciding what should actually exist in the product.",
+              avatarIndex: 1,
+            },
+            {
+              id: "design-1-thread-6",
+              user: "Riley Morgan",
+              time: "10:18 AM",
+              content:
+                "I would also keep the thread attached to the decision so future readers can see why the final UI changed from the first visual probe.",
+              avatarIndex: 2,
+            },
+            {
+              id: "design-1-thread-7",
+              user: "Marom",
+              time: "10:22 AM",
+              content:
+                "Then the rule is simple: fast visual exploration, slow product judgment, real implementation after the judgment is clear.",
+              avatarIndex: 3,
+            },
+          ],
+        },
       },
       {
         id: "design-2",
@@ -136,12 +212,11 @@ export const slackChannels: SlackChannelContent[] = [
       },
       {
         id: "design-4",
-        user: "You",
+        user: "Marom",
         time: "10:15 AM",
         content:
           "I drafted a cleaner variation with the filters pulled higher, the first scan feels faster now.",
         reactions: [],
-        isSelf: true,
         avatarIndex: 3,
       },
     ],

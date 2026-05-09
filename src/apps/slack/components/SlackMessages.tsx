@@ -5,37 +5,31 @@ import { Badge } from "@/components/ui/badge";
 import { CaretDown, Plus } from "@phosphor-icons/react";
 import { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
-import { ALL_USER_PICTURES } from "@/utils/userPictures";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import type { SlackChannelContent, SlackMessageItem } from "../data/channelContent";
+import { SLACK_PROFILE_PICTURES, getSlackInitials } from "./slackAvatarUtils";
 
 const COMMON_EMOJIS = ["👍", "❤️", "😂", "😮", "😢", "🔥", "🙏", "👀"];
-const SLACK_PROFILE_PICTURES = [
-  ALL_USER_PICTURES[1]?.path,
-  ALL_USER_PICTURES[9]?.path,
-  ALL_USER_PICTURES[23]?.path,
-  ALL_USER_PICTURES[37]?.path,
-];
-
-function getInitials(name: string) {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) return "?";
-  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-  return `${parts[0][0] ?? ""}${parts[parts.length - 1][0] ?? ""}`.toUpperCase();
-}
 
 interface SlackMessagesProps {
   channel: SlackChannelContent;
+  selectedThreadMessageId?: string | null;
+  onOpenThread: (messageId: string) => void;
   onMessagesChange: (
     updater: (messages: SlackMessageItem[]) => SlackMessageItem[]
   ) => void;
 }
 
-export function SlackMessages({ channel, onMessagesChange }: SlackMessagesProps) {
+export function SlackMessages({
+  channel,
+  selectedThreadMessageId,
+  onOpenThread,
+  onMessagesChange,
+}: SlackMessagesProps) {
   const messagesRef = useRef<HTMLDivElement>(null);
   const previousChannelIdRef = useRef(channel.id);
   const previousMessageCountRef = useRef(channel.messages.length);
@@ -108,7 +102,7 @@ export function SlackMessages({ channel, onMessagesChange }: SlackMessagesProps)
           <div className="avatar">
             <ProfileAvatar
               picture={SLACK_PROFILE_PICTURES[msg.avatarIndex ?? 0]}
-              fallback={getInitials(msg.user)}
+              fallback={getSlackInitials(msg.user)}
               label={msg.user}
               className="w-full h-full"
             />
@@ -187,6 +181,30 @@ export function SlackMessages({ channel, onMessagesChange }: SlackMessagesProps)
                 </PopoverContent>
               </Popover>
             </div>
+            {msg.thread && (
+              <button
+                type="button"
+                className="thread-summary"
+                data-active={selectedThreadMessageId === msg.id ? "true" : undefined}
+                onClick={() => onOpenThread(msg.id)}
+                aria-label={`Open thread for ${msg.user}'s message, ${msg.thread.replyCount} replies`}
+              >
+                <span className="thread-avatars" aria-hidden="true">
+                  {msg.thread.participantAvatarIndexes.slice(0, 4).map((avatarIndex, index) => (
+                    <span className="thread-avatar" key={`${msg.id}-${avatarIndex}-${index}`}>
+                      <ProfileAvatar
+                        picture={SLACK_PROFILE_PICTURES[avatarIndex]}
+                        fallback=""
+                        label=""
+                        className="w-full h-full"
+                      />
+                    </span>
+                  ))}
+                </span>
+                <span className="thread-count">{msg.thread.replyCount} replies</span>
+                <span className="thread-last">{msg.thread.lastReplyLabel}</span>
+              </button>
+            )}
           </div>
         </div>
       ))}
