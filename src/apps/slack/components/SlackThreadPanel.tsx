@@ -1,4 +1,5 @@
 import { ChatInput } from "@/apps/chats/components/ChatInput";
+import { ImageAttachment } from "@/components/shared/ImageAttachment";
 import { MessageBubble } from "@/components/shared/MessageBubble";
 import { ProfileAvatar } from "@/components/shared/ProfileAvatar";
 import { X } from "@phosphor-icons/react";
@@ -10,11 +11,12 @@ interface SlackThreadPanelProps {
   channel: SlackChannelContent;
   message: SlackMessageItem;
   onClose: () => void;
-  onAddReply: (content: string) => void;
+  onAddReply: (content: string, imageData?: string | null) => boolean;
 }
 
 export function SlackThreadPanel({ channel, message, onClose, onAddReply }: SlackThreadPanelProps) {
   const [replyText, setReplyText] = useState("");
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -25,10 +27,12 @@ export function SlackThreadPanel({ channel, message, onClose, onAddReply }: Slac
 
   const handleSubmit = () => {
     const trimmedReply = replyText.trim();
-    if (!trimmedReply) return;
+    if (!trimmedReply && !selectedImage) return;
 
-    onAddReply(trimmedReply);
-    setReplyText("");
+    if (onAddReply(trimmedReply, selectedImage)) {
+      setReplyText("");
+      setSelectedImage(null);
+    }
   };
 
   return (
@@ -71,7 +75,15 @@ export function SlackThreadPanel({ channel, message, onClose, onAddReply }: Slac
             handleSubmit();
           }}
           onStop={() => {}}
+          onDirectMessageSubmit={(content) => {
+            if (onAddReply(content, selectedImage)) {
+              setReplyText("");
+              setSelectedImage(null);
+            }
+          }}
           showNudgeButton={false}
+          selectedImage={selectedImage}
+          onImageChange={setSelectedImage}
           placeholderOverride="Reply to thread..."
         />
       </div>
@@ -83,7 +95,10 @@ function ThreadMessage({
   message,
   isParent,
 }: {
-  message: Pick<SlackMessageItem, "user" | "time" | "content" | "avatarIndex" | "isSelf">;
+  message: Pick<
+    SlackMessageItem,
+    "user" | "time" | "content" | "avatarIndex" | "isSelf" | "hasImage" | "imageSrc" | "imageAlt"
+  >;
   isParent?: boolean;
 }) {
   const isSelf = message.isSelf || message.user === "You";
@@ -113,6 +128,14 @@ function ThreadMessage({
         >
           {message.content}
         </MessageBubble>
+        {message.hasImage && (
+          <div className="msg-attachment mt-2 mb-1">
+            <ImageAttachment
+              src={message.imageSrc ?? ""}
+              alt={message.imageAlt ?? "attachment"}
+            />
+          </div>
+        )}
       </div>
     </article>
   );

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ArrowUp, Square, Hand, At, Microphone, ImageSquare, X } from "@phosphor-icons/react";
+import { ArrowUp, Square, Hand, At, ImageSquare, X } from "@phosphor-icons/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AudioInputButton } from "@/components/ui/audio-input-button";
 import { useChatSynth } from "@/hooks/useChatSynth";
@@ -133,6 +133,10 @@ export function ChatInput({
   const currentTheme = useThemeStore((s) => s.current);
   const isMacTheme = currentTheme === "macosx";
   const isXpTheme = isWindowsTheme(currentTheme);
+  const hasImageButton = Boolean(onImageChange);
+  const trailingActionCount =
+    (showNudgeButton ? 1 : 0) + (isInChatRoom ? 1 : 0) + (hasImageButton ? 1 : 0);
+  const inputRightPadding = trailingActionCount <= 1 ? "pr-10" : "pr-[62px]";
 
   // Get the model display name for debug information
   const modelDisplayName = aiModel ? AI_MODELS[aiModel]?.name : null;
@@ -387,36 +391,6 @@ export function ChatInput({
     onImageChange?.(null);
   }, [onImageChange]);
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (
-        e.code === "Space" &&
-        !e.repeat &&
-        isForeground &&
-        !isFocused &&
-        !isTranscribing
-      ) {
-        e.preventDefault();
-        audioButtonRef.current?.click();
-      }
-    };
-
-    const handleKeyUp = (e: KeyboardEvent) => {
-      if (e.code === "Space" && isForeground && !isFocused && isTranscribing) {
-        e.preventDefault();
-        audioButtonRef.current?.click();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("keyup", handleKeyUp);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("keyup", handleKeyUp);
-    };
-  }, [isForeground, isFocused, isTranscribing]);
-
   return (
     <AnimatePresence initial={false}>
       <motion.div
@@ -438,7 +412,7 @@ export function ChatInput({
 
         {/* Image preview thumbnail */}
         <AnimatePresence>
-          {selectedImage && !isInChatRoom && (
+          {selectedImage && (
             <motion.div
               key="image-preview"
               initial={{ opacity: 0, height: 0, marginBottom: 0 }}
@@ -633,10 +607,10 @@ export function ChatInput({
                       ? t("apps.chats.status.createAccountToContinue")
                       : isFocused || isTouchDevice
                       ? t("apps.chats.status.typeMessage")
-                      : t("apps.chats.status.typeOrPushSpace")
+                      : t("apps.chats.status.typeMessage")
                   }
                   className={`w-full border-1 border-gray-800 text-xs font-geneva-12 h-9 ${
-                    isMacTheme ? "pl-3 pr-[88px] rounded-full" : "pl-2 pr-[88px]"
+                    isMacTheme ? `pl-3 ${inputRightPadding} rounded-full` : `pl-2 ${inputRightPadding}`
                   } backdrop-blur-lg bg-white/80 ${
                     isFocused ? "input--focused" : ""
                   } ${isTypingRyoMention ? "border-blue-600 bg-blue-50" : ""} ${
@@ -721,7 +695,7 @@ export function ChatInput({
                       </Tooltip>
                     </TooltipProvider>
                   )}
-                  {!isInChatRoom && onImageChange && (
+                  {hasImageButton && (
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -745,28 +719,6 @@ export function ChatInput({
                       </Tooltip>
                     </TooltipProvider>
                   )}
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button
-                          type="button"
-                          onClick={() => audioButtonRef.current?.click()}
-                          className={`w-[22px] h-[22px] flex items-center justify-center ${
-                            isMacTheme
-                              ? "text-neutral-400 hover:text-neutral-800 transition-colors"
-                              : ""
-                          }`}
-                          disabled={isTranscribing}
-                          aria-label={t("apps.chats.ariaLabels.pushToTalk")}
-                        >
-                          <Microphone className="h-4 w-4" weight="bold" />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{t("apps.chats.ariaLabels.pushToTalk")}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
                 </div>
               </motion.div>
             )}
