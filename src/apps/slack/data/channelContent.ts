@@ -44,14 +44,123 @@ export interface SlackMessageItem {
   thread?: SlackThreadItem;
 }
 
+export interface SlackChannelMemberItem {
+  id: string;
+  name: string;
+  handle: string;
+  title: string;
+  avatarIndex?: number;
+  status?: "active" | "away";
+}
+
 export interface SlackChannelContent {
   id: SlackChannelId;
   name: string;
   topic: string;
   memberCount: number;
+  members: SlackChannelMemberItem[];
   composerPlaceholder: string;
   messages: SlackMessageItem[];
 }
+
+const sharedMembers: SlackChannelMemberItem[] = [
+  {
+    id: "jordan",
+    name: "Jordan Ellis",
+    handle: "jordan",
+    title: "Product designer",
+    avatarIndex: 0,
+    status: "active",
+  },
+  {
+    id: "jamie",
+    name: "Jamie Lin",
+    handle: "jamie",
+    title: "Product manager",
+    avatarIndex: 1,
+    status: "active",
+  },
+  {
+    id: "riley",
+    name: "Riley Morgan",
+    handle: "riley",
+    title: "Frontend engineer",
+    avatarIndex: 2,
+    status: "active",
+  },
+  {
+    id: "marom",
+    name: "Marom",
+    handle: "marom",
+    title: "Design engineer",
+    avatarIndex: 3,
+    status: "active",
+  },
+  {
+    id: "casey",
+    name: "Casey Park",
+    handle: "casey",
+    title: "Research partner",
+    avatarIndex: 1,
+    status: "away",
+  },
+  {
+    id: "morgan",
+    name: "Morgan Liu",
+    handle: "morgan",
+    title: "UX designer",
+    avatarIndex: 2,
+    status: "active",
+  },
+  {
+    id: "alex",
+    name: "Alex Turner",
+    handle: "alex",
+    title: "Design lead",
+    avatarIndex: 0,
+    status: "active",
+  },
+  {
+    id: "taylor",
+    name: "Taylor Kim",
+    handle: "taylor",
+    title: "Interaction engineer",
+    avatarIndex: 3,
+    status: "away",
+  },
+  {
+    id: "dev",
+    name: "Devon Price",
+    handle: "devon",
+    title: "Prototype engineer",
+    avatarIndex: 0,
+    status: "active",
+  },
+  {
+    id: "nina",
+    name: "Nina Santos",
+    handle: "nina",
+    title: "Visual designer",
+    avatarIndex: 1,
+    status: "away",
+  },
+  {
+    id: "omar",
+    name: "Omar Reed",
+    handle: "omar",
+    title: "Design systems",
+    avatarIndex: 2,
+    status: "active",
+  },
+  {
+    id: "priya",
+    name: "Priya Nair",
+    handle: "priya",
+    title: "Product strategist",
+    avatarIndex: 3,
+    status: "active",
+  },
+];
 
 export const slackChannels: SlackChannelContent[] = [
   {
@@ -59,6 +168,7 @@ export const slackChannels: SlackChannelContent[] = [
     name: "welcome",
     topic: "Start here to learn who Marom is and what this workspace is about",
     memberCount: 1,
+    members: [sharedMembers[3]],
     composerPlaceholder: "Message #welcome",
     messages: [
       {
@@ -101,6 +211,7 @@ export const slackChannels: SlackChannelContent[] = [
     name: "general",
     topic: "Workspace-wide notes and day-to-day updates",
     memberCount: 8,
+    members: sharedMembers,
     composerPlaceholder: "Message #general",
     messages: [
       {
@@ -119,6 +230,20 @@ export const slackChannels: SlackChannelContent[] = [
     name: "design-lab",
     topic: "Ideas, UI explorations, and design feedback",
     memberCount: 12,
+    members: [
+      sharedMembers[6],
+      sharedMembers[1],
+      sharedMembers[2],
+      sharedMembers[3],
+      sharedMembers[0],
+      sharedMembers[7],
+      sharedMembers[4],
+      sharedMembers[5],
+      sharedMembers[8],
+      sharedMembers[9],
+      sharedMembers[10],
+      sharedMembers[11],
+    ],
     composerPlaceholder: "Message #design-lab",
     messages: [
       {
@@ -229,6 +354,14 @@ export const slackChannels: SlackChannelContent[] = [
     name: "feedback",
     topic: "Notes, critiques, and iteration requests",
     memberCount: 6,
+    members: [
+      sharedMembers[4],
+      sharedMembers[1],
+      sharedMembers[3],
+      sharedMembers[0],
+      sharedMembers[5],
+      sharedMembers[2],
+    ],
     composerPlaceholder: "Message #feedback",
     messages: [
       {
@@ -247,6 +380,13 @@ export const slackChannels: SlackChannelContent[] = [
     name: "random",
     topic: "Loose ideas, references, and side notes",
     memberCount: 5,
+    members: [
+      sharedMembers[5],
+      sharedMembers[2],
+      sharedMembers[3],
+      sharedMembers[1],
+      sharedMembers[0],
+    ],
     composerPlaceholder: "Message #random",
     messages: [
       {

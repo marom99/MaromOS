@@ -306,6 +306,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
   padding: 0 18px;
   border-bottom: 1px solid #cfd1d4;
   background: linear-gradient(to bottom, #ffffff, #fbfbfb);
@@ -342,78 +343,159 @@
   gap: 8px;
 }
 
+.head-stat-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
 .head-stat {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  height: 20px;
-  padding: 0 7px;
-  border-radius: 10px;
-  border: 1px solid #bfc1c4;
-  background: transparent;
-  color: #5a5c5f;
-  font-size: 11.5px;
+  gap: 8px;
+  height: 32px;
+  padding: 0 12px 0 6px;
+  margin: 0;
+  border-radius: 16px;
+  border: 1px solid #c5c7cb;
+  background: linear-gradient(to bottom, #ffffff, #f5f5f6);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 1px 0 rgba(0, 0, 0, 0.04);
+  color: #4d5054;
+  font-size: 18px;
   font-family: var(--os-font-ui);
-  font-weight: 400;
+  font-weight: 700;
   white-space: nowrap;
   line-height: 1;
-  cursor: default;
-  user-select: none;
-}
-
-.info-btn {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  border: 1px solid #c5c7ca;
-  background: linear-gradient(to bottom, #ffffff 0%, #f0f1f2 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), 0 1px 0 rgba(0, 0, 0, 0.04);
-  color: #707274;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   cursor: pointer;
-  flex-shrink: 0;
-  padding: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: background 140ms ease-out, border-color 140ms ease-out,
+    box-shadow 140ms ease-out, transform 140ms ease-out, color 140ms ease-out;
+}
+
+.head-stat-wrap:hover .head-stat {
+  background: linear-gradient(to bottom, #ffffff, #fafafa);
+  border-color: #b6b9be;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 1px 0 rgba(0, 0, 0, 0.04), 0 2px 6px rgba(15, 28, 55, 0.08);
+  color: #3a3d41;
+}
+
+.head-stat-wrap:active .head-stat {
+  background: linear-gradient(to bottom, #f0f1f3, #fafafa);
+  border-color: #b6b9be;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+  transform: translateY(0.5px);
+}
+
+.head-stat:focus-visible {
   outline: none;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 1px 0 rgba(0, 0, 0, 0.04), 0 0 0 3px rgba(52, 106, 227, 0.32);
 }
 
-.info-btn:hover {
-  background: linear-gradient(to bottom, #f3f4f5 0%, #e6e7e9 100%);
+.head-avatar-stack {
+  display: inline-flex;
+  align-items: center;
+  padding-left: 1px;
 }
 
-.search-wrap {
-  position: relative;
-}
-
-.search-wrap input {
-  width: 176px;
+.head-avatar {
+  width: 24px;
   height: 24px;
-  border-radius: 12px;
-  border: 1px solid #b9bdc2;
-  background: linear-gradient(to bottom, #ffffff, #f3f3f3);
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.07), 0 1px 0 #fff;
-  padding: 0 26px 0 10px;
-  font-size: 12px;
-  color: #333;
-  outline: none;
+  display: inline-flex;
+  overflow: hidden;
+  border-radius: 50%;
+  border: 1px solid #ffffff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.18);
+  background: #f8f8f8;
+  transition: margin-left 140ms ease-out, box-shadow 140ms ease-out;
 }
 
-.search-wrap input::placeholder {
-  color: #888;
+.head-avatar + .head-avatar {
+  margin-left: -7px;
 }
 
-.search-wrap svg {
+.head-stat-wrap:hover .head-avatar {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.22), 0 1px 2px rgba(15, 28, 55, 0.10);
+}
+
+.head-stat-wrap:hover .head-avatar + .head-avatar {
+  margin-left: -4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .head-stat,
+  .head-avatar {
+    transition: none;
+  }
+  .head-stat-wrap:hover .head-avatar + .head-avatar {
+    margin-left: -7px;
+  }
+  .head-stat-wrap:active .head-stat {
+    transform: none;
+  }
+}
+
+.head-stat-count {
+  font-variant-numeric: tabular-nums;
+  min-width: 1.4em;
+  text-align: right;
+}
+
+.head-stat-tooltip {
   position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
+  top: calc(100% + 10px);
+  left: 50%;
+  z-index: 40;
+  width: 258px;
+  padding: 17px 20px 18px;
+  border: 1px solid #3f434a;
+  border-radius: 16px;
+  background: #1f2228;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  color: #f4f4f4;
+  font-family: var(--os-font-ui);
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(-4px);
+  transition: opacity 150ms ease-out, transform 150ms ease-out;
+}
+
+.head-stat-tooltip::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -8px;
   width: 14px;
   height: 14px;
-  stroke: #777;
-  fill: none;
-  stroke-width: 2;
-  opacity: 0.7;
+  border-left: 1px solid #3f434a;
+  border-top: 1px solid #3f434a;
+  background: #1f2228;
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.head-stat-tooltip strong {
+  display: block;
+  font-size: 16px;
+  line-height: 1.35;
+  font-weight: 800;
+  letter-spacing: -0.1px;
+}
+
+.head-stat-tooltip span {
+  display: block;
+  margin-top: 8px;
+  color: #c7c8cc;
+  font-size: 15px;
+  line-height: 1.35;
+  font-weight: 700;
+}
+
+.head-stat-wrap:hover .head-stat-tooltip,
+.head-stat-wrap:focus-within .head-stat-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
 
 /* ---- Messages ----------------------------------------------------- */
@@ -687,14 +769,20 @@
   gap: 10px;
   align-self: flex-start;
   margin-top: 7px;
-  padding: 3px 8px 3px 0;
+  padding: 4px 12px 4px 4px;
   border: 0;
-  border-radius: 5px;
+  border-radius: 100px;
   background: transparent;
   color: inherit;
   font: inherit;
   line-height: 1;
   cursor: pointer;
+  transition: background-color 0.15s ease-out, transform 0.1s ease-out;
+  outline: none;
+}
+
+.thread-summary:active {
+  transform: scale(0.96);
 }
 
 .msg[data-self="true"] .thread-summary {
@@ -703,32 +791,36 @@
 
 .thread-summary:hover,
 .thread-summary[data-active="true"] {
-  background: #f3f4f6;
+  background: #f1f3f6;
 }
 
 .thread-summary:focus-visible {
-  outline: 2px solid rgba(39, 101, 202, 0.36);
-  outline-offset: 2px;
+  box-shadow: 0 0 0 2px rgba(39, 101, 202, 0.36);
 }
 
 .thread-avatars {
   display: inline-flex;
   align-items: center;
-  padding-left: 1px;
+  padding-left: 0;
 }
 
 .thread-avatar {
   width: 28px;
   height: 28px;
   overflow: hidden;
-  border-radius: 6px;
+  border-radius: 50%;
   border: 2px solid #fff;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
   background: #fff;
+  transition: transform 0.15s ease-out;
+}
+
+.thread-summary:hover .thread-avatar {
+  transform: translateY(-1px);
 }
 
 .thread-avatar + .thread-avatar {
-  margin-left: -7px;
+  margin-left: -8px;
 }
 
 .thread-count {
@@ -736,6 +828,7 @@
   font-size: 14px;
   font-weight: 700;
   white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
 .thread-last {
@@ -902,4 +995,230 @@
   padding: 12px 20px 18px;
   background: #f6f7f8;
   border-top: 1px solid #d9dadd;
+}
+
+/* ---- Members dialog ---------------------------------------------- */
+
+.slack-members-dialog {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.slack-members-tabs {
+  display: flex;
+  align-items: stretch;
+  gap: 4px;
+  margin: 0 -2px 12px;
+  border-bottom: 1px solid #e1e3e6;
+}
+
+.slack-members-tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 8px 12px;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  color: #6b6f76;
+  font-family: var(--os-font-ui);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  transition-property: color, background-color;
+  transition-duration: 140ms;
+  transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
+.slack-members-tab::after {
+  content: "";
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: -1px;
+  height: 2px;
+  border-radius: 2px 2px 0 0;
+  background: currentColor;
+  opacity: 0;
+  transform: scaleX(0.6);
+  transform-origin: center;
+  transition-property: opacity, transform;
+  transition-duration: 180ms;
+  transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
+.slack-members-tab:hover {
+  color: #3a3d41;
+  background: rgba(15, 28, 55, 0.04);
+  border-radius: 6px 6px 0 0;
+}
+
+.slack-members-tab:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(52, 106, 227, 0.32);
+  border-radius: 6px 6px 0 0;
+}
+
+.slack-members-tab[data-active="true"] {
+  color: #1264a3;
+}
+
+.slack-members-tab[data-active="true"]::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.slack-members-tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: rgba(15, 28, 55, 0.08);
+  color: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.slack-members-tab[data-active="true"] .slack-members-tab-count {
+  background: rgba(18, 100, 163, 0.14);
+}
+
+.slack-members-tabpanel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.slack-members-search {
+  height: 30px;
+}
+
+.slack-members-list {
+  max-height: 60vh;
+  min-height: 60px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.slack-members-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.slack-members-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px;
+  border-radius: 8px;
+  transition-property: background-color;
+  transition-duration: 120ms;
+  transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
+.slack-members-row + .slack-members-row {
+  margin-top: 1px;
+}
+
+.slack-members-avatar {
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #f0f1f3;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.slack-members-avatar img,
+.slack-members-avatar > * {
+  border-radius: 50%;
+}
+
+.slack-members-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.slack-members-name {
+  font-family: var(--os-font-ui);
+  font-size: 13px;
+  font-weight: 600;
+  color: #1d1f23;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.slack-members-title {
+  font-family: var(--os-font-ui);
+  font-size: 11px;
+  font-weight: 400;
+  color: #6b6f76;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.slack-members-empty {
+  padding: 18px 8px;
+  text-align: center;
+  color: #6b6f76;
+  font-family: var(--os-font-ui);
+  font-size: 12px;
+}
+
+/* ---- About tab --------------------------------------------------- */
+
+.slack-about {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 4px 2px 8px;
+}
+
+.slack-about-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.slack-about-label {
+  font-family: var(--os-font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6b6f76;
+}
+
+.slack-about-value {
+  font-family: var(--os-font-ui);
+  font-size: 13px;
+  font-weight: 500;
+  color: #1d1f23;
+  text-wrap: pretty;
+}
+
+.slack-about-description {
+  font-weight: 400;
+  line-height: 1.5;
+  color: #3a3d41;
+}
+
+.slack-about-count {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
 }

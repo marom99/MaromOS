@@ -40,3 +40,7 @@ src-tauri/apple.p8
 
 core
 .omx/
+
+# Local agent and design tool data
+.impeccable/
+.claude/
