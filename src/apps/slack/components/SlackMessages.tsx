@@ -3,7 +3,7 @@ import { ImageAttachment } from "@/components/shared/ImageAttachment";
 import { ProfileAvatar } from "@/components/shared/ProfileAvatar";
 import { Badge } from "@/components/ui/badge";
 import { CaretDown, Plus } from "@phosphor-icons/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 import {
   Popover,
@@ -19,70 +19,70 @@ interface SlackMessagesProps {
   channel: SlackChannelContent;
   selectedThreadMessageId?: string | null;
   onOpenThread: (messageId: string) => void;
+  onMessagesChange: (
+    updater: (messages: SlackMessageItem[]) => SlackMessageItem[]
+  ) => void;
 }
 
 export function SlackMessages({
   channel,
   selectedThreadMessageId,
   onOpenThread,
+  onMessagesChange,
 }: SlackMessagesProps) {
   const messagesRef = useRef<HTMLDivElement>(null);
-  const [channelMessages, setChannelMessages] = useState<Record<string, SlackMessageItem[]>>(() => ({
-    [channel.id]: channel.messages,
-  }));
-
-  const messages = channelMessages[channel.id] ?? channel.messages;
+  const previousChannelIdRef = useRef(channel.id);
+  const previousMessageCountRef = useRef(channel.messages.length);
+  const messages = channel.messages;
 
   useEffect(() => {
-    messagesRef.current?.scrollTo({ top: 0 });
-  }, [channel.id]);
+    const channelChanged = previousChannelIdRef.current !== channel.id;
+    const messageWasAdded = messages.length > previousMessageCountRef.current;
 
-  useEffect(() => {
-    setChannelMessages((prev) => ({
-      ...prev,
-      [channel.id]: channel.messages,
-    }));
-  }, [channel.id, channel.messages]);
+    if (channelChanged) {
+      messagesRef.current?.scrollTo({ top: 0 });
+    } else if (messageWasAdded) {
+      messagesRef.current?.scrollTo({ top: messagesRef.current.scrollHeight });
+    }
+
+    previousChannelIdRef.current = channel.id;
+    previousMessageCountRef.current = messages.length;
+  }, [channel.id, messages.length]);
 
   const toggleReaction = (messageId: string, emoji: string) => {
-    setChannelMessages((prev) => {
-      const current = prev[channel.id] ?? channel.messages;
+    onMessagesChange((current) =>
+      current.map((msg) => {
+        if (msg.id !== messageId) return msg;
 
-      return {
-        ...prev,
-        [channel.id]: current.map((msg) => {
-          if (msg.id !== messageId) return msg;
+        const existingIdx = msg.reactions.findIndex((r) => r.emoji === emoji);
+        const newReactions = [...msg.reactions];
 
-          const existingIdx = msg.reactions.findIndex((r) => r.emoji === emoji);
-          const newReactions = [...msg.reactions];
-
-          if (existingIdx > -1) {
-            const reaction = newReactions[existingIdx];
-            if (reaction.hasReacted) {
-              if (reaction.count === 1) {
-                newReactions.splice(existingIdx, 1);
-              } else {
-                newReactions[existingIdx] = {
-                  ...reaction,
-                  count: reaction.count - 1,
-                  hasReacted: false,
-                };
-              }
+        if (existingIdx > -1) {
+          const reaction = newReactions[existingIdx];
+          if (reaction.hasReacted) {
+            if (reaction.count === 1) {
+              newReactions.splice(existingIdx, 1);
             } else {
               newReactions[existingIdx] = {
                 ...reaction,
-                count: reaction.count + 1,
-                hasReacted: true,
+                count: reaction.count - 1,
+                hasReacted: false,
               };
             }
           } else {
-            newReactions.push({ emoji, count: 1, hasReacted: true });
+            newReactions[existingIdx] = {
+              ...reaction,
+              count: reaction.count + 1,
+              hasReacted: true,
+            };
           }
+        } else {
+          newReactions.push({ emoji, count: 1, hasReacted: true });
+        }
 
-          return { ...msg, reactions: newReactions };
-        }),
-      };
-    });
+        return { ...msg, reactions: newReactions };
+      })
+    );
   };
 
   return (

@@ -14,11 +14,26 @@ import { SlackComposer } from "./SlackComposer";
 import { SlackThreadPanel } from "./SlackThreadPanel";
 import {
   getSlackChannel,
-  type SlackChannelContent,
+  slackChannels,
   type SlackChannelId,
+  type SlackMessageItem,
   type SlackThreadReplyItem,
 } from "../data/channelContent";
 import "./slack-aqua.css";
+
+function createInitialChannelMessages() {
+  return Object.fromEntries(
+    slackChannels.map((channel) => [channel.id, channel.messages])
+  ) as Record<SlackChannelId, SlackMessageItem[]>;
+}
+
+function formatSlackTime(date: Date) {
+  return date.toLocaleTimeString([], {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+}
 
 export function SlackAppComponent({
   isWindowOpen,
@@ -38,12 +53,17 @@ export function SlackAppComponent({
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
   const [activeChannelId, setActiveChannelId] = useState<SlackChannelId>("design-lab");
+  const [channelMessages, setChannelMessages] = useState(createInitialChannelMessages);
   const [selectedThreadMessageId, setSelectedThreadMessageId] = useState<string | null>(null);
-  const [channelOverrides, setChannelOverrides] = useState<Partial<Record<SlackChannelId, SlackChannelContent>>>({});
 
   if (!isWindowOpen) return null;
 
-  const activeChannel = channelOverrides[activeChannelId] ?? getSlackChannel(activeChannelId);
+  const baseActiveChannel = getSlackChannel(activeChannelId);
+  const activeChannel = {
+    ...baseActiveChannel,
+    messages: channelMessages[activeChannelId] ?? baseActiveChannel.messages,
+  };
+
   const selectedThreadMessage =
     activeChannel.messages.find((message) => message.id === selectedThreadMessageId && message.thread) ??
     null;
@@ -53,6 +73,38 @@ export function SlackAppComponent({
     setSelectedThreadMessageId(null);
   };
 
+  const updateChannelMessages = (
+    updater: (messages: SlackMessageItem[]) => SlackMessageItem[]
+  ) => {
+    setChannelMessages((prev) => ({
+      ...prev,
+      [activeChannelId]: updater(prev[activeChannelId] ?? baseActiveChannel.messages),
+    }));
+  };
+
+  const handleSendMessage = (content: string, imageData?: string | null) => {
+    const trimmedContent = content.trim();
+    if (!trimmedContent && !imageData) return false;
+
+    updateChannelMessages((messages) => [
+      ...messages,
+      {
+        id: `${activeChannelId}-visitor-${Date.now()}-${messages.length}`,
+        user: "You",
+        time: formatSlackTime(new Date()),
+        content: trimmedContent || "Shared an image.",
+        reactions: [],
+        isSelf: true,
+        avatarIndex: 3,
+        hasImage: Boolean(imageData),
+        imageSrc: imageData ?? undefined,
+        imageAlt: "Shared image",
+      },
+    ]);
+
+    return true;
+  };
+
   const handleAddThreadReply = (messageId: string, content: string) => {
     const trimmedContent = content.trim();
     if (!trimmedContent) return;
@@ -60,38 +112,30 @@ export function SlackAppComponent({
     const newReply: SlackThreadReplyItem = {
       id: `${messageId}-visitor-${Date.now()}`,
       user: "You",
-      time: "Just now",
+      time: formatSlackTime(new Date()),
       content: trimmedContent,
       avatarIndex: 3,
       isSelf: true,
     };
 
-    setChannelOverrides((currentOverrides) => {
-      const currentChannel = currentOverrides[activeChannelId] ?? getSlackChannel(activeChannelId);
+    updateChannelMessages((messages) =>
+      messages.map((message) => {
+        if (message.id !== messageId || !message.thread) return message;
 
-      return {
-        ...currentOverrides,
-        [activeChannelId]: {
-          ...currentChannel,
-          messages: currentChannel.messages.map((message) => {
-            if (message.id !== messageId || !message.thread) return message;
-
-            return {
-              ...message,
-              thread: {
-                ...message.thread,
-                replyCount: message.thread.replyCount + 1,
-                lastReplyLabel: "Last reply just now",
-                participantAvatarIndexes: [3, ...message.thread.participantAvatarIndexes]
-                  .filter((avatarIndex, index, avatarIndexes) => avatarIndexes.indexOf(avatarIndex) === index)
-                  .slice(0, 4),
-                replies: [...message.thread.replies, newReply],
-              },
-            };
-          }),
-        },
-      };
-    });
+        return {
+          ...message,
+          thread: {
+            ...message.thread,
+            replyCount: message.thread.replyCount + 1,
+            lastReplyLabel: "Last reply just now",
+            participantAvatarIndexes: [3, ...message.thread.participantAvatarIndexes]
+              .filter((avatarIndex, index, avatarIndexes) => avatarIndexes.indexOf(avatarIndex) === index)
+              .slice(0, 4),
+            replies: [...message.thread.replies, newReply],
+          },
+        };
+      })
+    );
   };
 
   const menuBar = (
@@ -128,8 +172,12 @@ export function SlackAppComponent({
               channel={activeChannel}
               selectedThreadMessageId={selectedThreadMessageId}
               onOpenThread={setSelectedThreadMessageId}
+              onMessagesChange={updateChannelMessages}
             />
-            <SlackComposer channel={activeChannel} />
+            <SlackComposer
+              isForeground={!!isForeground}
+              onSendMessage={handleSendMessage}
+            />
           </main>
           {selectedThreadMessage && (
             <SlackThreadPanel

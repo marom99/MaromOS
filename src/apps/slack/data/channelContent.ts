@@ -63,7 +63,7 @@ export const slackChannels: SlackChannelContent[] = [
         user: "Marom",
         time: "9:12 AM",
         content:
-          "Hey, I’m Marom. I build interactive product experiences and use MaromOS as a playground for turning interface ideas into something people can actually click through.",
+          "Welcome to ryOS. I’m Marom, and this workspace is set up so you can explore the projects from inside the OS instead of reading a flat portfolio page.",
         reactions: [
           { emoji: "👋", count: 4, hasReacted: false },
           { emoji: "✨", count: 2, hasReacted: false },
@@ -75,7 +75,7 @@ export const slackChannels: SlackChannelContent[] = [
         user: "Marom",
         time: "9:14 AM",
         content:
-          "A lot of my work sits between design and engineering: shaping product direction, refining interaction details, and then building the real interface so the concept survives contact with implementation.",
+          "You’re the visitor here. The channels work like a guided studio tour: product notes, design thinking, interaction details, and the implementation choices behind the interface.",
         reactions: [{ emoji: "🎯", count: 3, hasReacted: false }],
         avatarIndex: 3,
       },
@@ -84,7 +84,7 @@ export const slackChannels: SlackChannelContent[] = [
         user: "Marom",
         time: "9:18 AM",
         content:
-          "This channel is the quickest introduction. The rest of the workspace shows how I think through visual systems, nostalgic computing references, and product storytelling in a way that still feels usable.",
+          "Try sending a note from the composer below. Your messages show up as You, so the Slack app feels like you are inside the workspace, not impersonating me.",
         reactions: [
           { emoji: "💬", count: 2, hasReacted: false },
           { emoji: "🖥️", count: 1, hasReacted: false },
