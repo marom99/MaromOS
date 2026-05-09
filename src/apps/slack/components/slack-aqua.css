@@ -854,9 +854,19 @@
 
 .thread-composer {
   flex-shrink: 0;
-  padding: 12px 14px 16px;
+  padding: 12px 20px 18px;
   background: #f6f7f8;
   border-top: 1px solid #d9dadd;
+}
+
+.thread-composer form {
+  align-items: center;
+}
+
+.thread-composer input,
+.thread-composer button {
+  height: 36px !important;
+  min-height: 36px;
 }
 
 @media (max-width: 760px) {
