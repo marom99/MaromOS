@@ -18,6 +18,9 @@ export interface SlackThreadReplyItem {
   content: string;
   avatarIndex?: number;
   isSelf?: boolean;
+  hasImage?: boolean;
+  imageSrc?: string;
+  imageAlt?: string;
 }
 
 export interface SlackThreadItem {

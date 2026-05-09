@@ -425,6 +425,21 @@
   background: #fff;
 }
 
+.messages,
+.messages .msg-body,
+.messages .msg-head,
+.messages .msg-name,
+.messages .msg-time,
+.messages .chat-bubble,
+.thread-message-body,
+.thread-message-body .msg-head,
+.thread-message-body .msg-name,
+.thread-message-body .msg-time,
+.thread-message-body .chat-bubble {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
 /* ---- Date separator ----------------------------------------------- */
 
 .date-sep {

@@ -301,6 +301,7 @@ export function ChatsAppComponent({
           handleInputChange({
             target: { value: "" },
           } as React.ChangeEvent<HTMLInputElement>);
+          handleImageChange(null);
           // Trigger scroll after sending room message
           setScrollToBottomTrigger((prev) => prev + 1);
         }
@@ -319,6 +320,7 @@ export function ChatsAppComponent({
       t,
       input,
       handleInputChange,
+      handleImageChange,
       handleRyoMention,
       detectAndProcessMention,
     ]

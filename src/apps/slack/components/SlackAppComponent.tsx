@@ -105,17 +105,20 @@ export function SlackAppComponent({
     return true;
   };
 
-  const handleAddThreadReply = (messageId: string, content: string) => {
+  const handleAddThreadReply = (messageId: string, content: string, imageData?: string | null) => {
     const trimmedContent = content.trim();
-    if (!trimmedContent) return;
+    if (!trimmedContent && !imageData) return false;
 
     const newReply: SlackThreadReplyItem = {
       id: `${messageId}-visitor-${Date.now()}`,
       user: "You",
       time: formatSlackTime(new Date()),
-      content: trimmedContent,
+      content: trimmedContent || "Shared an image.",
       avatarIndex: 3,
       isSelf: true,
+      hasImage: Boolean(imageData),
+      imageSrc: imageData ?? undefined,
+      imageAlt: "Shared image",
     };
 
     updateChannelMessages((messages) =>
@@ -136,6 +139,8 @@ export function SlackAppComponent({
         };
       })
     );
+
+    return true;
   };
 
   const menuBar = (
@@ -184,7 +189,9 @@ export function SlackAppComponent({
               channel={activeChannel}
               message={selectedThreadMessage}
               onClose={() => setSelectedThreadMessageId(null)}
-              onAddReply={(content) => handleAddThreadReply(selectedThreadMessage.id, content)}
+              onAddReply={(content, imageData) =>
+                handleAddThreadReply(selectedThreadMessage.id, content, imageData)
+              }
             />
           )}
         </div>
