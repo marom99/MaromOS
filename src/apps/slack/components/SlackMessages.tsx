@@ -123,6 +123,8 @@ export function SlackMessages({
                 <ImageAttachment
                   src={msg.imageSrc ?? ""}
                   alt={msg.imageAlt ?? "attachment"}
+                  enablePreview
+                  previewTitle={msg.imageAlt ?? "Image preview"}
                 />
               </div>
             )}
