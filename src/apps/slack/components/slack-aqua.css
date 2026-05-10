@@ -1003,6 +1003,7 @@
   display: flex;
   flex-direction: column;
   min-height: 0;
+  max-height: min(620px, calc(100vh - 96px));
 }
 
 .slack-members-tabs {
@@ -1019,6 +1020,7 @@
   align-items: center;
   gap: 6px;
   min-height: 40px;
+  min-width: 44px;
   padding: 8px 12px;
   margin: 0;
   border: 0;
@@ -1103,10 +1105,11 @@
 }
 
 .slack-members-list {
-  max-height: 60vh;
+  max-height: min(60vh, 430px);
   min-height: 60px;
   overflow-y: auto;
   padding-right: 2px;
+  -webkit-overflow-scrolling: touch;
 }
 
 .slack-members-rows {
@@ -1187,6 +1190,8 @@
   flex-direction: column;
   gap: 14px;
   padding: 4px 2px 8px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .slack-about-section {
@@ -1216,11 +1221,91 @@
   font-weight: 400;
   line-height: 1.5;
   color: #3a3d41;
+  overflow-wrap: anywhere;
 }
 
 .slack-about-count {
   font-variant-numeric: tabular-nums;
   font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .slack-members-dialog-content {
+    width: calc(100vw - 24px);
+    max-width: calc(100vw - 24px);
+    max-height: calc(100dvh - 24px);
+  }
+
+  .slack-members-dialog-content > .flex {
+    max-height: calc(100dvh - 24px);
+  }
+
+  .slack-members-dialog {
+    width: 100%;
+    max-height: calc(100dvh - 78px);
+    padding: 12px 14px 14px !important;
+  }
+
+  .slack-members-tabs {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    gap: 6px;
+    margin: -2px 0 12px;
+    background: var(--os-color-window-bg);
+  }
+
+  .slack-members-tab {
+    flex: 1;
+    justify-content: center;
+    min-height: 44px;
+    padding: 10px 8px;
+  }
+
+  .slack-members-search {
+    height: 40px;
+    font-size: 16px !important;
+  }
+
+  .slack-members-list {
+    max-height: calc(100dvh - 218px);
+    padding-right: 0;
+  }
+
+  .slack-members-row {
+    min-height: 48px;
+    padding: 8px 4px;
+  }
+
+  .slack-members-avatar {
+    flex-basis: 36px;
+    width: 36px;
+    height: 36px;
+  }
+
+  .slack-members-name {
+    font-size: 14px;
+  }
+
+  .slack-members-title {
+    font-size: 12px;
+    line-height: 1.35;
+  }
+
+  .slack-about {
+    max-height: calc(100dvh - 150px);
+    gap: 16px;
+    padding: 2px 0 4px;
+  }
+
+  .slack-about-section {
+    gap: 6px;
+  }
+
+  .slack-about-value {
+    font-size: 14px;
+    line-height: 1.45;
+  }
 }
 
 /* ---- Mobile menu button (hidden on desktop) ----------------------- */
