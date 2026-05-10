@@ -3,7 +3,7 @@ import { ImageAttachment } from "@/components/shared/ImageAttachment";
 import { MessageBubble } from "@/components/shared/MessageBubble";
 import { ProfileAvatar } from "@/components/shared/ProfileAvatar";
 import { X } from "@phosphor-icons/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { SlackChannelContent, SlackMessageItem } from "../data/channelContent";
 import { SLACK_PROFILE_PICTURES, getSlackInitials } from "./slackAvatarUtils";
 
@@ -18,9 +18,14 @@ export function SlackThreadPanel({ channel, message, onClose, onAddReply }: Slac
   const [replyText, setReplyText] = useState("");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    scrollRef.current?.scrollTo({ top: 0, behavior: "instant" });
+  }, []);
 
+  // Scroll to bottom when new replies are added.
   useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
+    bottomRef.current?.scrollIntoView({ behavior: "instant" });
   }, [message.thread?.replies.length]);
 
   if (!message.thread) return null;
@@ -62,6 +67,7 @@ export function SlackThreadPanel({ channel, message, onClose, onAddReply }: Slac
         {message.thread.replies.map((reply) => (
           <ThreadMessage key={reply.id} message={reply} />
         ))}
+        <div ref={bottomRef} aria-hidden="true" />
       </div>
 
       <div className="thread-composer" aria-label="Thread reply composer">
