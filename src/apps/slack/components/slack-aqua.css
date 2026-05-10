@@ -1222,3 +1222,143 @@
   font-variant-numeric: tabular-nums;
   font-weight: 700;
 }
+
+/* ---- Mobile menu button (hidden on desktop) ----------------------- */
+
+.main-head-menu {
+  display: none;
+}
+
+/* ---- Mobile layout ------------------------------------------------- */
+
+.app--mobile {
+  position: relative;
+  overflow: hidden;
+}
+
+.app--mobile .sidebar {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  z-index: 4;
+  transform: translateX(-100%);
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+  border-right: none;
+  box-shadow: inset 0 1px 0 #fff;
+}
+
+.app--mobile.app--sidebar-open .sidebar {
+  transform: translateX(0);
+}
+
+.app--mobile .main {
+  width: 100%;
+  min-width: 0;
+}
+
+.app--mobile .thread-panel {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  min-width: 0;
+  z-index: 3;
+  transform: translateX(100%);
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+  border-left: none;
+  box-shadow: none;
+}
+
+.app--mobile.app--thread-open .thread-panel {
+  transform: translateX(0);
+}
+
+.app--mobile .main-head {
+  padding: 0 12px;
+  gap: 10px;
+}
+
+.app--mobile .main-head-menu {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-left: -6px;
+  flex-shrink: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: #1d1d1d;
+  cursor: pointer;
+  transition-property: background-color, border-color, scale;
+  transition-duration: 120ms;
+  transition-timing-function: ease;
+}
+
+.app--mobile .main-head-menu-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app--mobile .main-head-menu:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.app--mobile .main-head-menu:active {
+  background: rgba(0, 0, 0, 0.08);
+  scale: 0.96;
+}
+
+.app--mobile .main-head-menu:focus-visible {
+  outline: none;
+  border-color: #2a7be4;
+  box-shadow: 0 0 0 2px rgba(42, 123, 228, 0.25);
+}
+
+.app--mobile .main-head-title {
+  min-width: 0;
+  flex: 1;
+}
+
+.app--mobile .ch-title {
+  font-size: 19px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.app--mobile .ch-sub {
+  display: none;
+}
+
+.app--mobile .head-avatar-stack .head-avatar:nth-child(n + 3) {
+  display: none;
+}
+
+.app--mobile .avatar {
+  width: 36px;
+  height: 36px;
+}
+
+.app--mobile .msg {
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.app--mobile .composer {
+  padding: 10px 12px 14px;
+}
+
+.app--mobile .thread-panel-head {
+  padding: 0 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app--mobile .sidebar,
+  .app--mobile .thread-panel {
+    transition: none;
+  }
+}

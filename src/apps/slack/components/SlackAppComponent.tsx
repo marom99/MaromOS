@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AppProps } from "@/apps/base/types";
 import { WindowFrame } from "@/components/layout/WindowFrame";
 import { useTranslatedHelpItems } from "@/hooks/useTranslatedHelpItems";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import { useThemeStore } from "@/stores/useThemeStore";
 import { isWindowsTheme } from "@/themes";
 import { appMetadata, helpItems } from "../metadata";
@@ -49,12 +50,18 @@ export function SlackAppComponent({
   const currentTheme = useThemeStore((state) => state.current);
   const isXpTheme = isWindowsTheme(currentTheme);
   const isMacTheme = currentTheme === "macosx";
+  const isMobile = useIsMobile();
 
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
   const [activeChannelId, setActiveChannelId] = useState<SlackChannelId>("design-lab");
   const [channelMessages, setChannelMessages] = useState(createInitialChannelMessages);
   const [selectedThreadMessageId, setSelectedThreadMessageId] = useState<string | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isMobile) setIsSidebarOpen(false);
+  }, [isMobile]);
 
   if (!isWindowOpen) return null;
 
@@ -71,6 +78,20 @@ export function SlackAppComponent({
   const handleSelectChannel = (channelId: SlackChannelId) => {
     setActiveChannelId(channelId);
     setSelectedThreadMessageId(null);
+    if (isMobile) setIsSidebarOpen(false);
+  };
+
+  const handleToggleSidebar = () => {
+    setIsSidebarOpen((open) => {
+      const next = !open;
+      if (next) setSelectedThreadMessageId(null);
+      return next;
+    });
+  };
+
+  const handleOpenThread = (messageId: string | null) => {
+    setSelectedThreadMessageId(messageId);
+    if (messageId && isMobile) setIsSidebarOpen(false);
   };
 
   const updateChannelMessages = (
@@ -166,17 +187,25 @@ export function SlackAppComponent({
         onNavigatePrevious={onNavigatePrevious}
         menuBar={isXpTheme ? menuBar : undefined}
       >
-        <div className="app">
+        <div
+          className={`app${isMobile ? " app--mobile" : ""}${
+            isMobile && isSidebarOpen ? " app--sidebar-open" : ""
+          }${isMobile && selectedThreadMessage ? " app--thread-open" : ""}`}
+        >
           <SlackSidebar
             activeChannelId={activeChannelId}
             onSelectChannel={handleSelectChannel}
           />
           <main className="main">
-            <SlackChannelHeader channel={activeChannel} />
+            <SlackChannelHeader
+              channel={activeChannel}
+              onToggleSidebar={isMobile ? handleToggleSidebar : undefined}
+              isSidebarOpen={isSidebarOpen}
+            />
             <SlackMessages
               channel={activeChannel}
               selectedThreadMessageId={selectedThreadMessageId}
-              onOpenThread={setSelectedThreadMessageId}
+              onOpenThread={handleOpenThread}
               onMessagesChange={updateChannelMessages}
             />
             <SlackComposer
