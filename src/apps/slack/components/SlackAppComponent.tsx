@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { AppProps } from "@/apps/base/types";
 import { WindowFrame } from "@/components/layout/WindowFrame";
 import { useTranslatedHelpItems } from "@/hooks/useTranslatedHelpItems";
@@ -51,6 +52,7 @@ export function SlackAppComponent({
   const isXpTheme = isWindowsTheme(currentTheme);
   const isMacTheme = currentTheme === "macosx";
   const isMobile = useIsMobile();
+  const shouldReduceMotion = useReducedMotion();
 
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
@@ -58,6 +60,7 @@ export function SlackAppComponent({
   const [channelMessages, setChannelMessages] = useState(createInitialChannelMessages);
   const [selectedThreadMessageId, setSelectedThreadMessageId] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   useEffect(() => {
     if (!isMobile) setIsSidebarOpen(false);
@@ -190,11 +193,14 @@ export function SlackAppComponent({
         <div
           className={`app${isMobile ? " app--mobile" : ""}${
             isMobile && isSidebarOpen ? " app--sidebar-open" : ""
-          }${isMobile && selectedThreadMessage ? " app--thread-open" : ""}`}
+          }${!isMobile && isSidebarCollapsed ? " app--sidebar-collapsed" : ""
+          }${selectedThreadMessage ? " app--thread-open" : ""}`}
         >
           <SlackSidebar
             activeChannelId={activeChannelId}
             onSelectChannel={handleSelectChannel}
+            isCollapsed={!isMobile && isSidebarCollapsed}
+            onToggleCollapsed={() => setIsSidebarCollapsed((collapsed) => !collapsed)}
           />
           <main className="main">
             <SlackChannelHeader
@@ -213,16 +219,51 @@ export function SlackAppComponent({
               onSendMessage={handleSendMessage}
             />
           </main>
-          {selectedThreadMessage && (
-            <SlackThreadPanel
-              channel={activeChannel}
-              message={selectedThreadMessage}
-              onClose={() => setSelectedThreadMessageId(null)}
-              onAddReply={(content, imageData) =>
-                handleAddThreadReply(selectedThreadMessage.id, content, imageData)
-              }
-            />
-          )}
+          <AnimatePresence initial={false}>
+            {selectedThreadMessage && (
+              <motion.div
+                key={selectedThreadMessage.id}
+                className="thread-panel-stage"
+                initial={
+                  shouldReduceMotion
+                    ? false
+                    : {
+                        flexBasis: "0px",
+                        transform: "translate3d(18px, 0, 0)",
+                      }
+                }
+                animate={{
+                  flexBasis: "min(360px, 42vw)",
+                  transform: "translate3d(0, 0, 0)",
+                }}
+                exit={
+                  shouldReduceMotion
+                    ? {}
+                    : {
+                        flexBasis: "0px",
+                        transform: "translate3d(12px, 0, 0)",
+                      }
+                }
+                transition={
+                  shouldReduceMotion
+                    ? { duration: 0 }
+                    : {
+                        flexBasis: { duration: 0.24, ease: [0.32, 0.72, 0, 1] },
+                        transform: { duration: 0.22, ease: [0.23, 1, 0.32, 1] },
+                      }
+                }
+              >
+                <SlackThreadPanel
+                  channel={activeChannel}
+                  message={selectedThreadMessage}
+                  onClose={() => setSelectedThreadMessageId(null)}
+                  onAddReply={(content, imageData) =>
+                    handleAddThreadReply(selectedThreadMessage.id, content, imageData)
+                  }
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         <SlackDialogs

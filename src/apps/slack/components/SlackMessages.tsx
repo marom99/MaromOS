@@ -188,7 +188,7 @@ export function SlackMessages({
                 type="button"
                 className="thread-summary"
                 data-active={selectedThreadMessageId === msg.id ? "true" : undefined}
-                onClick={() => onOpenThread(msg.id)}
+                onClick={() => onOpenThread(selectedThreadMessageId === msg.id ? null : msg.id)}
                 aria-label={`Open thread for ${msg.user}'s message, ${msg.thread.replyCount} replies`}
               >
                 <span className="thread-avatars" aria-hidden="true">
