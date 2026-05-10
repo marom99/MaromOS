@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { List, X } from "@phosphor-icons/react";
 import { ProfileAvatar } from "@/components/shared/ProfileAvatar";
 import type { SlackChannelContent, SlackChannelMemberItem } from "../data/channelContent";
 import { SLACK_PROFILE_PICTURES, getSlackInitials } from "./slackAvatarUtils";
@@ -6,6 +8,8 @@ import { SlackMembersDialog } from "./SlackMembersDialog";
 
 interface SlackChannelHeaderProps {
   channel: SlackChannelContent;
+  onToggleSidebar?: () => void;
+  isSidebarOpen?: boolean;
 }
 
 function MemberAvatar({
@@ -26,14 +30,44 @@ function MemberAvatar({
   );
 }
 
-export function SlackChannelHeader({ channel }: SlackChannelHeaderProps) {
+export function SlackChannelHeader({
+  channel,
+  onToggleSidebar,
+  isSidebarOpen,
+}: SlackChannelHeaderProps) {
   const [isMembersOpen, setIsMembersOpen] = useState(false);
   const previewMembers = channel.members.slice(0, 3);
 
   return (
     <>
       <header className="main-head">
-        <div>
+        {onToggleSidebar && (
+          <button
+            type="button"
+            className="main-head-menu"
+            onClick={onToggleSidebar}
+            aria-label={isSidebarOpen ? "Close channel list" : "Open channel list"}
+            aria-expanded={!!isSidebarOpen}
+          >
+            <AnimatePresence initial={false} mode="wait">
+              <motion.span
+                key={isSidebarOpen ? "close" : "open"}
+                className="main-head-menu-icon"
+                initial={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
+                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                exit={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
+                transition={{ type: "spring", duration: 0.3, bounce: 0 }}
+              >
+                {isSidebarOpen ? (
+                  <X size={20} weight="bold" />
+                ) : (
+                  <List size={20} weight="bold" />
+                )}
+              </motion.span>
+            </AnimatePresence>
+          </button>
+        )}
+        <div className="main-head-title">
           <div className="ch-title"># {channel.name}</div>
           <div className="ch-sub">
             <span className="play"></span> {channel.topic}
