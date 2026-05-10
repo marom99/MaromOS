@@ -58,6 +58,7 @@ export function SlackAppComponent({
   const [channelMessages, setChannelMessages] = useState(createInitialChannelMessages);
   const [selectedThreadMessageId, setSelectedThreadMessageId] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   useEffect(() => {
     if (!isMobile) setIsSidebarOpen(false);
@@ -190,11 +191,14 @@ export function SlackAppComponent({
         <div
           className={`app${isMobile ? " app--mobile" : ""}${
             isMobile && isSidebarOpen ? " app--sidebar-open" : ""
+          }${!isMobile && isSidebarCollapsed ? " app--sidebar-collapsed" : ""
           }${isMobile && selectedThreadMessage ? " app--thread-open" : ""}`}
         >
           <SlackSidebar
             activeChannelId={activeChannelId}
             onSelectChannel={handleSelectChannel}
+            isCollapsed={!isMobile && isSidebarCollapsed}
+            onToggleCollapsed={() => setIsSidebarCollapsed((collapsed) => !collapsed)}
           />
           <main className="main">
             <SlackChannelHeader
