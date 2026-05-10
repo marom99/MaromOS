@@ -71,7 +71,10 @@ export function SlackMembersDialog({
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent
-        className={cn("max-w-[420px]", isXpTheme && "p-0 overflow-hidden")}
+        className={cn(
+          "slack-members-dialog-content max-w-[420px]",
+          isXpTheme && "p-0 overflow-hidden"
+        )}
         onKeyDown={(e) => e.stopPropagation()}
       >
         {isXpTheme ? (
