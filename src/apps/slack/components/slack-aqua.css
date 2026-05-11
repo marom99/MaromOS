@@ -47,7 +47,8 @@
   align-items: center;
   gap: 8px;
   padding: 12px 12px 10px 12px;
-  min-height: 54px;
+  height: 58px;
+  flex-shrink: 0;
 }
 
 .ws-icon {

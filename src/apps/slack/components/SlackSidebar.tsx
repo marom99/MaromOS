@@ -26,10 +26,7 @@ interface SlackSidebarProps {
 }
 
 const directMessages = [
-  "Jordan Ellis",
-  "Taylor Kim",
-  "Casey Park",
-  "Morgan Liu",
+  "Marom",
 ];
 
 const NAV_ITEMS: { id: SlackNavItem; icon: React.ReactNode; label: string }[] = [
