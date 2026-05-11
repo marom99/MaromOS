@@ -48,7 +48,7 @@ export function SlackSidebar({
         aria-label={isCollapsed ? "Slack workspace navigation, collapsed" : "Slack workspace navigation"}
       >
         <div className="ws-head">
-          <Tooltip>
+          <Tooltip open={isCollapsed ? undefined : false}>
             <TooltipTrigger asChild>
               <div className="ws-icon" aria-label="Studio Workspace">
                 <img src={wsIcon} alt="Workspace icon" />
@@ -71,7 +71,7 @@ export function SlackSidebar({
 
         <nav className="nav">
           {NAV_ITEMS.map(({ icon, label }) => (
-            <Tooltip key={label}>
+            <Tooltip key={label} open={isCollapsed ? undefined : false}>
               <TooltipTrigger asChild>
                 <div className="nav-item" aria-label={label}>
                   {icon}
@@ -89,7 +89,7 @@ export function SlackSidebar({
           </div>
           <div className="list">
             {slackChannels.map((channel) => (
-              <Tooltip key={channel.id}>
+              <Tooltip key={channel.id} open={isCollapsed ? undefined : false}>
                 <TooltipTrigger asChild>
                   <button
                     type="button"
@@ -114,7 +114,7 @@ export function SlackSidebar({
           </div>
           <div className="dm-list">
             {directMessages.map((name) => (
-              <Tooltip key={name}>
+              <Tooltip key={name} open={isCollapsed ? undefined : false}>
                 <TooltipTrigger asChild>
                   <div className="dm" aria-label={name}>
                     <div className="dm-avatar">
