@@ -59,6 +59,7 @@ const DEFAULT_SHORTCUT_ORDER: AppId[] = [
   "terminal",
   "pc",
   "dashboard",
+  "github-contributions",
 ];
 
 type DesktopItemId = string;

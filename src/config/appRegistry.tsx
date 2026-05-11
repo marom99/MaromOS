@@ -162,6 +162,11 @@ const LazySlackApp = createLazyComponent<unknown>(
   "slack"
 );
 
+const LazyGitHubContributionsApp = createLazyComponent<unknown>(
+  () => import("@/apps/github-contributions/components/GitHubContributionsAppComponent").then(m => ({ default: m.GitHubContributionsAppComponent })),
+  "github-contributions"
+);
+
 // ============================================================================
 // APP METADATA (loaded eagerly - small, isolated from components)
 // Import from metadata.ts files to avoid eager loading of components
@@ -195,6 +200,7 @@ import { appMetadata as contactsMetadata, helpItems as contactsHelpItems } from 
 import { appMetadata as dashboardMetadata, helpItems as dashboardHelpItems } from "@/apps/dashboard/metadata";
 import { appMetadata as candybarMetadata, helpItems as candybarHelpItems } from "@/apps/candybar/metadata";
 import { appMetadata as slackMetadata, helpItems as slackHelpItems } from "@/apps/slack/metadata";
+import { appMetadata as githubContributionsMetadata, helpItems as githubContributionsHelpItems } from "@/apps/github-contributions/metadata";
 import { DEFAULT_WINDOW_SIZE_WITH_TITLEBAR as infiniteMacDefaultSize } from "@/apps/infinite-mac/hooks/useInfiniteMacLogic";
 
 // ============================================================================
@@ -534,6 +540,19 @@ export const appRegistry = {
     windowConfig: {
       defaultSize: { width: 1100, height: 720 },
       minSize: { width: 720, height: 520 },
+    } as WindowConstraints,
+  },
+  ["github-contributions"]: {
+    id: "github-contributions",
+    name: "GitHub",
+    icon: { type: "image", src: githubContributionsMetadata.icon },
+    description: "Showcase GitHub contributions",
+    component: LazyGitHubContributionsApp,
+    helpItems: githubContributionsHelpItems,
+    metadata: githubContributionsMetadata,
+    windowConfig: {
+      defaultSize: { width: 760, height: 220 },
+      minSize: { width: 580, height: 200 },
     } as WindowConstraints,
   },
 } as const;
