@@ -3,7 +3,6 @@ import {
   At,
   Bookmark,
 } from "@phosphor-icons/react";
-import wsIcon from "../assets/workspace-icon.png";
 import dmAvatar from "../assets/dm-avatar.png";
 import { slackChannels, type SlackChannelId } from "../data/channelContent";
 import {
@@ -47,20 +46,12 @@ export function SlackSidebar({
         aria-label={isCollapsed ? "Slack workspace navigation, collapsed" : "Slack workspace navigation"}
       >
         <div className="ws-head">
-          <Tooltip open={isCollapsed ? undefined : false}>
-            <TooltipTrigger asChild>
-              <div className="ws-icon" aria-label="Studio Workspace">
-                <img src={wsIcon} alt="Workspace icon" />
-              </div>
-            </TooltipTrigger>
-            <TooltipContent side="right">Studio Workspace</TooltipContent>
-          </Tooltip>
+          <div className="ws-logo">
+            <img src="/icons/default/slack.svg" alt="Workspace" />
+          </div>
           <div className="ws-meta">
             <div className="ws-name">
-              Studio Workspace{" "}
-              <svg viewBox="0 0 8 5">
-                <path d="M0 0l4 5 4-5z" />
-              </svg>
+              Marom's Workspace
             </div>
             <div className="ws-status">
               <span className="ws-dot"></span> Active
