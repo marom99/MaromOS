@@ -18,7 +18,7 @@
 /* ---- Sidebar ------------------------------------------------------ */
 
 .sidebar {
-  width: 280px;
+  width: 220px;
   flex-shrink: 0;
   background: #e6e8eb;
   background-image: linear-gradient(to bottom, #eeeff1 0%, #e8eaed 100%);
