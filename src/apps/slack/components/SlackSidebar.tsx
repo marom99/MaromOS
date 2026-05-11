@@ -2,8 +2,6 @@ import {
   ChatCircleDots,
   At,
   Bookmark,
-  NotePencil,
-  DotsThree,
 } from "@phosphor-icons/react";
 import wsIcon from "../assets/workspace-icon.png";
 import dmAvatar from "../assets/dm-avatar.png";
@@ -22,18 +20,13 @@ interface SlackSidebarProps {
 }
 
 const directMessages = [
-  "Jordan Ellis",
-  "Taylor Kim",
-  "Casey Park",
-  "Morgan Liu",
+  "Marom",
 ];
 
 const NAV_ITEMS = [
   { icon: <ChatCircleDots size={16} weight="regular" />, label: "Threads" },
   { icon: <At size={16} weight="regular" />, label: "Mentions" },
   { icon: <Bookmark size={16} weight="regular" />, label: "Bookmarks" },
-  { icon: <NotePencil size={16} weight="regular" />, label: "Drafts" },
-  { icon: <DotsThree size={16} weight="bold" />, label: "More" },
 ];
 
 export function SlackSidebar({
