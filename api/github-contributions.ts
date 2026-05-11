@@ -88,7 +88,7 @@ export default apiHandler(
         return;
       }
 
-      const result = await response.json();
+      const result = await response.json() as { data?: { user?: { contributionsCollection: { contributionCalendar: { totalContributions: number; weeks: unknown[] } } } }; errors?: unknown };
 
       if (result.errors) {
         logger.error("GitHub GraphQL errors", result.errors);
