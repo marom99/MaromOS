@@ -37,6 +37,24 @@ export interface GitHubContributionsState {
   refetch: () => Promise<void>;
 }
 
+function filterToYear(calendar: ContributionCalendar, year: number): ContributionCalendar {
+  const prefix = `${year}-`;
+  const weeks = calendar.weeks
+    .map((week) => ({
+      ...week,
+      contributionDays: week.contributionDays.filter((d) => d.date.startsWith(prefix)),
+    }))
+    .filter((week) => week.contributionDays.length > 0);
+
+  const totalContributions = weeks
+    .flatMap((w) => w.contributionDays)
+    .reduce((sum, d) => sum + d.contributionCount, 0);
+
+  const months = calendar.months.filter((m) => m.year === year);
+
+  return { totalContributions, weeks, months };
+}
+
 export function useGitHubContributionsLogic(): GitHubContributionsState {
   const [calendar, setCalendar] = useState<ContributionCalendar | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -57,8 +75,8 @@ export function useGitHubContributionsLogic(): GitHubContributionsState {
         signal: abortControllerRef.current.signal,
       });
 
-      const data = await response.json();
-      setCalendar(data);
+      const data: ContributionCalendar = await response.json();
+      setCalendar(filterToYear(data, 2026));
     } catch (err) {
       if (err instanceof Error && err.name === "AbortError") {
         return;

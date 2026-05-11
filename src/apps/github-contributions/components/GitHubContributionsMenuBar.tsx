@@ -1,8 +1,9 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sun, Moon } from "@phosphor-icons/react";
+import { MenuBar } from "@/components/layout/MenuBar";
+import { useThemeStore } from "@/stores/useThemeStore";
 import {
-  Menubar,
   MenubarMenu,
   MenubarTrigger,
   MenubarContent,
@@ -23,32 +24,29 @@ export const GitHubContributionsMenuBar: React.FC<GitHubContributionsMenuBarProp
   isDark,
   onToggleMode,
 }) => {
+  const currentTheme = useThemeStore((state) => state.current);
+  const isXpTheme = currentTheme === "xp" || currentTheme === "win98";
+
   return (
-    <div className="flex items-center">
-      <Menubar className="border-b-0 border-x-0 border-t-0 rounded-none h-7 px-2 select-none flex-1">
-        <MenubarMenu>
-          <MenubarTrigger className="h-6 text-[12px] font-geneva-12">File</MenubarTrigger>
-          <MenubarContent>
-            <MenubarItem
-              className="text-[12px] font-geneva-12"
-              onClick={onRefresh}
-            >
-              Refresh
-            </MenubarItem>
-            <MenubarSeparator />
-            <MenubarItem
-              className="text-[12px] font-geneva-12"
-              onClick={onClose}
-            >
-              Close
-            </MenubarItem>
-          </MenubarContent>
-        </MenubarMenu>
-      </Menubar>
+    <MenuBar inWindowFrame={isXpTheme}>
+      <MenubarMenu>
+        <MenubarTrigger className="text-md px-2 py-1 border-none focus-visible:ring-0">
+          File
+        </MenubarTrigger>
+        <MenubarContent>
+          <MenubarItem className="text-md h-6 px-3" onClick={onRefresh}>
+            Refresh
+          </MenubarItem>
+          <MenubarSeparator />
+          <MenubarItem className="text-md h-6 px-3" onClick={onClose}>
+            Close
+          </MenubarItem>
+        </MenubarContent>
+      </MenubarMenu>
 
       <button
         onClick={onToggleMode}
-        className="relative h-6 w-6 mr-2 flex items-center justify-center rounded opacity-50 hover:opacity-100 transition-opacity duration-150"
+        className="relative h-6 w-6 ml-0.5 flex items-center justify-center rounded opacity-50 hover:opacity-100 transition-opacity duration-150"
         title={isDark ? "Switch to light mode" : "Switch to dark mode"}
       >
         <AnimatePresence mode="wait" initial={false}>
@@ -77,6 +75,6 @@ export const GitHubContributionsMenuBar: React.FC<GitHubContributionsMenuBarProp
           )}
         </AnimatePresence>
       </button>
-    </div>
+    </MenuBar>
   );
 };

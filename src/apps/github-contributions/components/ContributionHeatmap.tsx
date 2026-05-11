@@ -16,6 +16,7 @@ interface ContributionHeatmapProps {
   longestStreak: number;
   maxInDay: number;
   isDark: boolean;
+  containerWidth?: number;
 }
 
 const DARK = {
@@ -50,8 +51,10 @@ const LIGHT = {
   },
 } as const;
 
-const CELL = 11;
 const GAP = 2;
+const DAY_COL_WIDTH = 30;
+const DAY_COL_GAP = 2;
+const H_PADDING = 28; // 14px each side
 
 const DAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -61,42 +64,75 @@ export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({
   longestStreak,
   maxInDay,
   isDark,
+  containerWidth,
 }) => {
   const p = isDark ? DARK : LIGHT;
 
+  const numWeeks = calendar.weeks.length;
+  const available = (containerWidth ?? 0) - H_PADDING - DAY_COL_WIDTH - DAY_COL_GAP;
+  const rawCell = available > 0 ? (available + GAP) / numWeeks - GAP : 11;
+  const cellSize = Math.max(8, Math.min(14, Math.floor(rawCell)));
+  const labelFontSize = Math.max(8, Math.min(13, cellSize - 2));
+
   return (
     <div
-      className="flex flex-col select-none antialiased"
+      className="flex flex-col select-none antialiased mx-auto"
       style={{
         fontFamily: "var(--os-font-mono)",
         fontSize: "10px",
         color: p.text,
         lineHeight: 1.4,
         transition: "color 0.2s ease",
+        width: "fit-content",
       }}
     >
-      {/* Month labels */}
-      <div
-        className="flex"
-        style={{ paddingLeft: `${CELL + GAP + 32}px`, marginBottom: "4px" }}
-      >
-        {calendar.months.map((month, i) => (
-          <div
-            key={`${month.name}-${month.year}-${i}`}
-            style={{
-              width: `${month.totalWeeks * (CELL + GAP)}px`,
-              minWidth: 0,
-              overflow: "hidden",
-              whiteSpace: "nowrap",
-              color: p.labelMonth,
-              fontSize: "9px",
-              letterSpacing: "0.02em",
-              transition: "color 0.2s ease",
-            }}
-          >
-            {month.name}
-          </div>
-        ))}
+      {/* Year + Month labels */}
+      <div className="flex" style={{ marginBottom: "4px", alignItems: "baseline" }}>
+        <div
+          style={{
+            width: `${DAY_COL_WIDTH + GAP}px`,
+            flexShrink: 0,
+            fontSize: `${labelFontSize}px`,
+            color: p.text,
+            letterSpacing: "0.06em",
+            transition: "color 0.2s ease",
+          }}
+        >
+          2026
+        </div>
+        {calendar.months.map((month, i) => {
+          const nextMonth = calendar.months[i + 1];
+          const monthStartIdx = calendar.weeks.findIndex((w) => w.firstDay >= month.firstDay);
+          const nextMonthStartIdx = nextMonth
+            ? calendar.weeks.findIndex((w) => w.firstDay >= nextMonth.firstDay)
+            : calendar.weeks.length;
+
+          const actualWeeks = Math.max(
+            0,
+            (nextMonthStartIdx === -1 ? calendar.weeks.length : nextMonthStartIdx) -
+              (monthStartIdx === -1 ? 0 : monthStartIdx)
+          );
+
+          if (actualWeeks === 0 && i > 0) return null;
+
+          return (
+            <div
+              key={`${month.name}-${month.year}-${i}`}
+              style={{
+                width: `${actualWeeks * (cellSize + GAP)}px`,
+                minWidth: 0,
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+                color: p.labelMonth,
+                fontSize: `${labelFontSize}px`,
+                letterSpacing: "0.02em",
+                transition: "color 0.2s ease",
+              }}
+            >
+              {month.name}
+            </div>
+          );
+        })}
       </div>
 
       {/* Grid + day labels */}
@@ -107,7 +143,7 @@ export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({
           style={{
             gap: `${GAP}px`,
             paddingTop: "1px",
-            width: "30px",
+            width: `${DAY_COL_WIDTH}px`,
             flexShrink: 0,
           }}
         >
@@ -115,9 +151,9 @@ export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({
             <div
               key={i}
               style={{
-                height: `${CELL}px`,
-                lineHeight: `${CELL}px`,
-                fontSize: "9px",
+                height: `${cellSize}px`,
+                lineHeight: `${cellSize}px`,
+                fontSize: `${labelFontSize}px`,
                 color: i % 2 === 0 ? p.labelDay : "transparent",
                 textAlign: "right",
                 paddingRight: "4px",
@@ -136,7 +172,7 @@ export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({
             style={{
               display: "grid",
               gridAutoFlow: "column",
-              gridTemplateRows: `repeat(7, ${CELL}px)`,
+              gridTemplateRows: `repeat(7, ${cellSize}px)`,
               gap: `${GAP}px`,
             }}
           >
@@ -150,10 +186,10 @@ export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({
                     return (
                       <div
                         key={dayIdx}
-                        style={{ width: CELL, height: CELL }}
+                        style={{ width: cellSize, height: cellSize }}
                       />
                     );
-                  return <DayCell key={day.date} day={day} cellColors={p.cells} />;
+                  return <DayCell key={day.date} day={day} cellColors={p.cells} cellSize={cellSize} />;
                 })}
               </React.Fragment>
             ))}
@@ -195,7 +231,7 @@ export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({
 
 type CellColors = typeof DARK.cells;
 
-const DayCell: React.FC<{ day: ContributionDay; cellColors: CellColors }> = ({ day, cellColors }) => {
+const DayCell: React.FC<{ day: ContributionDay; cellColors: CellColors; cellSize: number }> = ({ day, cellColors, cellSize }) => {
   const dateStr = new Date(day.date + "T12:00:00").toLocaleDateString(
     undefined,
     {
@@ -211,8 +247,8 @@ const DayCell: React.FC<{ day: ContributionDay; cellColors: CellColors }> = ({ d
       <TooltipTrigger asChild>
         <div
           style={{
-            width: CELL,
-            height: CELL,
+            width: cellSize,
+            height: cellSize,
             backgroundColor: cellColors[day.contributionLevel],
             borderRadius: "2px",
             cursor: "default",

@@ -4,6 +4,8 @@ import { ContributionHeatmap } from "./ContributionHeatmap";
 import { GitHubContributionsMenuBar } from "./GitHubContributionsMenuBar";
 import { WindowFrame } from "@/components/layout/WindowFrame";
 import { AppProps } from "@/apps/base/types";
+import { useThemeStore } from "@/stores/useThemeStore";
+import { useResizeObserver } from "@/hooks/useResizeObserver";
 
 const SCROLLBAR_COLORS = {
   dark: { thumb: "oklch(0.32 0.05 145)", thumbHover: "oklch(0.42 0.08 145)", bg: "oklch(0.13 0.018 145)" },
@@ -23,6 +25,13 @@ export const GitHubContributionsAppComponent: React.FC<AppProps> = ({
   const [isDark, setIsDark] = useState(
     () => localStorage.getItem("ryos:github-contributions:color-mode") !== "light"
   );
+  const [containerWidth, setContainerWidth] = useState(0);
+  const containerRef = useResizeObserver<HTMLDivElement>((entry) => {
+    setContainerWidth(entry.contentRect.width);
+  });
+
+  const currentTheme = useThemeStore((state) => state.current);
+  const isXpTheme = currentTheme === "xp" || currentTheme === "win98";
 
   const toggleMode = () => {
     setIsDark((prev) => {
@@ -32,60 +41,67 @@ export const GitHubContributionsAppComponent: React.FC<AppProps> = ({
     });
   };
 
+  const menuBarEl = (
+    <GitHubContributionsMenuBar
+      onRefresh={refetch}
+      onClose={onClose}
+      isDark={isDark}
+      onToggleMode={toggleMode}
+    />
+  );
+
   if (!isWindowOpen) return null;
 
   const colors = isDark ? SCROLLBAR_COLORS.dark : SCROLLBAR_COLORS.light;
 
   return (
-    <WindowFrame
-      appId="github-contributions"
-      instanceId={instanceId}
-      title="GitHub"
-      isForeground={isForeground}
-      onClose={onClose}
-      skipInitialSound={skipInitialSound}
-      menuBar={
-        <GitHubContributionsMenuBar
-          onRefresh={refetch}
-          onClose={onClose}
-          isDark={isDark}
-          onToggleMode={toggleMode}
-        />
-      }
-    >
-      <>
-        <style>{`
-          .gh-heatmap-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
-          .gh-heatmap-scroll::-webkit-scrollbar-track { background: transparent; }
-          .gh-heatmap-scroll::-webkit-scrollbar-thumb { background: ${colors.thumb}; border-radius: 2px; }
-          .gh-heatmap-scroll::-webkit-scrollbar-thumb:hover { background: ${colors.thumbHover}; }
-        `}</style>
-        <div
-          className="flex-1 flex flex-col justify-center overflow-auto gh-heatmap-scroll"
-          style={{
-            backgroundColor: colors.bg,
-            padding: "12px 14px 10px",
-            scrollbarWidth: "thin",
-            scrollbarColor: `${colors.thumb} transparent`,
-            transition: "background-color 0.2s ease",
-          }}
-        >
-          {isLoading && !calendar ? (
-            <LoadingState isDark={isDark} />
-          ) : error ? (
-            <ErrorState message={error} onRetry={refetch} isDark={isDark} />
-          ) : calendar ? (
-            <ContributionHeatmap
-              calendar={calendar}
-              currentStreak={currentStreak}
-              longestStreak={longestStreak}
-              maxInDay={maxInDay}
-              isDark={isDark}
-            />
-          ) : null}
-        </div>
-      </>
-    </WindowFrame>
+    <>
+      {!isXpTheme && isForeground && menuBarEl}
+      <WindowFrame
+        appId="github-contributions"
+        instanceId={instanceId}
+        title="GitHub"
+        isForeground={isForeground}
+        onClose={onClose}
+        skipInitialSound={skipInitialSound}
+        menuBar={isXpTheme ? menuBarEl : undefined}
+      >
+        <>
+          <style>{`
+            .gh-heatmap-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
+            .gh-heatmap-scroll::-webkit-scrollbar-track { background: transparent; }
+            .gh-heatmap-scroll::-webkit-scrollbar-thumb { background: ${colors.thumb}; border-radius: 2px; }
+            .gh-heatmap-scroll::-webkit-scrollbar-thumb:hover { background: ${colors.thumbHover}; }
+          `}</style>
+          <div
+            ref={containerRef}
+            className="flex-1 flex flex-col justify-center items-center overflow-auto gh-heatmap-scroll"
+            style={{
+              backgroundColor: colors.bg,
+              padding: "12px 14px 10px",
+              scrollbarWidth: "thin",
+              scrollbarColor: `${colors.thumb} transparent`,
+              transition: "background-color 0.2s ease",
+            }}
+          >
+            {isLoading && !calendar ? (
+              <LoadingState isDark={isDark} />
+            ) : error ? (
+              <ErrorState message={error} onRetry={refetch} isDark={isDark} />
+            ) : calendar ? (
+              <ContributionHeatmap
+                calendar={calendar}
+                currentStreak={currentStreak}
+                longestStreak={longestStreak}
+                maxInDay={maxInDay}
+                isDark={isDark}
+                containerWidth={containerWidth}
+              />
+            ) : null}
+          </div>
+        </>
+      </WindowFrame>
+    </>
   );
 };
 
