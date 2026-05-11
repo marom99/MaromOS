@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { AppProps } from "@/apps/base/types";
 import { WindowFrame } from "@/components/layout/WindowFrame";
@@ -66,6 +66,62 @@ export function SlackAppComponent({
   useEffect(() => {
     if (!isMobile) setIsSidebarOpen(false);
   }, [isMobile]);
+
+  const [panelWidthPx, setPanelWidthPx] = useState<number | null>(null);
+  const [defaultWidthPx, setDefaultWidthPx] = useState(400);
+  const appRef = useRef<HTMLDivElement>(null);
+  const panelStageRef = useRef<HTMLDivElement>(null);
+  const dragStateRef = useRef<{ startX: number; startWidth: number } | null>(null);
+  const isResizingRef = useRef(false);
+
+  useLayoutEffect(() => {
+    isResizingRef.current = false;
+  });
+
+  useEffect(() => {
+    if (appRef.current) {
+      setDefaultWidthPx(Math.max(280, Math.min(appRef.current.clientWidth * 0.35, 420)));
+    }
+  }, [isWindowOpen]);
+
+  useEffect(() => {
+    if (!selectedThreadMessageId) setPanelWidthPx(null);
+  }, [selectedThreadMessageId]);
+
+  const handleResizeStart = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      if (!panelStageRef.current || !appRef.current || isMobile) return;
+      dragStateRef.current = {
+        startX: e.clientX,
+        startWidth: panelStageRef.current.offsetWidth,
+      };
+      const handleMove = (moveEvent: PointerEvent) => {
+        if (!dragStateRef.current || !panelStageRef.current || !appRef.current) return;
+        const dx = moveEvent.clientX - dragStateRef.current.startX;
+        const appWidth = appRef.current.clientWidth;
+        const newWidth = Math.max(
+          240,
+          Math.min(appWidth * 0.65, dragStateRef.current.startWidth - dx)
+        );
+        panelStageRef.current.style.flexBasis = `${newWidth}px`;
+      };
+      const handleUp = () => {
+        if (panelStageRef.current) {
+          const finalWidth = panelStageRef.current.offsetWidth;
+          dragStateRef.current = null;
+          isResizingRef.current = true;
+          setPanelWidthPx(finalWidth);
+        } else {
+          dragStateRef.current = null;
+        }
+        window.removeEventListener("pointermove", handleMove);
+        window.removeEventListener("pointerup", handleUp);
+      };
+      window.addEventListener("pointermove", handleMove);
+      window.addEventListener("pointerup", handleUp);
+    },
+    [isMobile]
+  );
 
   if (!isWindowOpen) return null;
 
@@ -220,6 +276,7 @@ export function SlackAppComponent({
         titleBarLeftContent={sidebarToggleButton}
       >
         <div
+          ref={appRef}
           className={`app${isMobile ? " app--mobile" : ""}${
             isMobile && isSidebarOpen ? " app--sidebar-open" : ""
           }${!isMobile && isSidebarCollapsed ? " app--sidebar-collapsed" : ""
@@ -250,6 +307,7 @@ export function SlackAppComponent({
           <AnimatePresence initial={false}>
             {selectedThreadMessage && (
               <motion.div
+                ref={panelStageRef}
                 key={selectedThreadMessage.id}
                 className="thread-panel-stage"
                 initial={
@@ -261,7 +319,7 @@ export function SlackAppComponent({
                       }
                 }
                 animate={{
-                  flexBasis: "min(360px, 42vw)",
+                  flexBasis: `${panelWidthPx ?? defaultWidthPx}px`,
                   transform: "translate3d(0, 0, 0)",
                 }}
                 exit={
@@ -273,7 +331,7 @@ export function SlackAppComponent({
                       }
                 }
                 transition={
-                  shouldReduceMotion
+                  shouldReduceMotion || isResizingRef.current
                     ? { duration: 0 }
                     : {
                         flexBasis: { duration: 0.24, ease: [0.32, 0.72, 0, 1] },
@@ -288,6 +346,8 @@ export function SlackAppComponent({
                   onAddReply={(content, imageData) =>
                     handleAddThreadReply(selectedThreadMessage.id, content, imageData)
                   }
+                  onResizeStart={isMobile ? undefined : handleResizeStart}
+                  onResizeReset={isMobile ? undefined : () => setPanelWidthPx(null)}
                 />
               </motion.div>
             )}
