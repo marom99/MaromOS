@@ -12,9 +12,11 @@ interface SlackThreadPanelProps {
   message: SlackMessageItem;
   onClose: () => void;
   onAddReply: (content: string, imageData?: string | null) => boolean;
+  onResizeStart?: (e: React.PointerEvent<HTMLDivElement>) => void;
+  onResizeReset?: () => void;
 }
 
-export function SlackThreadPanel({ channel, message, onClose, onAddReply }: SlackThreadPanelProps) {
+export function SlackThreadPanel({ channel, message, onClose, onAddReply, onResizeStart, onResizeReset }: SlackThreadPanelProps) {
   const [replyText, setReplyText] = useState("");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -42,6 +44,13 @@ export function SlackThreadPanel({ channel, message, onClose, onAddReply }: Slac
 
   return (
     <aside className="thread-panel" aria-label={`Thread for ${message.user}'s message`}>
+      {onResizeStart && (
+        <div
+          className="thread-panel-resize-handle"
+          onPointerDown={onResizeStart}
+          onDoubleClick={onResizeReset}
+        />
+      )}
       <header className="thread-panel-head">
         <div>
           <div className="thread-panel-title">Thread</div>
