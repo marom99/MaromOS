@@ -19,228 +19,241 @@ interface ContributionHeatmapProps {
   containerWidth?: number;
 }
 
-const DARK = {
-  text: "oklch(0.72 0.12 145)",
-  labelMonth: "oklch(0.60 0.10 145)",
-  labelDay: "oklch(0.55 0.09 145)",
-  divider: "oklch(0.32 0.05 145)",
-  statsLabel: "oklch(0.58 0.09 145)",
-  statsValue: "oklch(0.78 0.18 145)",
-  cells: {
-    NONE: "oklch(0.24 0.028 145)",
-    FIRST_QUARTILE: "oklch(0.40 0.105 145)",
-    SECOND_QUARTILE: "oklch(0.54 0.158 145)",
-    THIRD_QUARTILE: "oklch(0.66 0.185 145)",
-    FOURTH_QUARTILE: "oklch(0.80 0.195 145)",
-  },
-} as const;
+const COLORS = {
+  duoGreen: "#58CC02",
+  duoGreenLight: "#78C800",
+  duoGreenDark: "#46A302",
+  duoGreenActive: "#58A700",
+  duoGreenShadow: "#58A700",
+  duoGreyBorder: "#E5E5E5",
+  duoGreyBg: "#F7F7F7",
+  duoTextMain: "#4B4B4B",
+  duoTextLight: "#777777",
 
-const LIGHT = {
-  text: "oklch(0.25 0.04 145)",
-  labelMonth: "oklch(0.50 0.06 145)",
-  labelDay: "oklch(0.55 0.06 145)",
-  divider: "oklch(0.85 0.03 145)",
-  statsLabel: "oklch(0.50 0.06 145)",
-  statsValue: "oklch(0.25 0.08 145)",
-  cells: {
-    NONE: "oklch(0.91 0.03 145)",
-    FIRST_QUARTILE: "oklch(0.75 0.10 145)",
-    SECOND_QUARTILE: "oklch(0.60 0.14 145)",
-    THIRD_QUARTILE: "oklch(0.47 0.15 145)",
-    FOURTH_QUARTILE: "oklch(0.33 0.14 145)",
-  },
-} as const;
+  level0: "#EBEDF0",
+  level1: "#C6E48B",
+  level2: "#7BC96F",
+  level3: "#239A3B",
+  level4: "#196127",
+};
 
-const GAP = 2;
+const GAP = 6;
 const DAY_COL_WIDTH = 30;
-const DAY_COL_GAP = 2;
-const H_PADDING = 28; // 14px each side
+const DAY_COL_GAP = 10;
+const H_PADDING = 30;
 
-const DAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const DAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({
   calendar,
   currentStreak,
-  longestStreak,
-  maxInDay,
-  isDark,
   containerWidth,
 }) => {
-  const p = isDark ? DARK : LIGHT;
-
   const numWeeks = calendar.weeks.length;
-  const available = (containerWidth ?? 0) - H_PADDING - DAY_COL_WIDTH - DAY_COL_GAP;
-  const rawCell = available > 0 ? (available + GAP) / numWeeks - GAP : 11;
-  const cellSize = Math.max(8, Math.min(14, Math.floor(rawCell)));
-  const labelFontSize = Math.max(8, Math.min(13, cellSize - 2));
+  // Calculate cellSize similarly but clamped appropriately
+  const available = (containerWidth ?? 900) - H_PADDING * 2 - DAY_COL_WIDTH - DAY_COL_GAP;
+  const rawCell = available > 0 ? (available + GAP) / numWeeks - GAP : 16;
+  const cellSize = Math.max(10, Math.min(16, Math.floor(rawCell)));
+  
+  const fontStyle = {
+      fontFamily: "'Varela Round', 'Arial Rounded MT Bold', 'Helvetica Rounded', sans-serif"
+  };
 
   return (
     <div
-      className="flex flex-col select-none antialiased mx-auto"
       style={{
-        fontFamily: "var(--os-font-mono)",
-        fontSize: "10px",
-        color: p.text,
-        lineHeight: 1.4,
-        transition: "color 0.2s ease",
-        width: "fit-content",
+        ...fontStyle,
+        WebkitFontSmoothing: "antialiased",
+        MozOsxFontSmoothing: "grayscale",
+        backgroundColor: "white",
+        borderRadius: "20px",
+        boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 4px 8px rgba(0,0,0,0.04), 0 8px 16px rgba(0,0,0,0.04), 0 16px 32px rgba(0,0,0,0.02)",
+        padding: "30px",
+        width: "100%",
+        maxWidth: "900px",
+        position: "relative",
+        color: COLORS.duoTextMain,
+        margin: "0 auto",
       }}
     >
-      {/* Year + Month labels */}
-      <div className="flex" style={{ marginBottom: "4px", alignItems: "baseline" }}>
-        <div
-          style={{
-            width: `${DAY_COL_WIDTH + GAP}px`,
-            flexShrink: 0,
-            fontSize: `${labelFontSize}px`,
-            color: p.text,
-            letterSpacing: "0.06em",
-            transition: "color 0.2s ease",
-          }}
-        >
-          2026
-        </div>
-        {calendar.months.map((month, i) => {
-          const nextMonth = calendar.months[i + 1];
-          const monthStartIdx = calendar.weeks.findIndex((w) => w.firstDay >= month.firstDay);
-          const nextMonthStartIdx = nextMonth
-            ? calendar.weeks.findIndex((w) => w.firstDay >= nextMonth.firstDay)
-            : calendar.weeks.length;
-
-          const actualWeeks = Math.max(
-            0,
-            (nextMonthStartIdx === -1 ? calendar.weeks.length : nextMonthStartIdx) -
-              (monthStartIdx === -1 ? 0 : monthStartIdx)
-          );
-
-          if (actualWeeks === 0 && i > 0) return null;
-
-          return (
-            <div
-              key={`${month.name}-${month.year}-${i}`}
-              style={{
-                width: `${actualWeeks * (cellSize + GAP)}px`,
-                minWidth: 0,
-                overflow: "hidden",
-                whiteSpace: "nowrap",
-                color: p.labelMonth,
-                fontSize: `${labelFontSize}px`,
-                letterSpacing: "0.02em",
-                transition: "color 0.2s ease",
-              }}
-            >
-              {month.name}
+      {/* Header Section */}
+      <div style={{ display: "flex", alignItems: "center", marginBottom: "25px", position: "relative" }}>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+            <h1 style={{ margin: "0 0 5px 0", fontSize: "28px", fontWeight: 800, color: "#3C3C3C", textWrap: "balance" }}>
+                GitHub Streak
+            </h1>
+            <div style={{ display: "flex", alignItems: "center", fontSize: "16px", color: COLORS.duoTextLight, fontWeight: 600 }}>
+                Code every day. Build amazing things.
+                <div style={{ display: "flex", alignItems: "center", marginLeft: "10px", paddingLeft: "10px", borderLeft: `2px solid ${COLORS.duoGreyBorder}` }}>
+                    <span style={{ color: "#FF9600", fontSize: "20px", marginRight: "5px" }}>🔥</span>
+                    <span>Current streak: <span style={{ color: COLORS.duoGreen, fontWeight: 800, fontVariantNumeric: "tabular-nums" }}>{currentStreak} days</span></span>
+                </div>
             </div>
-          );
-        })}
+        </div>
       </div>
 
-      {/* Grid + day labels */}
-      <div className="flex" style={{ gap: `${GAP}px` }}>
-        {/* Day labels column */}
-        <div
-          className="flex flex-col"
-          style={{
-            gap: `${GAP}px`,
-            paddingTop: "1px",
-            width: `${DAY_COL_WIDTH}px`,
-            flexShrink: 0,
-          }}
-        >
-          {DAY_LABELS.map((label, i) => (
-            <div
-              key={i}
-              style={{
-                height: `${cellSize}px`,
-                lineHeight: `${cellSize}px`,
-                fontSize: `${labelFontSize}px`,
-                color: i % 2 === 0 ? p.labelDay : "transparent",
-                textAlign: "right",
-                paddingRight: "4px",
-                letterSpacing: "0.01em",
-                transition: "color 0.2s ease",
-              }}
-            >
-              {label}
-            </div>
-          ))}
-        </div>
+      {/* Calendar Section */}
+      <div style={{ display: "flex", flexDirection: "column", marginBottom: "25px", width: "100%" }}>
+        <div style={{ display: "flex", marginLeft: "45px", marginBottom: "10px", justifyContent: "space-between", paddingRight: "15px", fontWeight: 700, color: COLORS.duoTextLight, fontSize: "14px" }}>
+            {calendar.months.map((month, i) => {
+              const nextMonth = calendar.months[i + 1];
+              const monthStartIdx = calendar.weeks.findIndex((w) => w.firstDay >= month.firstDay);
+              const nextMonthStartIdx = nextMonth
+                ? calendar.weeks.findIndex((w) => w.firstDay >= nextMonth.firstDay)
+                : calendar.weeks.length;
 
-        {/* Heatmap */}
-        <TooltipProvider delayDuration={0}>
-          <div
-            style={{
-              display: "grid",
-              gridAutoFlow: "column",
-              gridTemplateRows: `repeat(7, ${cellSize}px)`,
-              gap: `${GAP}px`,
-            }}
-          >
-            {calendar.weeks.map((week) => (
-              <React.Fragment key={week.firstDay}>
-                {Array.from({ length: 7 }).map((_, dayIdx) => {
-                  const day = week.contributionDays.find(
-                    (d) => d.weekday === dayIdx
-                  );
-                  if (!day)
-                    return (
-                      <div
-                        key={dayIdx}
-                        style={{ width: cellSize, height: cellSize }}
-                      />
-                    );
-                  return <DayCell key={day.date} day={day} cellColors={p.cells} cellSize={cellSize} />;
-                })}
-              </React.Fragment>
-            ))}
+              const actualWeeks = Math.max(
+                0,
+                (nextMonthStartIdx === -1 ? calendar.weeks.length : nextMonthStartIdx) -
+                  (monthStartIdx === -1 ? 0 : monthStartIdx)
+              );
+
+              if (actualWeeks === 0 && i > 0) return null;
+
+              return (
+                <div
+                  key={`${month.name}-${month.year}-${i}`}
+                  style={{
+                    width: `${actualWeeks * (cellSize + GAP)}px`,
+                    minWidth: 0,
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {month.name}
+                </div>
+              );
+            })}
+        </div>
+        
+        <div style={{ display: "flex" }}>
+            <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", paddingRight: "10px", color: COLORS.duoTextLight, fontSize: "14px", fontWeight: 700 }}>
+                {DAY_LABELS.map((label, i) => (
+                    <span key={i} style={{ height: `${cellSize}px`, lineHeight: `${cellSize}px`, color: i % 2 === 0 ? COLORS.duoTextLight : 'transparent' }}>{label}</span>
+                ))}
+            </div>
+            
+            <TooltipProvider delayDuration={0}>
+              <div style={{ display: "grid", gridAutoFlow: "column", gridTemplateRows: `repeat(7, ${cellSize}px)`, gap: `${GAP}px`, flexGrow: 1 }}>
+                {calendar.weeks.map((week) => (
+                  <React.Fragment key={week.firstDay}>
+                    {/* Re-order days to match Mon-Sun format */}
+                    {[1, 2, 3, 4, 5, 6, 0].map((dayIdx) => {
+                      const day = week.contributionDays.find((d) => d.weekday === dayIdx);
+                      if (!day) return <div key={dayIdx} style={{ width: cellSize, height: cellSize }} />;
+                      return <DayCell key={day.date} day={day} cellSize={cellSize} />;
+                    })}
+                  </React.Fragment>
+                ))}
+              </div>
+            </TooltipProvider>
+        </div>
+      </div>
+
+      {/* Legend */}
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "20px", marginBottom: "30px", fontSize: "14px", fontWeight: 700, color: COLORS.duoTextLight }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <div style={{ width: "16px", height: "16px", borderRadius: "4px", backgroundColor: COLORS.level0 }} />
+              <span>No contributions</span>
           </div>
-        </TooltipProvider>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <div style={{ width: "16px", height: "16px", borderRadius: "4px", backgroundColor: COLORS.level1, boxShadow: "inset 0 -2px 0 rgba(0,0,0,0.15)" }} />
+              <span>1 contribution</span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <div style={{ width: "16px", height: "16px", borderRadius: "4px", backgroundColor: COLORS.level2, boxShadow: "inset 0 -2px 0 rgba(0,0,0,0.15)" }} />
+              <span>2-4 contributions</span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <div style={{ width: "16px", height: "16px", borderRadius: "4px", backgroundColor: COLORS.level3, boxShadow: "inset 0 -2px 0 rgba(0,0,0,0.15)" }} />
+              <span>5-9 contributions</span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <div style={{ width: "16px", height: "16px", borderRadius: "4px", backgroundColor: COLORS.level4, boxShadow: "inset 0 -2px 0 rgba(0,0,0,0.15)" }} />
+              <span>10+ contributions</span>
+          </div>
       </div>
 
-      {/* Stats footer */}
-      <div
-        style={{
-          marginTop: "10px",
-          borderTop: `1px solid ${p.divider}`,
-          paddingTop: "6px",
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "3px 20px",
-          fontSize: "9px",
-          letterSpacing: "0.02em",
-          transition: "border-color 0.2s ease",
-        }}
-      >
-        {[
-          { label: "Contributions", value: calendar.totalContributions.toLocaleString() },
-          { label: "Longest streak", value: `${longestStreak}d` },
-          { label: "Current streak", value: `${currentStreak}d` },
-          { label: "Peak / day", value: String(maxInDay) },
-        ].map(({ label, value }) => (
-          <span key={label} style={{ color: p.statsLabel, transition: "color 0.2s ease" }}>
-            {label}:{" "}
-            <span style={{ color: p.statsValue, fontVariantNumeric: "tabular-nums", transition: "color 0.2s ease" }}>
-              {value}
-            </span>
-          </span>
-        ))}
+      {/* Footer Section */}
+      <div style={{ borderRadius: "16px", padding: "20px", display: "flex", justifyContent: "space-between", alignItems: "center", boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 4px 8px rgba(0,0,0,0.04), 0 8px 16px rgba(0,0,0,0.02)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
+              <div style={{ width: "45px", height: "45px", backgroundColor: "#CE82FF", borderRadius: "12px", display: "flex", justifyContent: "center", alignItems: "center", boxShadow: "0 4px 0 #A559D6", flexShrink: 0 }}>
+                  <svg viewBox="0 0 24 24" style={{ width: "25px", height: "25px", fill: "white" }}>
+                      <path d="M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.62L12 2L9.19 8.62L2 9.24L7.45 13.97L5.82 21L12 17.27Z"/>
+                  </svg>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                  <h3 style={{ margin: "0 0 5px 0", fontSize: "18px", color: "#3C3C3C", fontWeight: 800 }}>You're on fire!</h3>
+                  <p style={{ margin: 0, fontSize: "15px", color: COLORS.duoTextMain, fontWeight: 600 }}>
+                      {currentStreak} day streak! <span style={{ color: "#FF9600" }}>🔥</span> Keep shipping!
+                  </p>
+              </div>
+          </div>
+          
+          <button 
+            onClick={() => window.open("https://github.com", "_blank")}
+            style={{ 
+                backgroundColor: "white", 
+                color: COLORS.duoGreen, 
+                border: `2px solid ${COLORS.duoGreyBorder}`, 
+                borderBottomWidth: "4px", 
+                borderRadius: "16px", 
+                padding: "12px 24px", 
+                fontSize: "16px", 
+                fontWeight: 800, 
+                fontFamily: "inherit", 
+                cursor: "pointer", 
+                display: "flex", 
+                alignItems: "center", 
+                gap: "10px", 
+                textTransform: "uppercase", 
+                letterSpacing: "0.5px",
+                flexShrink: 0,
+                outline: "none",
+                transitionProperty: "transform, background-color, border-bottom-width",
+                transitionDuration: "0.15s",
+                transitionTimingFunction: "cubic-bezier(0.2, 0, 0, 1)"
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "#F7F7F7";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "white";
+              e.currentTarget.style.transform = "scale(1) translateY(0)";
+              e.currentTarget.style.borderBottomWidth = "4px";
+            }}
+            onMouseDown={(e) => {
+              e.currentTarget.style.transform = "scale(0.96) translateY(2px)";
+              e.currentTarget.style.borderBottomWidth = "2px";
+            }}
+            onMouseUp={(e) => {
+              e.currentTarget.style.transform = "scale(1) translateY(0)";
+              e.currentTarget.style.borderBottomWidth = "4px";
+            }}
+            >
+              <svg viewBox="0 0 24 24" style={{ width: "24px", height: "24px", fill: COLORS.duoGreen }}>
+                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+              VIEW ON GITHUB <span style={{ color: COLORS.duoGreen, fontWeight: "bold", fontSize: "20px" }}>›</span>
+          </button>
       </div>
     </div>
   );
 };
 
-type CellColors = typeof DARK.cells;
-
-const DayCell: React.FC<{ day: ContributionDay; cellColors: CellColors; cellSize: number }> = ({ day, cellColors, cellSize }) => {
+const DayCell: React.FC<{ day: ContributionDay; cellSize: number }> = ({ day, cellSize }) => {
   const dateStr = new Date(day.date + "T12:00:00").toLocaleDateString(
     undefined,
-    {
-      weekday: "short",
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    }
+    { weekday: "short", month: "short", day: "numeric", year: "numeric" }
   );
+
+  let bgColor = COLORS.level0;
+  let hasShadow = false;
+
+  if (day.contributionLevel === "FIRST_QUARTILE") { bgColor = COLORS.level1; hasShadow = true; }
+  else if (day.contributionLevel === "SECOND_QUARTILE") { bgColor = COLORS.level2; hasShadow = true; }
+  else if (day.contributionLevel === "THIRD_QUARTILE") { bgColor = COLORS.level3; hasShadow = true; }
+  else if (day.contributionLevel === "FOURTH_QUARTILE") { bgColor = COLORS.level4; hasShadow = true; }
 
   return (
     <Tooltip>
@@ -249,25 +262,43 @@ const DayCell: React.FC<{ day: ContributionDay; cellColors: CellColors; cellSize
           style={{
             width: cellSize,
             height: cellSize,
-            backgroundColor: cellColors[day.contributionLevel],
-            borderRadius: "2px",
-            cursor: "default",
-            transition: "filter 0.1s ease-out, background-color 0.2s ease",
+            backgroundColor: bgColor,
+            borderRadius: "4px",
+            boxShadow: hasShadow ? "inset 0 -2px 0 rgba(0,0,0,0.15)" : "none",
+            cursor: "pointer",
+            transitionProperty: "transform, box-shadow",
+            transitionDuration: "0.1s",
+            transitionTimingFunction: "ease-out",
+            position: "relative",
+            zIndex: 1
           }}
           onMouseEnter={(e) => {
-            (e.currentTarget as HTMLDivElement).style.filter = "brightness(1.3)";
+            const el = e.currentTarget as HTMLDivElement;
+            el.style.transform = "scale(1.2)";
+            el.style.boxShadow = "0 2px 5px rgba(0,0,0,0.2)";
+            el.style.zIndex = "10";
           }}
           onMouseLeave={(e) => {
-            (e.currentTarget as HTMLDivElement).style.filter = "brightness(1)";
+            const el = e.currentTarget as HTMLDivElement;
+            el.style.transform = "scale(1)";
+            el.style.boxShadow = hasShadow ? "inset 0 -2px 0 rgba(0,0,0,0.15)" : "none";
+            el.style.zIndex = "1";
           }}
         />
       </TooltipTrigger>
       <TooltipContent
         side="top"
-        className="px-2 py-1"
-        style={{ fontSize: "10px", fontFamily: "var(--os-font-mono)" }}
+        className="px-3 py-2 border-none shadow-lg"
+        style={{
+            fontSize: "12px",
+            fontFamily: "inherit",
+            backgroundColor: "#4B4B4B",
+            color: "white",
+            borderRadius: "8px",
+            fontWeight: 600
+        }}
       >
-        <strong>{day.contributionCount}</strong> contributions · {dateStr}
+        <strong style={{ color: "#FF9600", fontWeight: 800 }}>{day.contributionCount}</strong> contributions on {dateStr}
       </TooltipContent>
     </Tooltip>
   );

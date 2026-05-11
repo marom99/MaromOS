@@ -44,6 +44,7 @@ export function useDashboardLogic() {
         dictionary: { width: 240, height: 220 },
         stickynote: { width: 200, height: 200 },
         translation: { width: 300, height: 170 },
+        gitstreak: { width: 300, height: 120 },
       };
       const size = sizeMap[type];
 

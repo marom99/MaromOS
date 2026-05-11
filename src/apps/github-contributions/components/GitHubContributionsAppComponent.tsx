@@ -77,7 +77,7 @@ export const GitHubContributionsAppComponent: React.FC<AppProps> = ({
             ref={containerRef}
             className="flex-1 flex flex-col justify-center items-center overflow-auto gh-heatmap-scroll"
             style={{
-              backgroundColor: colors.bg,
+              backgroundColor: "#F0F2F5",
               padding: "12px 14px 10px",
               scrollbarWidth: "thin",
               scrollbarColor: `${colors.thumb} transparent`,
