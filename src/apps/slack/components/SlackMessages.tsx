@@ -18,7 +18,7 @@ const COMMON_EMOJIS = ["👍", "❤️", "😂", "😮", "😢", "🔥", "🙏",
 interface SlackMessagesProps {
   channel: SlackChannelContent;
   selectedThreadMessageId?: string | null;
-  onOpenThread: (messageId: string) => void;
+  onOpenThread: (messageId: string | null) => void;
   onMessagesChange: (
     updater: (messages: SlackMessageItem[]) => SlackMessageItem[]
   ) => void;
