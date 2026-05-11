@@ -26,7 +26,8 @@ export type AppId =
   | "contacts"
   | "dashboard"
   | "candybar"
-  | "slack";
+  | "slack"
+  | "github-contributions";
 
 /**
  * Get translated app name with theme-awareness
