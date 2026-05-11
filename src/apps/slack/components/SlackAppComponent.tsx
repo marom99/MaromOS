@@ -10,6 +10,7 @@ import { appMetadata, helpItems } from "../metadata";
 import { SlackMenuBar } from "./SlackMenuBar";
 import { SlackDialogs } from "./SlackDialogs";
 import { SlackSidebar } from "./SlackSidebar";
+import { SidebarCollapseIcon, SidebarExpandIcon } from "./SlackIcons";
 import { SlackChannelHeader } from "./SlackChannelHeader";
 import { SlackMessages } from "./SlackMessages";
 import { SlackComposer } from "./SlackComposer";
@@ -175,6 +176,33 @@ export function SlackAppComponent({
     />
   );
 
+  const sidebarToggleButton = !isMobile && (
+    <button
+      type="button"
+      className="titlebar-sidebar-collapse"
+      onClick={() => setIsSidebarCollapsed((collapsed) => !collapsed)}
+      aria-label={isSidebarCollapsed ? "Show full sidebar" : "Show icon-only sidebar"}
+      title={isSidebarCollapsed ? "Show full sidebar" : "Show icon-only sidebar"}
+    >
+      <AnimatePresence initial={false} mode="wait">
+        <motion.span
+          key={isSidebarCollapsed ? "expand" : "collapse"}
+          className="sidebar-collapse-icon"
+          initial={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
+          animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+          exit={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
+          transition={{ type: "spring", duration: 0.3, bounce: 0 }}
+        >
+          {isSidebarCollapsed ? (
+            <SidebarExpandIcon />
+          ) : (
+            <SidebarCollapseIcon />
+          )}
+        </motion.span>
+      </AnimatePresence>
+    </button>
+  );
+
   return (
     <>
       {!isXpTheme && isForeground && menuBar}
@@ -189,6 +217,7 @@ export function SlackAppComponent({
         onNavigateNext={onNavigateNext}
         onNavigatePrevious={onNavigatePrevious}
         menuBar={isXpTheme ? menuBar : undefined}
+        titleBarLeftContent={sidebarToggleButton}
       >
         <div
           className={`app${isMobile ? " app--mobile" : ""}${
@@ -200,7 +229,6 @@ export function SlackAppComponent({
             activeChannelId={activeChannelId}
             onSelectChannel={handleSelectChannel}
             isCollapsed={!isMobile && isSidebarCollapsed}
-            onToggleCollapsed={() => setIsSidebarCollapsed((collapsed) => !collapsed)}
           />
           <main className="main">
             <SlackChannelHeader

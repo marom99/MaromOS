@@ -54,6 +54,8 @@ interface WindowFrameProps {
   disableTitlebarAutoHide?: boolean;
   // Custom content for the right side of the titlebar (replaces fullscreen button if provided)
   titleBarRightContent?: React.ReactNode;
+  // Custom content for the left side of the titlebar (next to traffic lights)
+  titleBarLeftContent?: React.ReactNode;
 }
 
 export function WindowFrame({
@@ -75,6 +77,7 @@ export function WindowFrame({
   onFullscreenToggle,
   disableTitlebarAutoHide = false,
   titleBarRightContent,
+  titleBarLeftContent,
 }: WindowFrameProps) {
   const { t } = useTranslation();
   const config = getWindowConfig(appId);
@@ -1453,6 +1456,9 @@ export function WindowFrame({
                   debugMode={debugMode}
                   ariaLabel={t("common.window.maximize")}
                 />
+                {titleBarLeftContent && (
+                  <div className="ml-2 flex items-center">{titleBarLeftContent}</div>
+                )}
               </div>
 
               {/* Title - absolutely centered so it stays centered regardless of left/right content width */}
