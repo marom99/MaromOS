@@ -72,40 +72,29 @@
   min-width: 0;
 }
 
-.sidebar-collapse {
+.titlebar-sidebar-collapse {
   width: 22px;
   height: 22px;
-  margin-left: auto;
-  border-radius: 11px;
-  border: 1px solid #b8bcc2;
-  background: linear-gradient(to bottom, #ffffff, #e3e6ea);
-  box-shadow: inset 0 1px 0 #fff, 0 1px 0 rgba(255, 255, 255, 0.55);
-  color: #4a4e52;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #555;
   cursor: pointer;
-  appearance: none;
-  -webkit-appearance: none;
-  flex-shrink: 0;
-  transition: background 140ms ease-out, border-color 140ms ease-out,
-    box-shadow 140ms ease-out, transform 140ms ease-out;
+  padding: 0;
+  transition: all 140ms ease-out;
+  opacity: 0.8;
 }
 
-.sidebar-collapse:hover {
-  background: linear-gradient(to bottom, #ffffff, #eef1f5);
-  border-color: #aeb3ba;
+.titlebar-sidebar-collapse:hover {
+  opacity: 1;
+  color: #000;
 }
 
-.sidebar-collapse:active {
-  background: linear-gradient(to bottom, #d8dde3, #f3f5f7);
+.titlebar-sidebar-collapse:active {
   transform: translateY(0.5px);
-}
-
-.sidebar-collapse:focus-visible {
-  outline: none;
-  border-color: #346ae3;
-  box-shadow: inset 0 1px 0 #fff, 0 0 0 3px rgba(52, 106, 227, 0.28);
 }
 
 .sidebar-collapse-icon {
@@ -324,27 +313,6 @@
   color: #2d3033;
 }
 
-/* ---- Invite ------------------------------------------------------- */
-
-.invite {
-  margin-top: auto;
-  padding: 11px 18px 13px;
-  border-top: 1px solid #cfd2d6;
-  box-shadow: inset 0 1px 0 #fff;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #3a3e42;
-}
-
-.invite svg {
-  width: 16px;
-  height: 16px;
-  color: #555;
-  opacity: 0.85;
-  flex-shrink: 0;
-}
-
 /* ---- Collapsed desktop sidebar ----------------------------------- */
 
 .app--sidebar-collapsed .sidebar {
@@ -367,13 +335,8 @@
 .app--sidebar-collapsed .nav-item span,
 .app--sidebar-collapsed .section-head,
 .app--sidebar-collapsed .channel-name,
-.app--sidebar-collapsed .dm-name,
-.app--sidebar-collapsed .invite span {
+.app--sidebar-collapsed .dm-name {
   display: none;
-}
-
-.app--sidebar-collapsed .sidebar-collapse {
-  margin-left: 0;
 }
 
 .app--sidebar-collapsed .nav {
@@ -427,12 +390,6 @@
 .app--sidebar-collapsed .dm-avatar {
   width: 23px;
   height: 23px;
-}
-
-.app--sidebar-collapsed .invite {
-  justify-content: center;
-  padding: 11px 0 13px;
-  gap: 0;
 }
 
 /* ---- Main content area -------------------------------------------- */
@@ -1538,10 +1495,6 @@
   will-change: transform;
   border-right: none;
   box-shadow: inset 0 1px 0 #fff;
-}
-
-.app--mobile .sidebar-collapse {
-  display: none;
 }
 
 .app--mobile.app--sidebar-open .sidebar {
