@@ -2,8 +2,6 @@ import {
   ChatCircleDots,
   At,
   Bookmark,
-  NotePencil,
-  DotsThree,
 } from "@phosphor-icons/react";
 import wsIcon from "../assets/workspace-icon.png";
 import dmAvatar from "../assets/dm-avatar.png";
@@ -15,7 +13,7 @@ import {
   TooltipProvider,
 } from "@/components/ui/tooltip";
 
-export type SlackNavItem = "threads" | "mentions" | "bookmarks" | "drafts" | "more";
+export type SlackNavItem = "threads" | "mentions" | "bookmarks";
 
 interface SlackSidebarProps {
   activeChannelId: SlackChannelId;
@@ -33,8 +31,6 @@ const NAV_ITEMS: { id: SlackNavItem; icon: React.ReactNode; label: string }[] = 
   { id: "threads", icon: <ChatCircleDots size={16} weight="regular" />, label: "Threads" },
   { id: "mentions", icon: <At size={16} weight="regular" />, label: "Mentions" },
   { id: "bookmarks", icon: <Bookmark size={16} weight="regular" />, label: "Bookmarks" },
-  { id: "drafts", icon: <NotePencil size={16} weight="regular" />, label: "Drafts" },
-  { id: "more", icon: <DotsThree size={16} weight="bold" />, label: "More" },
 ];
 
 export function SlackSidebar({
