@@ -15,10 +15,14 @@ import {
   TooltipProvider,
 } from "@/components/ui/tooltip";
 
+export type SlackNavItem = "threads" | "mentions" | "bookmarks" | "drafts" | "more";
+
 interface SlackSidebarProps {
   activeChannelId: SlackChannelId;
   onSelectChannel: (channelId: SlackChannelId) => void;
   isCollapsed: boolean;
+  activeNavItem: SlackNavItem | null;
+  onSelectNav: (item: SlackNavItem) => void;
 }
 
 const directMessages = [
@@ -28,18 +32,20 @@ const directMessages = [
   "Morgan Liu",
 ];
 
-const NAV_ITEMS = [
-  { icon: <ChatCircleDots size={16} weight="regular" />, label: "Threads" },
-  { icon: <At size={16} weight="regular" />, label: "Mentions" },
-  { icon: <Bookmark size={16} weight="regular" />, label: "Bookmarks" },
-  { icon: <NotePencil size={16} weight="regular" />, label: "Drafts" },
-  { icon: <DotsThree size={16} weight="bold" />, label: "More" },
+const NAV_ITEMS: { id: SlackNavItem; icon: React.ReactNode; label: string }[] = [
+  { id: "threads", icon: <ChatCircleDots size={16} weight="regular" />, label: "Threads" },
+  { id: "mentions", icon: <At size={16} weight="regular" />, label: "Mentions" },
+  { id: "bookmarks", icon: <Bookmark size={16} weight="regular" />, label: "Bookmarks" },
+  { id: "drafts", icon: <NotePencil size={16} weight="regular" />, label: "Drafts" },
+  { id: "more", icon: <DotsThree size={16} weight="bold" />, label: "More" },
 ];
 
 export function SlackSidebar({
   activeChannelId,
   onSelectChannel,
   isCollapsed,
+  activeNavItem,
+  onSelectNav,
 }: SlackSidebarProps) {
   return (
     <TooltipProvider delayDuration={100}>
@@ -70,13 +76,19 @@ export function SlackSidebar({
         </div>
 
         <nav className="nav">
-          {NAV_ITEMS.map(({ icon, label }) => (
-            <Tooltip key={label} open={isCollapsed ? undefined : false}>
+          {NAV_ITEMS.map(({ id, icon, label }) => (
+            <Tooltip key={id} open={isCollapsed ? undefined : false}>
               <TooltipTrigger asChild>
-                <div className="nav-item" aria-label={label}>
+                <button
+                  type="button"
+                  className={`nav-item${activeNavItem === id ? " active" : ""}`}
+                  onClick={() => onSelectNav(id)}
+                  aria-pressed={activeNavItem === id}
+                  aria-label={label}
+                >
                   {icon}
                   <span>{label}</span>
-                </div>
+                </button>
               </TooltipTrigger>
               <TooltipContent side="right">{label}</TooltipContent>
             </Tooltip>
@@ -93,9 +105,9 @@ export function SlackSidebar({
                 <TooltipTrigger asChild>
                   <button
                     type="button"
-                    className={`channel${channel.id === activeChannelId ? " active" : ""}`}
+                    className={`channel${channel.id === activeChannelId && !activeNavItem ? " active" : ""}`}
                     onClick={() => onSelectChannel(channel.id)}
-                    aria-pressed={channel.id === activeChannelId}
+                    aria-pressed={channel.id === activeChannelId && !activeNavItem}
                     aria-label={`Open #${channel.name}`}
                   >
                     <span className="hash" aria-hidden="true">#</span>

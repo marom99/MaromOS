@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { AppProps } from "@/apps/base/types";
 import { WindowFrame } from "@/components/layout/WindowFrame";
@@ -9,12 +9,14 @@ import { isWindowsTheme } from "@/themes";
 import { appMetadata, helpItems } from "../metadata";
 import { SlackMenuBar } from "./SlackMenuBar";
 import { SlackDialogs } from "./SlackDialogs";
-import { SlackSidebar } from "./SlackSidebar";
+import { SlackSidebar, type SlackNavItem } from "./SlackSidebar";
 import { SidebarCollapseIcon, SidebarExpandIcon } from "./SlackIcons";
 import { SlackChannelHeader } from "./SlackChannelHeader";
 import { SlackMessages } from "./SlackMessages";
 import { SlackComposer } from "./SlackComposer";
 import { SlackThreadPanel } from "./SlackThreadPanel";
+import { SlackThreadsView, type ThreadEntry } from "./SlackThreadsView";
+import { SlackEmptyState } from "./SlackEmptyState";
 import {
   getSlackChannel,
   slackChannels,
@@ -60,6 +62,8 @@ export function SlackAppComponent({
   const [activeChannelId, setActiveChannelId] = useState<SlackChannelId>("design-lab");
   const [channelMessages, setChannelMessages] = useState(createInitialChannelMessages);
   const [selectedThreadMessageId, setSelectedThreadMessageId] = useState<string | null>(null);
+  const [selectedThreadChannelId, setSelectedThreadChannelId] = useState<SlackChannelId | null>(null);
+  const [activeNavItem, setActiveNavItem] = useState<SlackNavItem | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
@@ -131,26 +135,88 @@ export function SlackAppComponent({
     messages: channelMessages[activeChannelId] ?? baseActiveChannel.messages,
   };
 
-  const selectedThreadMessage =
-    activeChannel.messages.find((message) => message.id === selectedThreadMessageId && message.thread) ??
-    null;
+  const threadsForMarom = useMemo<ThreadEntry[]>(() => {
+    const entries: ThreadEntry[] = [];
+
+    for (const channel of slackChannels) {
+      const messages = channelMessages[channel.id] ?? channel.messages;
+      const channelName = channel.name;
+
+      for (const message of messages) {
+        if (!message.thread) continue;
+
+        const involvesMarom =
+          message.user === "Marom" ||
+          message.thread.replies.some(
+            (reply) => reply.user === "Marom"
+          );
+
+        if (involvesMarom) {
+          entries.push({
+            channelId: channel.id,
+            channelName,
+            message,
+          });
+        }
+      }
+    }
+
+    return entries;
+  }, [channelMessages]);
+
+  const selectedThreadMessage = (() => {
+    if (!selectedThreadMessageId) return null;
+
+    if (selectedThreadChannelId) {
+      const channel = getSlackChannel(selectedThreadChannelId);
+      const messages = channelMessages[selectedThreadChannelId] ?? channel.messages;
+      return messages.find(
+        (message) => message.id === selectedThreadMessageId && message.thread
+      ) ?? null;
+    }
+
+    return activeChannel.messages.find(
+      (message) => message.id === selectedThreadMessageId && message.thread
+    ) ?? null;
+  })();
+
+  const selectedThreadChannel = selectedThreadChannelId
+    ? getSlackChannel(selectedThreadChannelId)
+    : activeChannel;
 
   const handleSelectChannel = (channelId: SlackChannelId) => {
     setActiveChannelId(channelId);
+    setActiveNavItem(null);
     setSelectedThreadMessageId(null);
+    setSelectedThreadChannelId(null);
     if (isMobile) setIsSidebarOpen(false);
+  };
+
+  const handleSelectNav = (item: SlackNavItem) => {
+    setActiveNavItem((prev) => (prev === item ? null : item));
+    setSelectedThreadMessageId(null);
+    setSelectedThreadChannelId(null);
+  };
+
+  const handleOpenThreadMessage = (channelId: SlackChannelId, messageId: string) => {
+    setSelectedThreadChannelId(channelId);
+    setSelectedThreadMessageId(messageId);
   };
 
   const handleToggleSidebar = () => {
     setIsSidebarOpen((open) => {
       const next = !open;
-      if (next) setSelectedThreadMessageId(null);
+      if (next) {
+        setSelectedThreadMessageId(null);
+        setSelectedThreadChannelId(null);
+      }
       return next;
     });
   };
 
   const handleOpenThread = (messageId: string | null) => {
     setSelectedThreadMessageId(messageId);
+    setSelectedThreadChannelId(null);
     if (messageId && isMobile) setIsSidebarOpen(false);
   };
 
@@ -186,7 +252,7 @@ export function SlackAppComponent({
     return true;
   };
 
-  const handleAddThreadReply = (messageId: string, content: string, imageData?: string | null) => {
+  const handleAddThreadReply = (channelId: SlackChannelId, messageId: string, content: string, imageData?: string | null) => {
     const trimmedContent = content.trim();
     if (!trimmedContent && !imageData) return false;
 
@@ -202,24 +268,30 @@ export function SlackAppComponent({
       imageAlt: "Shared image",
     };
 
-    updateChannelMessages((messages) =>
-      messages.map((message) => {
-        if (message.id !== messageId || !message.thread) return message;
+    setChannelMessages((prev) => {
+      const channelData = getSlackChannel(channelId);
+      const currentMessages = prev[channelId] ?? channelData.messages;
 
-        return {
-          ...message,
-          thread: {
-            ...message.thread,
-            replyCount: message.thread.replyCount + 1,
-            lastReplyLabel: "Last reply just now",
-            participantAvatarIndexes: [3, ...message.thread.participantAvatarIndexes]
-              .filter((avatarIndex, index, avatarIndexes) => avatarIndexes.indexOf(avatarIndex) === index)
-              .slice(0, 4),
-            replies: [...message.thread.replies, newReply],
-          },
-        };
-      })
-    );
+      return {
+        ...prev,
+        [channelId]: currentMessages.map((message) => {
+          if (message.id !== messageId || !message.thread) return message;
+
+          return {
+            ...message,
+            thread: {
+              ...message.thread,
+              replyCount: message.thread.replyCount + 1,
+              lastReplyLabel: "Last reply just now",
+              participantAvatarIndexes: [3, ...message.thread.participantAvatarIndexes]
+                .filter((avatarIndex, index, avatarIndexes) => avatarIndexes.indexOf(avatarIndex) === index)
+                .slice(0, 4),
+              replies: [...message.thread.replies, newReply],
+            },
+          };
+        }),
+      };
+    });
 
     return true;
   };
@@ -259,11 +331,19 @@ export function SlackAppComponent({
     </button>
   );
 
+  const getWindowTitle = () => {
+    if (activeNavItem === "threads") return "Slack — Threads";
+    if (activeNavItem === "mentions") return "Slack — Mentions & Reactions";
+    if (activeNavItem === "bookmarks") return "Slack — Bookmarks";
+    if (activeNavItem === "drafts") return "Slack — Drafts";
+    return `Slack — #${activeChannel.name}`;
+  };
+
   return (
     <>
       {!isXpTheme && isForeground && menuBar}
       <WindowFrame
-        title={`Slack — #${activeChannel.name}`}
+        title={getWindowTitle()}
         onClose={onClose}
         isForeground={isForeground}
         appId="slack"
@@ -286,24 +366,38 @@ export function SlackAppComponent({
             activeChannelId={activeChannelId}
             onSelectChannel={handleSelectChannel}
             isCollapsed={!isMobile && isSidebarCollapsed}
+            activeNavItem={activeNavItem}
+            onSelectNav={handleSelectNav}
           />
-          <main className="main">
-            <SlackChannelHeader
-              channel={activeChannel}
-              onToggleSidebar={isMobile ? handleToggleSidebar : undefined}
-              isSidebarOpen={isSidebarOpen}
+          {activeNavItem === "threads" ? (
+            <SlackThreadsView
+              threads={threadsForMarom}
+              onOpenThreadMessage={handleOpenThreadMessage}
             />
-            <SlackMessages
-              channel={activeChannel}
-              selectedThreadMessageId={selectedThreadMessageId}
-              onOpenThread={handleOpenThread}
-              onMessagesChange={updateChannelMessages}
-            />
-            <SlackComposer
-              isForeground={!!isForeground}
-              onSendMessage={handleSendMessage}
-            />
-          </main>
+          ) : activeNavItem === "mentions" ||
+            activeNavItem === "bookmarks" ||
+            activeNavItem === "drafts" ||
+            activeNavItem === "more" ? (
+            <SlackEmptyState type={activeNavItem} />
+          ) : (
+            <main className="main">
+              <SlackChannelHeader
+                channel={activeChannel}
+                onToggleSidebar={isMobile ? handleToggleSidebar : undefined}
+                isSidebarOpen={isSidebarOpen}
+              />
+              <SlackMessages
+                channel={activeChannel}
+                selectedThreadMessageId={selectedThreadMessageId}
+                onOpenThread={handleOpenThread}
+                onMessagesChange={updateChannelMessages}
+              />
+              <SlackComposer
+                isForeground={!!isForeground}
+                onSendMessage={handleSendMessage}
+              />
+            </main>
+          )}
           <AnimatePresence initial={false}>
             {selectedThreadMessage && (
               <motion.div
@@ -339,16 +433,19 @@ export function SlackAppComponent({
                       }
                 }
               >
-                <SlackThreadPanel
-                  channel={activeChannel}
-                  message={selectedThreadMessage}
-                  onClose={() => setSelectedThreadMessageId(null)}
-                  onAddReply={(content, imageData) =>
-                    handleAddThreadReply(selectedThreadMessage.id, content, imageData)
-                  }
-                  onResizeStart={isMobile ? undefined : handleResizeStart}
-                  onResizeReset={isMobile ? undefined : () => setPanelWidthPx(null)}
-                />
+              <SlackThreadPanel
+                channel={selectedThreadChannel}
+                message={selectedThreadMessage}
+                onClose={() => {
+                  setSelectedThreadMessageId(null);
+                  setSelectedThreadChannelId(null);
+                }}
+                onAddReply={(content, imageData) =>
+                  handleAddThreadReply(selectedThreadChannelId ?? activeChannelId, selectedThreadMessage.id, content, imageData)
+                }
+                onResizeStart={isMobile ? undefined : handleResizeStart}
+                onResizeReset={isMobile ? undefined : () => setPanelWidthPx(null)}
+              />
               </motion.div>
             )}
           </AnimatePresence>
