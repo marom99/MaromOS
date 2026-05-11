@@ -15,6 +15,7 @@ import { IpodWidget, IpodBackPanel } from "@/components/layout/dashboard/IpodWid
 import { TranslationWidget, TranslationBackPanel } from "@/components/layout/dashboard/TranslationWidget";
 import { StickyNoteWidget, StickyNoteBackPanel } from "@/components/layout/dashboard/StickyNoteWidget";
 import { DictionaryWidget, DictionaryBackPanel } from "@/components/layout/dashboard/DictionaryWidget";
+import { GitStreakWidget } from "@/components/layout/dashboard/GitStreakWidget";
 import { DashboardMenuBar } from "./DashboardMenuBar";
 import { useAppStore } from "@/stores/useAppStore";
 import { useTranslation } from "react-i18next";
@@ -39,6 +40,8 @@ function WidgetContent({ type, widgetId, isFlipped }: { type: string; widgetId: 
       return <StickyNoteWidget widgetId={widgetId} />;
     case "dictionary":
       return <DictionaryWidget widgetId={widgetId} />;
+    case "gitstreak":
+      return <GitStreakWidget />;
     default:
       return null;
   }
@@ -62,6 +65,8 @@ function WidgetBackContent({ type, widgetId, onDone }: { type: string; widgetId:
       return <StickyNoteBackPanel widgetId={widgetId} onDone={onDone} />;
     case "dictionary":
       return <DictionaryBackPanel widgetId={widgetId} onDone={onDone} />;
+    case "gitstreak":
+      return null;
     default:
       return null;
   }
@@ -81,6 +86,7 @@ const WIDGET_ICONS: Record<WidgetType, string> = {
   translation: "🌐",
   stickynote: "📝",
   dictionary: "📖",
+  gitstreak: "🔥",
 };
 
 function WidgetStrip({
@@ -118,6 +124,7 @@ function WidgetStrip({
     { type: "translation", label: t("apps.dashboard.widgets.translation", "Translation") },
     { type: "stickynote", label: t("apps.dashboard.widgets.stickyNote", "Sticky Note") },
     { type: "dictionary", label: t("apps.dashboard.widgets.dictionary", "Dictionary") },
+    { type: "gitstreak", label: t("apps.dashboard.widgets.gitStreak", "Git Streak") },
   ];
 
   return (
@@ -294,6 +301,7 @@ export function DashboardAppComponent({
       onAddTranslation={() => handleAddWidget("translation")}
       onAddStickyNote={() => handleAddWidget("stickynote")}
       onAddDictionary={() => handleAddWidget("dictionary")}
+      onAddGitStreak={() => handleAddWidget("gitstreak")}
       onResetWidgets={resetToDefaults}
     />
   );
