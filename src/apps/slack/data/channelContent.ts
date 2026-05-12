@@ -2,7 +2,8 @@ export type SlackChannelId =
   | "welcome"
   | "prototype-playground"
   | "transporter-app"
-  | "driver-app";
+  | "driver-app"
+  | "testimonial";
 
 export interface SlackReactionItem {
   emoji: string;
@@ -377,6 +378,83 @@ export const slackChannels: SlackChannelContent[] = [
           "Dropping this here because it feels on-brand: old desktop metaphors still make modern product work more memorable when the interaction quality is real.",
         reactions: [{ emoji: "🫡", count: 1, hasReacted: false }],
         avatarIndex: 2,
+      },
+    ],
+  },
+  {
+    id: "testimonial",
+    name: "testimonial",
+    topic: "What collaborators say about working with Marom",
+    memberCount: 8,
+    members: [
+      sharedMembers[0],
+      sharedMembers[1],
+      sharedMembers[2],
+      sharedMembers[4],
+      sharedMembers[5],
+      sharedMembers[6],
+      sharedMembers[7],
+      sharedMembers[3],
+    ],
+    composerPlaceholder: "Message #testimonial",
+    messages: [
+      {
+        id: "testimonial-1",
+        user: "Jordan Ellis",
+        time: "10:02 AM",
+        content:
+          "Working with Marom meant every design decision had a reason behind it. He'd push back on anything that didn't serve the user, but constructively — always with an alternative ready.",
+        reactions: [
+          { emoji: "💯", count: 5, hasReacted: false },
+          { emoji: "❤️", count: 3, hasReacted: false },
+        ],
+        avatarIndex: 0,
+      },
+      {
+        id: "testimonial-2",
+        user: "Jamie Lin",
+        time: "10:09 AM",
+        content:
+          "He's one of the rare designers who can go deep into a technical constraint and come back with a solution that actually looks better for it. Engineering and design both trusted him.",
+        reactions: [
+          { emoji: "👏", count: 4, hasReacted: false },
+        ],
+        avatarIndex: 1,
+      },
+      {
+        id: "testimonial-3",
+        user: "Riley Morgan",
+        time: "10:17 AM",
+        content:
+          "The thing that stood out most: Marom never shipped ambiguity. If a spec was unclear, he'd resolve it before it became a bug.",
+        reactions: [
+          { emoji: "🎯", count: 6, hasReacted: false },
+          { emoji: "💬", count: 2, hasReacted: false },
+        ],
+        avatarIndex: 2,
+      },
+      {
+        id: "testimonial-4",
+        user: "Casey Park",
+        time: "10:31 AM",
+        content:
+          "He made the handoff feel like a collaboration, not a handoff. By the time I got the spec, I already understood the thinking behind every choice.",
+        reactions: [
+          { emoji: "🙌", count: 3, hasReacted: false },
+        ],
+        avatarIndex: 4,
+      },
+      {
+        id: "testimonial-5",
+        user: "Morgan Liu",
+        time: "10:44 AM",
+        content:
+          "Product timelines being what they are, there were weeks where we needed someone who could hold quality and pace at the same time. Marom was always that person.",
+        reactions: [
+          { emoji: "⚡", count: 4, hasReacted: false },
+          { emoji: "💪", count: 2, hasReacted: false },
+        ],
+        avatarIndex: 5,
       },
     ],
   },
