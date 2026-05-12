@@ -522,7 +522,7 @@ async function saveDefaultContents(
 // Function to generate an empty initial state (just for typing)
 const getEmptyFileSystemState = (): Record<string, FileSystemItem> => ({});
 
-const STORE_VERSION = 10; // Update Applets folder icon
+const STORE_VERSION = 11; // Remove default images
 const STORE_NAME = "ryos:files";
 
 const initialFilesData: FilesStoreState = {
@@ -1358,6 +1358,28 @@ export const useFilesStore = create<FilesStoreState>()(
           // but we bump it to trigger the one-time sync in useFileSystem
           // which will calculate actual file sizes and set proper timestamps
           return persistedState;
+        }
+
+        if (version < 11) {
+          const oldState = persistedState as {
+            items: Record<string, FileSystemItem>;
+            libraryState?: LibraryState;
+          };
+          const newState: Record<string, FileSystemItem> = {};
+
+          for (const path in oldState.items) {
+            if (
+              path !== "/Images/steve-jobs.png" &&
+              path !== "/Images/susan-kare.png"
+            ) {
+              newState[path] = oldState.items[path];
+            }
+          }
+
+          return {
+            items: newState,
+            libraryState: oldState.libraryState || "loaded",
+          };
         }
 
         return persistedState;
