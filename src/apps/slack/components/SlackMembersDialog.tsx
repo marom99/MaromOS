@@ -11,6 +11,12 @@ import { ProfileAvatar } from "@/components/shared/ProfileAvatar";
 import { useThemeStore } from "@/stores/useThemeStore";
 import { isWindowsTheme } from "@/themes";
 import { cn } from "@/lib/utils";
+import { Tabs } from "@/components/ui/tabs";
+import {
+  ThemedTabsList,
+  ThemedTabsTrigger,
+  ThemedTabsContent,
+} from "@/components/shared/ThemedTabs";
 import type {
   SlackChannelContent,
   SlackChannelMemberItem,
@@ -123,130 +129,82 @@ function DialogBody({
   isXpTheme,
 }: DialogBodyProps) {
   return (
-    <div className={cn("slack-members-dialog", isXpTheme ? "p-2 px-4" : "p-4 px-6")}>
-      <div className="slack-members-tabs" role="tablist" aria-label="Channel details">
-        <TabButton
-          isActive={activeTab === "members"}
-          onClick={() => onTabChange("members")}
-          controls="slack-members-panel"
-          id="slack-members-tab"
-        >
-          Members
-          <span className="slack-members-tab-count">
-            {channel.memberCount.toLocaleString()}
-          </span>
-        </TabButton>
-        <TabButton
-          isActive={activeTab === "about"}
-          onClick={() => onTabChange("about")}
-          controls="slack-about-panel"
-          id="slack-about-tab"
-        >
-          About
-        </TabButton>
-      </div>
+    <div className="slack-members-dialog">
+      <Tabs value={activeTab} onValueChange={(v) => onTabChange(v as DialogTab)} className="w-full">
+        <ThemedTabsList>
+          <ThemedTabsTrigger value="members">
+            Members
+            <span className="slack-members-tab-count">
+              {channel.memberCount.toLocaleString()}
+            </span>
+          </ThemedTabsTrigger>
+          <ThemedTabsTrigger value="about">About</ThemedTabsTrigger>
+        </ThemedTabsList>
 
-      {activeTab === "members" ? (
-        <div
-          id="slack-members-panel"
-          role="tabpanel"
-          aria-labelledby="slack-members-tab"
-          className="slack-members-tabpanel"
-        >
-          <Input
-            autoFocus
-            value={query}
-            onChange={(e) => onQueryChange(e.target.value)}
-            onKeyDown={(e) => e.stopPropagation()}
-            placeholder="Search members…"
-            className={cn(
-              "shadow-none slack-members-search",
-              isXpTheme
-                ? "font-['Pixelated_MS_Sans_Serif',Arial] text-[11px]"
-                : "font-geneva-12 text-[12px]"
-            )}
-            style={{
-              fontFamily: isXpTheme
-                ? '"Pixelated MS Sans Serif", "ArkPixel", Arial'
-                : undefined,
-              fontSize: isXpTheme ? "11px" : undefined,
-            }}
-            aria-label="Search members"
-          />
+        <ThemedTabsContent value="members" className="!h-auto">
+          <div className="slack-members-tabpanel">
+            <Input
+              autoFocus
+              value={query}
+              onChange={(e) => onQueryChange(e.target.value)}
+              onKeyDown={(e) => e.stopPropagation()}
+              placeholder="Search members…"
+              className={cn(
+                "shadow-none slack-members-search",
+                isXpTheme
+                  ? "font-['Pixelated_MS_Sans_Serif',Arial] text-[11px]"
+                  : "font-geneva-12 text-[12px]"
+              )}
+              style={{
+                fontFamily: isXpTheme
+                  ? '"Pixelated MS Sans Serif", "ArkPixel", Arial'
+                  : undefined,
+                fontSize: isXpTheme ? "11px" : undefined,
+              }}
+              aria-label="Search members"
+            />
 
-          <div className="slack-members-list mt-3">
-            {filteredMembers.length === 0 ? (
-              <div className="slack-members-empty">
-                No members match “{query}”.
+            <div className="slack-members-list">
+              {filteredMembers.length === 0 ? (
+                <div className="slack-members-empty">
+                  No members match "{query}".
+                </div>
+              ) : (
+                <ul className="slack-members-rows">
+                  {filteredMembers.map((member) => (
+                    <MemberRow key={member.id} member={member} />
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+        </ThemedTabsContent>
+
+        <ThemedTabsContent value="about" className="!h-auto">
+          <div className="slack-members-tabpanel slack-about">
+            <div className="slack-about-section">
+              <div className="slack-about-label">Channel name</div>
+              <div className="slack-about-value">#{channel.name}</div>
+            </div>
+            <div className="slack-about-section">
+              <div className="slack-about-label">Description</div>
+              <div className="slack-about-value slack-about-description">
+                {channel.topic}
               </div>
-            ) : (
-              <ul className="slack-members-rows">
-                {filteredMembers.map((member) => (
-                  <MemberRow key={member.id} member={member} />
-                ))}
-              </ul>
-            )}
-          </div>
-        </div>
-      ) : (
-        <div
-          id="slack-about-panel"
-          role="tabpanel"
-          aria-labelledby="slack-about-tab"
-          className="slack-members-tabpanel slack-about"
-        >
-          <div className="slack-about-section">
-            <div className="slack-about-label">Channel name</div>
-            <div className="slack-about-value">#{channel.name}</div>
-          </div>
-          <div className="slack-about-section">
-            <div className="slack-about-label">Description</div>
-            <div className="slack-about-value slack-about-description">
-              {channel.topic}
+            </div>
+            <div className="slack-about-section">
+              <div className="slack-about-label">Members</div>
+              <div className="slack-about-value">
+                <span className="slack-about-count">
+                  {channel.memberCount.toLocaleString()}
+                </span>{" "}
+                {channel.memberCount === 1 ? "person" : "people"}
+              </div>
             </div>
           </div>
-          <div className="slack-about-section">
-            <div className="slack-about-label">Members</div>
-            <div className="slack-about-value">
-              <span className="slack-about-count">
-                {channel.memberCount.toLocaleString()}
-              </span>{" "}
-              {channel.memberCount === 1 ? "person" : "people"}
-            </div>
-          </div>
-        </div>
-      )}
+        </ThemedTabsContent>
+      </Tabs>
     </div>
-  );
-}
-
-function TabButton({
-  isActive,
-  onClick,
-  children,
-  id,
-  controls,
-}: {
-  isActive: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-  id: string;
-  controls: string;
-}) {
-  return (
-    <button
-      type="button"
-      role="tab"
-      id={id}
-      aria-selected={isActive}
-      aria-controls={controls}
-      tabIndex={isActive ? 0 : -1}
-      onClick={onClick}
-      className="slack-members-tab"
-      data-active={isActive ? "true" : undefined}
-    >
-      {children}
-    </button>
   );
 }
 
