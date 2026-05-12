@@ -3,6 +3,10 @@ dist/
 .vercel/output/
 .vercel/cache/
 
+# Backend (removed — frontend-only showcase)
+api/
+middleware.ts
+
 # Dependencies
 node_modules/
 
