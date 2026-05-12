@@ -484,7 +484,7 @@ export default defineConfig({
           "hangul": ["hangul-romanization"],
           
           // AI SDK - deferred until Chats/IE opens  
-          "ai-sdk": ["ai", "@ai-sdk/anthropic", "@ai-sdk/google", "@ai-sdk/openai", "@ai-sdk/react"],
+          "ai-sdk": ["ai", "@ai-sdk/react"],
           
           // Rich text editor - deferred until TextEdit opens
           // Note: @tiptap/pm is excluded because it only exports subpaths (e.g. @tiptap/pm/state)
