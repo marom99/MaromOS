@@ -3,11 +3,8 @@ import { useTranslation } from "react-i18next";
 import { appRegistry, getAppIconPath, getNonFinderApps } from "@/config/appRegistry";
 import type { AppId } from "@/config/appRegistry";
 import { useFilesStore } from "@/stores/useFilesStore";
-import { useIpodStore } from "@/stores/useIpodStore";
 import { useInternetExplorerStore } from "@/stores/useInternetExplorerStore";
 import { useVideoStore } from "@/stores/useVideoStore";
-import { useCalendarStore } from "@/stores/useCalendarStore";
-import { useContactsStore } from "@/stores/useContactsStore";
 import { useLaunchApp } from "@/hooks/useLaunchApp";
 import { getTranslatedAppName } from "@/utils/i18n";
 import type {
@@ -115,21 +112,6 @@ const SEARCHABLE_SETTINGS: Array<{
   },
 ];
 
-// Terminal commands
-const SEARCHABLE_COMMANDS = [
-  { name: "ls", description: "List files", keywords: ["list", "directory"] },
-  { name: "cd", description: "Change directory", keywords: ["navigate", "folder"] },
-  { name: "pwd", description: "Print working directory", keywords: ["path", "current"] },
-  { name: "touch", description: "Create file", keywords: ["new", "create"] },
-  { name: "rm", description: "Remove file", keywords: ["delete", "remove"] },
-  { name: "mkdir", description: "Create directory", keywords: ["folder", "new"] },
-  { name: "echo", description: "Print text", keywords: ["print", "output"] },
-  { name: "grep", description: "Search text", keywords: ["find", "search", "pattern"] },
-  { name: "whoami", description: "Current user", keywords: ["user", "name"] },
-  { name: "cowsay", description: "ASCII cow", keywords: ["fun", "cow", "ascii"] },
-  { name: "ryo", description: "Ask Ryo AI", keywords: ["ai", "chat", "assistant"] },
-];
-
 const MAX_RESULTS_PER_TYPE = 4;
 const MAX_TOTAL_RESULTS = 12;
 
@@ -142,35 +124,16 @@ function matchesQuery(query: string, ...fields: (string | undefined)[]): boolean
 
 const buildSpotlightSearchSnapshot = (): SpotlightSearchSnapshot => {
   const { items } = useFilesStore.getState();
-  const { tracks } = useIpodStore.getState();
   const { favorites } = useInternetExplorerStore.getState();
   const { videos } = useVideoStore.getState();
-  const { events } = useCalendarStore.getState();
-  const { contacts } = useContactsStore.getState();
 
   return {
     items,
-    tracks,
+    tracks: [],
     favorites,
     videos,
-    calendarEvents: events.map((ev) => ({
-      id: ev.id,
-      title: ev.title,
-      date: ev.date,
-      startTime: ev.startTime,
-      endTime: ev.endTime,
-      notes: ev.notes,
-    })),
-    contacts: contacts.map((c) => ({
-      id: c.id,
-      displayName: c.displayName,
-      firstName: c.firstName,
-      lastName: c.lastName,
-      organization: c.organization,
-      emails: c.emails.map((e) => e.value),
-      phones: c.phones.map((p) => p.value),
-      picture: c.picture,
-    })),
+    calendarEvents: [],
+    contacts: [],
   };
 };
 
@@ -210,10 +173,10 @@ const mapWorkerResultToSpotlightResult = (
         type: "music",
         title: result.title,
         subtitle: result.subtitle,
-        icon: getAppIconPath("ipod"),
+        icon: getAppIconPath("videos"),
         thumbnail: result.thumbnail,
         action: () =>
-          launchApp("ipod", { initialData: { videoId: result.videoId } }),
+          launchApp("videos", { initialData: { videoId: result.videoId } }),
       };
     case "site":
       return {
@@ -245,11 +208,8 @@ const mapWorkerResultToSpotlightResult = (
         type: "calendar",
         title: result.title,
         subtitle: result.subtitle,
-        icon: getAppIconPath("calendar"),
-        action: () => {
-          useCalendarStore.getState().setSelectedDate(result.date);
-          launchApp("calendar");
-        },
+        icon: getAppIconPath("dashboard"),
+        action: () => launchApp("dashboard"),
       };
     case "contact":
       return {
@@ -257,13 +217,10 @@ const mapWorkerResultToSpotlightResult = (
         type: "contact",
         title: result.title,
         subtitle: result.subtitle,
-        icon: getAppIconPath("contacts"),
+        icon: getAppIconPath("finder"),
         thumbnail: result.picture || undefined,
         initials: result.initials,
-        action: () => {
-          useContactsStore.getState().setSelectedContactId(result.contactId);
-          launchApp("contacts");
-        },
+        action: () => launchApp("finder"),
       };
   }
 };
@@ -390,16 +347,6 @@ export function useSpotlightSearch(query: string): SpotlightSearchState {
       refreshWorkerIndex();
     });
 
-    let tracksRef = useIpodStore.getState().tracks;
-    const unsubscribeTracks = useIpodStore.subscribe((state) => {
-      if (state.tracks === tracksRef) {
-        return;
-      }
-
-      tracksRef = state.tracks;
-      refreshWorkerIndex();
-    });
-
     let favoritesRef = useInternetExplorerStore.getState().favorites;
     const unsubscribeFavorites = useInternetExplorerStore.subscribe((state) => {
       if (state.favorites === favoritesRef) {
@@ -420,33 +367,10 @@ export function useSpotlightSearch(query: string): SpotlightSearchState {
       refreshWorkerIndex();
     });
 
-    let calendarEventsRef = useCalendarStore.getState().events;
-    const unsubscribeCalendar = useCalendarStore.subscribe((state) => {
-      if (state.events === calendarEventsRef) {
-        return;
-      }
-
-      calendarEventsRef = state.events;
-      refreshWorkerIndex();
-    });
-
-    let contactsRef = useContactsStore.getState().contacts;
-    const unsubscribeContacts = useContactsStore.subscribe((state) => {
-      if (state.contacts === contactsRef) {
-        return;
-      }
-
-      contactsRef = state.contacts;
-      refreshWorkerIndex();
-    });
-
     return () => {
       unsubscribeFiles();
-      unsubscribeTracks();
       unsubscribeFavorites();
       unsubscribeVideos();
-      unsubscribeCalendar();
-      unsubscribeContacts();
 
       if (idleHandle !== null) {
         window.cancelIdleCallback(idleHandle);
@@ -475,8 +399,9 @@ export function useSpotlightSearch(query: string): SpotlightSearchState {
         "finder",
         "textedit",
         "internet-explorer",
-        "ipod",
-        "terminal",
+        "videos",
+        "applet-viewer",
+        "slack",
       ];
       return topApps.map((appId) => ({
         id: `app-${appId}`,
@@ -539,22 +464,7 @@ export function useSpotlightSearch(query: string): SpotlightSearchState {
       }));
     results.push(...settingResults);
 
-    // 8. Terminal Commands
-    const cmdResults = SEARCHABLE_COMMANDS.filter((cmd) =>
-      matchesQuery(trimmed, cmd.name, cmd.description, ...cmd.keywords)
-    )
-      .slice(0, MAX_RESULTS_PER_TYPE)
-      .map((cmd) => ({
-        id: `cmd-${cmd.name}`,
-        type: "command" as const,
-        title: cmd.name,
-        subtitle: cmd.description,
-        icon: getAppIconPath("terminal"),
-        action: () => launchApp("terminal", { initialData: { prefillCommand: cmd.name } }),
-      }));
-    results.push(...cmdResults);
-
-    // 9. AI Fallback — always present when there's a query
+    // 8. AI Fallback — always present when there's a query
     results.push({
       id: "ai-ask-ryo",
       type: "ai" as const,

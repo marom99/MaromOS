@@ -19,7 +19,7 @@ import { getTranslatedAppName } from "@/utils/i18n";
 const MULTI_INSTANCE_APPS: AppId[] = ["textedit", "finder", "applet-viewer"];
 
 // Apps that support fullscreen mode
-const FULLSCREEN_APPS: AppId[] = ["ipod", "karaoke", "videos", "pc"];
+const FULLSCREEN_APPS: AppId[] = ["videos"];
 
 interface AppMenuProps {
   appId: AppId;

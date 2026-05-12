@@ -17,10 +17,8 @@ interface DashboardMenuBarProps {
   onShowHelp: () => void;
   onShowAbout: () => void;
   onAddClock: () => void;
-  onAddCalendar: () => void;
   onAddWeather: () => void;
   onAddStocks: () => void;
-  onAddIpod: () => void;
   onAddTranslation: () => void;
   onAddStickyNote: () => void;
   onAddDictionary: () => void;
@@ -33,10 +31,8 @@ export function DashboardMenuBar({
   onShowHelp,
   onShowAbout,
   onAddClock,
-  onAddCalendar,
   onAddWeather,
   onAddStocks,
-  onAddIpod,
   onAddTranslation,
   onAddStickyNote,
   onAddDictionary,
@@ -64,17 +60,11 @@ export function DashboardMenuBar({
               <MenubarItem onClick={onAddClock} className="text-md h-6 px-3">
                 🕐 {t("apps.dashboard.widgets.clock")}
               </MenubarItem>
-              <MenubarItem onClick={onAddCalendar} className="text-md h-6 px-3">
-                📅 {t("apps.dashboard.widgets.calendar")}
-              </MenubarItem>
               <MenubarItem onClick={onAddWeather} className="text-md h-6 px-3">
                 🌤️ {t("apps.dashboard.widgets.weather")}
               </MenubarItem>
               <MenubarItem onClick={onAddStocks} className="text-md h-6 px-3">
                 📈 {t("apps.dashboard.widgets.stocks")}
-              </MenubarItem>
-              <MenubarItem onClick={onAddIpod} className="text-md h-6 px-3">
-                🎵 {t("apps.dashboard.widgets.ipod", "iPod")}
               </MenubarItem>
               <MenubarItem onClick={onAddTranslation} className="text-md h-6 px-3">
                 🌐 {t("apps.dashboard.widgets.translation", "Translation")}

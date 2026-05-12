@@ -1200,9 +1200,9 @@ export const useFilesStore = create<FilesStoreState>()(
               shortcutsToCreate.push({
                 appId,
                 appName: app.name,
-                // Apply hiddenOnThemes for non-iPod/AppletViewer
+                // Apply hiddenOnThemes for non-AppletViewer shortcuts.
                 // This ensures they are hidden on macOS X theme but visible on others
-                hiddenOnThemes: appId !== "ipod" && appId !== "applet-viewer" ? ["macosx"] : [],
+                hiddenOnThemes: appId !== "applet-viewer" ? ["macosx"] : [],
               });
             }
           }

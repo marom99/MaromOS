@@ -1,8 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { EventColor } from "./useCalendarStore";
-
-export type WidgetType = "clock" | "weather" | "calendar" | "stocks" | "ipod" | "dictionary" | "stickynote" | "translation" | "gitstreak";
+export type WidgetType = "clock" | "weather" | "stocks" | "dictionary" | "stickynote" | "translation" | "gitstreak";
 
 export interface WeatherWidgetConfig {
   cityName?: string;
@@ -17,17 +15,8 @@ export interface ClockWidgetConfig {
   cityKey?: string;
 }
 
-export interface CalendarWidgetConfig {
-  hiddenColors?: EventColor[];
-}
-
 export interface StocksWidgetConfig {
   symbols?: string[];
-}
-
-export interface IpodWidgetConfig {
-  placeholder?: boolean;
-  controlMode?: "ipod" | "karaoke";
 }
 
 export interface DictionaryWidgetConfig {
@@ -44,7 +33,7 @@ export interface TranslationWidgetConfig {
   toLang?: string;
 }
 
-export type WidgetConfig = WeatherWidgetConfig | ClockWidgetConfig | CalendarWidgetConfig | StocksWidgetConfig | IpodWidgetConfig | DictionaryWidgetConfig | StickyNoteWidgetConfig | TranslationWidgetConfig;
+export type WidgetConfig = WeatherWidgetConfig | ClockWidgetConfig | StocksWidgetConfig | DictionaryWidgetConfig | StickyNoteWidgetConfig | TranslationWidgetConfig;
 
 export interface DashboardWidget {
   id: string;
@@ -74,12 +63,6 @@ const DEFAULT_WIDGETS: DashboardWidget[] = [
     type: "clock",
     position: { x: 80, y: 120 },
     size: { width: 170, height: 170 },
-  },
-  {
-    id: "default-calendar",
-    type: "calendar",
-    position: { x: 300, y: 100 },
-    size: { width: 240, height: 350 },
   },
   {
     id: "default-weather",

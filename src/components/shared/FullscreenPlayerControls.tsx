@@ -3,7 +3,6 @@ import { cn } from "@/lib/utils";
 import { useSound, Sounds } from "@/hooks/useSound";
 import type { LyricsAlignment, RomanizationSettings } from "@/types/lyrics";
 import { DisplayMode, LyricsFont, getLyricsFontClassName } from "@/types/lyrics";
-import { getTranslationBadge } from "@/apps/ipod/constants";
 import { Translate, X, ClockClockwise, SkipBack, SkipForward, Play, Pause, Shuffle, Video } from "@phosphor-icons/react";
 import {
   DropdownMenu,
@@ -15,6 +14,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useThemeStore } from "@/stores/useThemeStore";
+
+const getTranslationBadge = (translationCode?: string | null) => {
+  if (!translationCode || translationCode === "none") return "Tr";
+  return translationCode.slice(0, 2).toUpperCase();
+};
 
 // Aqua-style shine overlays for macOS X theme (dark glass style)
 function AquaShineOverlays({ variant }: { variant: "compact" | "responsive" }) {

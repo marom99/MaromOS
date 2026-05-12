@@ -949,7 +949,9 @@ function MacDock() {
 
   // Pinned apps on the left side (from dock store)
   const pinnedLeft: AppId[] = useMemo(
-    () => pinnedItems.filter(item => item.type === "app").map(item => item.id as AppId),
+    () => pinnedItems
+      .filter(item => item.type === "app" && appRegistry[item.id as AppId])
+      .map(item => item.id as AppId),
     [pinnedItems]
   );
   
@@ -1981,7 +1983,9 @@ function MacDock() {
   // Mark all currently visible ids as seen whenever the set changes
   const allVisibleIds = useMemo(() => {
     const ids = [
-      ...pinnedItems.map(item => item.id),
+      ...pinnedItems
+        .filter((item) => item.type !== "app" || appRegistry[item.id as AppId])
+        .map(item => item.id),
       ...openItems.map((item) =>
         item.type === "applet" ? item.instanceId! : item.appId
       ),
@@ -2116,6 +2120,7 @@ function MacDock() {
                   
                   if (item.type === "app") {
                     const appId = item.id as AppId;
+                    if (!appRegistry[appId]) return;
                     const icon = getAppIconPath(appId);
                     const isOpen = openAppsAllSet.has(appId);
                     const isLoading = Object.values(instances).some(

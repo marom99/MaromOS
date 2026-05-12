@@ -15,10 +15,8 @@ import { migrateIndexedDBToUUIDs } from "@/utils/indexedDBMigration";
 import { useFinderStore } from "@/stores/useFinderStore";
 import {
   useFilesStoreShallow,
-  useIpodStoreShallow,
   useVideoStoreShallow,
 } from "@/stores/helpers";
-import { formatKugouImageUrl } from "@/apps/ipod/constants";
 import { abortableFetch } from "@/utils/abortableFetch";
 import { getStoreForFile } from "@/utils/indexedDBOperations";
 import {
@@ -523,15 +521,6 @@ export function useFileSystem(
   }));
   const launchApp = useLaunchApp();
   const {
-    tracks: ipodTracks,
-    setCurrentSongId: setIpodSongId,
-    setIsPlaying: setIpodPlaying,
-  } = useIpodStoreShallow((state) => ({
-    tracks: state.tracks,
-    setCurrentSongId: state.setCurrentSongId,
-    setIsPlaying: state.setIsPlaying,
-  }));
-  const {
     videos: videoTracks,
     setCurrentVideoId: setVideoIndex,
     setIsPlaying: setVideoPlaying,
@@ -680,58 +669,6 @@ export function useFileSystem(
           icon: app.icon,
           appId: app.id,
           type: "application",
-        }));
-      } else if (currentPath === "/Music") {
-        // At root music directory, show artist folders
-        const artistSet = new Set<string>();
-
-        // Collect all unique artists
-        ipodTracks.forEach((track) => {
-          if (track.artist) {
-            artistSet.add(track.artist);
-          }
-        });
-
-        // Create a folder for artists with tracks
-        displayFiles = Array.from(artistSet).map((artist) => ({
-          name: artist,
-          isDirectory: true,
-          path: `/Music/${encodeURIComponent(artist)}`,
-          icon: "/icons/directory.png",
-          type: "directory-virtual",
-        }));
-
-        // Add an "Unknown Artist" folder if there are tracks without artists
-        if (ipodTracks.some((track) => !track.artist)) {
-          displayFiles.push({
-            name: "Unknown Artist",
-            isDirectory: true,
-            path: `/Music/Unknown Artist`,
-            icon: "/icons/directory.png",
-            type: "directory-virtual",
-          });
-        }
-      } else if (currentPath.startsWith("/Music/")) {
-        // Inside an artist folder
-        const artistName = decodeURIComponent(
-          currentPath.replace("/Music/", "")
-        );
-        const artistTracks = ipodTracks.filter((track) =>
-          artistName === "Unknown Artist"
-            ? !track.artist
-            : track.artist === artistName
-        );
-
-        // Display all tracks for this artist
-        displayFiles = artistTracks.map((track) => ({
-          name: `${track.title}.mp3`,
-          isDirectory: false,
-          path: `/Music/${track.id}`,
-          icon: "/icons/sound.png",
-          appId: "ipod",
-          type: "Music",
-          data: { songId: track.id },
-          contentUrl: formatKugouImageUrl(track.cover, 100) ?? undefined,
         }));
       } else if (currentPath === "/Videos") {
         // At root videos directory, show artist folders
@@ -954,21 +891,8 @@ export function useFileSystem(
         // --- END EDIT ---
       }
 
-      // a. Music Library (Virtual)
-      if (currentPath === "/Music Library") {
-        displayFiles = ipodTracks.map((track) => ({
-          name: `${track.title}.mp3`,
-          isDirectory: false,
-          path: `/Music Library/${track.title}.mp3`,
-          type: "Music",
-          data: track,
-          icon: "/icons/file-music.png",
-          modifiedAt: undefined, // Virtual files don't have timestamps
-          contentUrl: formatKugouImageUrl(track.cover, 100) ?? undefined,
-        }));
-      }
-      // b. Video Library (Virtual)
-      else if (currentPath === "/Video Library") {
+      // Video Library (Virtual)
+      if (currentPath === "/Video Library") {
         displayFiles = videoTracks.map((video) => ({
           name: `${video.title}.mov`,
           isDirectory: false,
@@ -1012,7 +936,6 @@ export function useFileSystem(
     currentPath,
     currentTheme,
     getItemsInPath,
-    ipodTracks,
     videoTracks,
     internetExplorerFavorites,
     isAdmin,
@@ -1252,11 +1175,6 @@ export function useFileSystem(
               e
             );
           }
-        } else if (file.appId === "ipod" && file.data?.songId) {
-          // iPod uses song ID directly
-          setIpodSongId(file.data.songId);
-          setIpodPlaying(true);
-          launchApp("ipod", { launchOrigin });
         } else if (file.appId === "videos" && file.data?.videoId) {
           // Videos uses video ID directly
           setVideoIndex(file.data.videoId);
@@ -1285,8 +1203,6 @@ export function useFileSystem(
     [
       launchApp,
       navigateToPath,
-      setIpodSongId,
-      setIpodPlaying,
       setVideoIndex,
       setVideoPlaying,
       ensureDefaultContent,

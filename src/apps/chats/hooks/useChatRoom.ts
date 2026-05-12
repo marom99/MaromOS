@@ -54,6 +54,7 @@ export function useChatRoom(
   const { t } = useTranslation();
   const {
     username,
+    isAuthenticated,
     rooms,
     currentRoomId,
     roomMessages,
@@ -73,6 +74,7 @@ export function useChatRoom(
     messageRenderLimit,
   } = useChatsStoreShallow((state) => ({
     username: state.username,
+    isAuthenticated: state.isAuthenticated,
     rooms: state.rooms,
     currentRoomId: state.currentRoomId,
     roomMessages: state.roomMessages,

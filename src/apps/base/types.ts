@@ -21,30 +21,18 @@ export interface AppProps<TInitialData = unknown> {
 
 export interface BaseApp<TInitialData = unknown> {
   id:
-    | "soundboard"
     | "internet-explorer"
     | "chats"
     | "textedit"
     | "control-panels"
-    | "minesweeper"
     | "finder"
     | "paint"
     | "videos"
-    | "pc"
     | "photo-booth"
-    | "synth"
-    | "ipod"
-    | "karaoke"
-    | "terminal"
     | "applet-viewer"
     | "admin"
     | "stickies"
-    | "infinite-mac"
-    | "winamp"
-    | "calendar"
-    | "contacts"
     | "dashboard"
-    | "candybar"
     | "slack"
     | "github-contributions";
   name: string;
@@ -93,16 +81,6 @@ export interface InternetExplorerInitialData {
   year?: string;
 }
 
-export interface IpodInitialData {
-  videoId?: string;
-  listenSessionId?: string;
-}
-
-export interface KaraokeInitialData {
-  videoId?: string;
-  listenSessionId?: string;
-}
-
 export interface PaintInitialData {
   path?: string;
   content?: Blob;
@@ -116,10 +94,6 @@ export interface FinderInitialData {
   path?: string;
 }
 
-export interface TerminalInitialData {
-  prefillCommand?: string;
-}
-
 export interface ChatsInitialData {
   prefillMessage?: string;
   autoSend?: boolean;
@@ -129,27 +103,21 @@ export interface ChatsInitialData {
 export type AnyApp =
   | BaseApp<ControlPanelsInitialData>
   | BaseApp<InternetExplorerInitialData>
-  | BaseApp<IpodInitialData>
-  | BaseApp<KaraokeInitialData>
+  | BaseApp<ChatsInitialData>
   | BaseApp<PaintInitialData>
   | BaseApp<VideosInitialData>
   | BaseApp<AppletViewerInitialData>
-  | BaseApp<TerminalInitialData>
-  | BaseApp<ChatsInitialData>
   | BaseApp<unknown>; // For apps without specific initialData
 
 // Type for the initialData that could be any of the specific types
 export type AnyInitialData =
   | ControlPanelsInitialData
   | InternetExplorerInitialData
-  | IpodInitialData
-  | KaraokeInitialData
+  | ChatsInitialData
   | PaintInitialData
   | VideosInitialData
   | FinderInitialData
   | AppletViewerInitialData
-  | TerminalInitialData
-  | ChatsInitialData
   | unknown;
 
 // Theme-aware menu bar pattern:

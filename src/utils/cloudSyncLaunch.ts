@@ -3,10 +3,6 @@ import type { CloudSyncDomain } from "@/utils/cloudSyncShared";
 
 const APP_CLOUD_SYNC_DOMAINS: Partial<Record<AppId, CloudSyncDomain[]>> = {
   stickies: ["stickies"],
-  calendar: ["calendar"],
-  contacts: ["contacts"],
-  ipod: ["songs", "settings"],
-  karaoke: ["songs", "settings"],
   videos: ["videos"],
 };
 
@@ -17,10 +13,6 @@ const APPS_THAT_TRIGGER_CLOUD_SYNC_CHECK_ON_LAUNCH = new Set<AppId>([
   "applet-viewer",
   "control-panels",
   "stickies",
-  "calendar",
-  "contacts",
-  "ipod",
-  "karaoke",
   "videos",
   "dashboard",
 ]);

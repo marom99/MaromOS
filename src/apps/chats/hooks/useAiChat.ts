@@ -54,20 +54,14 @@ import {
   handleLaunchApp,
   handleCloseApp,
   handleSettings,
-  handleIpodControl,
-  handleKaraokeControl,
   handleStickiesControl,
-  handleInfiniteMacControl,
   handleCalendarControl,
   handleContactsControl,
   type ToolContext,
   type LaunchAppInput,
   type CloseAppInput,
   type SettingsInput,
-  type IpodControlInput,
-  type KaraokeControlInput,
   type StickiesControlInput,
-  type InfiniteMacControlInput,
   type CalendarControlInput,
   type ContactsControlInput,
 } from "../tools";
@@ -704,24 +698,6 @@ export function useAiChat(onPromptSetUsername?: () => void) {
             );
             break;
           }
-          case "ipodControl": {
-            await handleIpodControl(
-              toolCall.input as IpodControlInput,
-              toolCall.toolCallId,
-              toolContext
-            );
-            result = ""; // Handler manages its own result
-            break;
-          }
-          case "karaokeControl": {
-            await handleKaraokeControl(
-              toolCall.input as KaraokeControlInput,
-              toolCall.toolCallId,
-              toolContext
-            );
-            result = ""; // Handler manages its own result
-            break;
-          }
           // === Server-side tools (executed on the server via `execute` function) ===
           // These tools have their results streamed from the server.
           // We must NOT call addToolResult here, as it would race with and
@@ -983,34 +959,7 @@ export function useAiChat(onPromptSetUsername?: () => void) {
             try {
               // Route based on path prefix
               if (path.startsWith("/Music/")) {
-                // Play iPod song by ID
-                const songId = path.replace("/Music/", "");
-                const ipodState = useIpodStore.getState();
-                const track = ipodState.tracks.find((t) => t.id === songId);
-
-                if (!track) {
-                  throw new Error(`Song not found: ${songId}`);
-                }
-
-                // Ensure iPod is open
-                const appState = useAppStore.getState();
-                const ipodInstances = appState.getInstancesByAppId("ipod");
-                if (!ipodInstances.some((inst) => inst.isOpen)) {
-                  launchApp("ipod");
-                }
-
-                ipodState.setCurrentSongId(songId);
-                ipodState.setIsPlaying(true);
-
-                const playingMessage = track.artist
-                  ? i18n.t("apps.chats.toolCalls.playingTrackByArtist", { title: track.title, artist: track.artist })
-                  : i18n.t("apps.chats.toolCalls.playingTrack", { title: track.title });
-                addToolResult({
-                  tool: toolCall.toolName,
-                  toolCallId: toolCall.toolCallId,
-                  output: playingMessage,
-                });
-                result = "";
+                throw new Error("Music playback is unavailable because iPod was removed.");
               } else if (path.startsWith("/Applets Store/")) {
                 // Open shared applet preview
                 const shareId = path.replace("/Applets Store/", "");
@@ -1671,15 +1620,6 @@ export function useAiChat(onPromptSetUsername?: () => void) {
           case "stickiesControl": {
             handleStickiesControl(
               toolCall.input as StickiesControlInput,
-              toolCall.toolCallId,
-              toolContext
-            );
-            result = ""; // Handler manages its own result
-            break;
-          }
-          case "infiniteMacControl": {
-            await handleInfiniteMacControl(
-              toolCall.input as InfiniteMacControlInput,
               toolCall.toolCallId,
               toolContext
             );
