@@ -14,7 +14,7 @@ export const helpItems = [
     icon: "#",
     title: "Browse the Workspace",
     description:
-      "Explore the design-lab channel to see the case study discussion with file attachments and reactions.",
+      "Explore the prototype-playground channel to see the case study discussion with file attachments and reactions.",
   },
   {
     icon: "💬",

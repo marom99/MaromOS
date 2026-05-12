@@ -61,7 +61,7 @@ export function SlackAppComponent({
 
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
-  const [activeChannelId, setActiveChannelId] = useState<SlackChannelId>("design-lab");
+  const [activeChannelId, setActiveChannelId] = useState<SlackChannelId>("prototype-playground");
   const [channelMessages, setChannelMessages] = useState(createInitialChannelMessages);
   const [selectedThreadMessageId, setSelectedThreadMessageId] = useState<string | null>(null);
   const [selectedThreadChannelId, setSelectedThreadChannelId] = useState<SlackChannelId | null>(null);
@@ -370,7 +370,6 @@ export function SlackAppComponent({
   const getWindowTitle = () => {
     if (activeDMId === MAROM_DM_ID) return "Slack — Marom";
     if (activeNavItem === "threads") return "Slack — Threads";
-    if (activeNavItem === "mentions") return "Slack — Mentions & Reactions";
     if (activeNavItem === "bookmarks") return "Slack — Bookmarks";
     if (activeNavItem === "drafts") return "Slack — Drafts";
     return `Slack — #${activeChannel.name}`;
@@ -438,8 +437,7 @@ export function SlackAppComponent({
               threads={threadsForMarom}
               onOpenThreadMessage={handleOpenThreadMessage}
             />
-          ) : activeNavItem === "mentions" ||
-            activeNavItem === "bookmarks" ||
+          ) : activeNavItem === "bookmarks" ||
             activeNavItem === "drafts" ||
             activeNavItem === "more" ? (
             <SlackEmptyState type={activeNavItem} />

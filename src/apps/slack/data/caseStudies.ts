@@ -77,8 +77,8 @@ const designLabMembers: SlackMember[] = [
 
 export const caseStudies: SlackChannel[] = [
   {
-    id: "design-lab",
-    name: "design-lab",
+    id: "prototype-playground",
+    name: "prototype-playground",
     topic: "Ideas, UI explorations, and design feedback",
     description: "Ideas, UI explorations, and design feedback",
     members: designLabMembers,

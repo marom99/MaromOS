@@ -1,17 +1,11 @@
-import { At, Bookmark, NotePencil, DotsThree } from "@phosphor-icons/react";
+import { Bookmark, NotePencil, DotsThree } from "@phosphor-icons/react";
 
 interface SlackEmptyStateProps {
-  type: "mentions" | "bookmarks" | "drafts" | "more";
+  type: "bookmarks" | "drafts" | "more";
 }
 
 export function SlackEmptyState({ type }: SlackEmptyStateProps) {
   const config = {
-    mentions: {
-      icon: <At size={32} weight="light" />,
-      title: "No mentions yet",
-      label: "Mentions & Reactions",
-      description: "When someone mentions you with @Marom, it'll appear here.",
-    },
     bookmarks: {
       icon: <Bookmark size={32} weight="light" />,
       title: "No bookmarks yet",

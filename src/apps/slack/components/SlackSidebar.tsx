@@ -1,6 +1,5 @@
 import {
   ChatCircleDots,
-  At,
   Bookmark,
 } from "@phosphor-icons/react";
 import dmAvatar from "../assets/dm-avatar.png";
@@ -12,7 +11,7 @@ import {
   TooltipProvider,
 } from "@/components/ui/tooltip";
 
-export type SlackNavItem = "threads" | "mentions" | "bookmarks";
+export type SlackNavItem = "threads" | "bookmarks";
 
 interface SlackSidebarProps {
   activeChannelId: SlackChannelId;
@@ -30,7 +29,6 @@ const directMessages = [
 
 const NAV_ITEMS: { id: SlackNavItem; icon: React.ReactNode; label: string }[] = [
   { id: "threads", icon: <ChatCircleDots size={16} weight="regular" />, label: "Threads" },
-  { id: "mentions", icon: <At size={16} weight="regular" />, label: "Mentions" },
   { id: "bookmarks", icon: <Bookmark size={16} weight="regular" />, label: "Bookmarks" },
 ];
 

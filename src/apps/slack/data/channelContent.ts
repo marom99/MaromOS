@@ -1,9 +1,8 @@
 export type SlackChannelId =
   | "welcome"
-  | "general"
-  | "design-lab"
-  | "feedback"
-  | "random";
+  | "prototype-playground"
+  | "transporter-app"
+  | "driver-app";
 
 export interface SlackReactionItem {
   emoji: string;
@@ -207,27 +206,8 @@ export const slackChannels: SlackChannelContent[] = [
     ],
   },
   {
-    id: "general",
-    name: "general",
-    topic: "Workspace-wide notes and day-to-day updates",
-    memberCount: 8,
-    members: sharedMembers,
-    composerPlaceholder: "Message #general",
-    messages: [
-      {
-        id: "general-1",
-        user: "Jordan Ellis",
-        time: "8:52 AM",
-        content:
-          "Quick housekeeping note: homepage polish is in progress today, so if anything shifts visually it is likely part of that pass.",
-        reactions: [{ emoji: "👍", count: 2, hasReacted: false }],
-        avatarIndex: 0,
-      },
-    ],
-  },
-  {
-    id: "design-lab",
-    name: "design-lab",
+    id: "prototype-playground",
+    name: "prototype-playground",
     topic: "Ideas, UI explorations, and design feedback",
     memberCount: 12,
     members: [
@@ -244,7 +224,7 @@ export const slackChannels: SlackChannelContent[] = [
       sharedMembers[10],
       sharedMembers[11],
     ],
-    composerPlaceholder: "Message #design-lab",
+    composerPlaceholder: "Message #prototype-playground",
     messages: [
       {
         id: "design-1",
@@ -350,8 +330,8 @@ export const slackChannels: SlackChannelContent[] = [
     ],
   },
   {
-    id: "feedback",
-    name: "feedback",
+    id: "transporter-app",
+    name: "transporter-app",
     topic: "Notes, critiques, and iteration requests",
     memberCount: 6,
     members: [
@@ -362,7 +342,7 @@ export const slackChannels: SlackChannelContent[] = [
       sharedMembers[5],
       sharedMembers[2],
     ],
-    composerPlaceholder: "Message #feedback",
+    composerPlaceholder: "Message #transporter-app",
     messages: [
       {
         id: "feedback-1",
@@ -376,8 +356,8 @@ export const slackChannels: SlackChannelContent[] = [
     ],
   },
   {
-    id: "random",
-    name: "random",
+    id: "driver-app",
+    name: "driver-app",
     topic: "Loose ideas, references, and side notes",
     memberCount: 5,
     members: [
@@ -387,7 +367,7 @@ export const slackChannels: SlackChannelContent[] = [
       sharedMembers[1],
       sharedMembers[0],
     ],
-    composerPlaceholder: "Message #random",
+    composerPlaceholder: "Message #driver-app",
     messages: [
       {
         id: "random-1",
