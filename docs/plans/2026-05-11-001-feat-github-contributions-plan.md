@@ -1,12 +1,12 @@
 ---
-title: "feat: Add GitHub Contributions app"
+title: "feat: Add GitHub Daily Streak app"
 type: feat
 status: active
 date: 2026-05-11
 origin: docs/brainstorms/2026-05-11-github-contributions-requirements.md
 ---
 
-# feat: Add GitHub Contributions App
+# feat: Add GitHub Daily Streak App
 
 ## Overview
 
@@ -316,7 +316,7 @@ Stats bar: Total | Current Streak | Longest Streak
 ## System-Wide Impact
 
 - **Interaction graph:** Only the new app and the new API route are added. No existing stores, components, or routes are modified except the registry files (additive only).
-- **Error propagation:** Network errors from the proxy stay within the GitHub app's error state; they do not bubble to the window manager or global app state.
+- **Error propagation:** Network errors from the proxy stay within the GitHub Daily Streak app's error state; they do not bubble to the window manager or global app state.
 - **State lifecycle risks:** No persistent state. All fetched data is in-memory (hook state); cleared when the app window closes.
 - **API surface parity:** `api/github-contributions.ts` is a new, app-specific route. No other ryOS app consumes it.
 - **Integration coverage:** The fetch → render flow requires the proxy route and component to work together. Manual end-to-end test (open app, see heatmap) is the primary integration check.

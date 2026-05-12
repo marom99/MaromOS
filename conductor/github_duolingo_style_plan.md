@@ -32,7 +32,7 @@ Modify the `DARK` and `LIGHT` color scales in `ContributionHeatmap.tsx` to use t
 - Update the `TooltipContent` to have rounded corners and bold text for the contribution count, matching the playful aesthetic of Duolingo.
 
 ## Verification & Testing
-- Open the GitHub app in both Light and Dark modes.
+- Open the GitHub Daily Streak app in both Light and Dark modes.
 - Verify the cell colors match the new multi-color scale.
 - Check that the streak statistics display the fire icon correctly.
 - Ensure responsive layout behaves correctly when the window is resized.

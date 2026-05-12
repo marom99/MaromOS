@@ -55,7 +55,7 @@ export const GitHubContributionsAppComponent: React.FC<AppProps> = ({
       <WindowFrame
         appId="github-contributions"
         instanceId={instanceId}
-        title="GitHub"
+        title="GitHub Daily Streak"
         isForeground={isForeground}
         onClose={onClose}
         skipInitialSound={skipInitialSound}
