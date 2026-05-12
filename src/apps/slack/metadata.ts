@@ -6,7 +6,7 @@ export const appMetadata = {
     url: "https://marom.com",
   },
   github: "https://github.com/ryokun6/ryos",
-  icon: "/icons/default/slack.svg",
+  icon: "/icons/default/slack.png",
 };
 
 export const helpItems = [

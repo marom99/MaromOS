@@ -49,7 +49,7 @@ export function SlackSidebar({
       >
         <div className="ws-head">
           <div className="ws-logo">
-            <img src="/icons/default/slack.svg" alt="Workspace" />
+            <img src="/icons/default/slack.png" alt="Workspace" />
           </div>
           <div className="ws-meta">
             <div className="ws-name">
