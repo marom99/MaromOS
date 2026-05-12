@@ -20,6 +20,8 @@ interface SlackSidebarProps {
   isCollapsed: boolean;
   activeNavItem: SlackNavItem | null;
   onSelectNav: (item: SlackNavItem) => void;
+  activeDMId: string | null;
+  onSelectDM: (id: string) => void;
 }
 
 const directMessages = [
@@ -38,6 +40,8 @@ export function SlackSidebar({
   isCollapsed,
   activeNavItem,
   onSelectNav,
+  activeDMId,
+  onSelectDM,
 }: SlackSidebarProps) {
   return (
     <TooltipProvider delayDuration={100}>
@@ -89,9 +93,9 @@ export function SlackSidebar({
                 <TooltipTrigger asChild>
                   <button
                     type="button"
-                    className={`channel${channel.id === activeChannelId && !activeNavItem ? " active" : ""}`}
+                    className={`channel${channel.id === activeChannelId && !activeNavItem && !activeDMId ? " active" : ""}`}
                     onClick={() => onSelectChannel(channel.id)}
-                    aria-pressed={channel.id === activeChannelId && !activeNavItem}
+                    aria-pressed={channel.id === activeChannelId && !activeNavItem && !activeDMId}
                     aria-label={`Open #${channel.name}`}
                   >
                     <span className="hash" aria-hidden="true">#</span>
@@ -112,13 +116,19 @@ export function SlackSidebar({
             {directMessages.map((name) => (
               <Tooltip key={name} open={isCollapsed ? undefined : false}>
                 <TooltipTrigger asChild>
-                  <div className="dm" aria-label={name}>
+                  <button
+                    type="button"
+                    className={`dm${activeDMId === name.toLowerCase() ? " active" : ""}`}
+                    onClick={() => onSelectDM(name.toLowerCase())}
+                    aria-pressed={activeDMId === name.toLowerCase()}
+                    aria-label={`Open direct message with ${name}`}
+                  >
                     <div className="dm-avatar">
                       <img src={dmAvatar} alt={name} />
                       <div className="presence"></div>
                     </div>
                     <div className="dm-name">{name}</div>
-                  </div>
+                  </button>
                 </TooltipTrigger>
                 <TooltipContent side="right">{name}</TooltipContent>
               </Tooltip>

@@ -24,6 +24,8 @@ import {
   type SlackMessageItem,
   type SlackThreadReplyItem,
 } from "../data/channelContent";
+import { MAROM_DM_ID, maromDMMessages } from "../data/dmContent";
+import { SlackDMHeader } from "./SlackDMHeader";
 import "./slack-aqua.css";
 
 function createInitialChannelMessages() {
@@ -64,6 +66,8 @@ export function SlackAppComponent({
   const [selectedThreadMessageId, setSelectedThreadMessageId] = useState<string | null>(null);
   const [selectedThreadChannelId, setSelectedThreadChannelId] = useState<SlackChannelId | null>(null);
   const [activeNavItem, setActiveNavItem] = useState<SlackNavItem | null>(null);
+  const [activeDMId, setActiveDMId] = useState<string | null>(null);
+  const [dmMessages, setDmMessages] = useState<SlackMessageItem[]>(maromDMMessages);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
@@ -187,9 +191,41 @@ export function SlackAppComponent({
   const handleSelectChannel = (channelId: SlackChannelId) => {
     setActiveChannelId(channelId);
     setActiveNavItem(null);
+    setActiveDMId(null);
     setSelectedThreadMessageId(null);
     setSelectedThreadChannelId(null);
     if (isMobile) setIsSidebarOpen(false);
+  };
+
+  const handleSelectDM = (id: string) => {
+    setActiveDMId(id);
+    setActiveNavItem(null);
+    setSelectedThreadMessageId(null);
+    setSelectedThreadChannelId(null);
+    if (isMobile) setIsSidebarOpen(false);
+  };
+
+  const handleSendDMMessage = (content: string, imageData?: string | null) => {
+    const trimmedContent = content.trim();
+    if (!trimmedContent && !imageData) return false;
+
+    setDmMessages((prev) => [
+      ...prev,
+      {
+        id: `dm-visitor-${Date.now()}-${prev.length}`,
+        user: "You",
+        time: formatSlackTime(new Date()),
+        content: trimmedContent || "Shared an image.",
+        reactions: [],
+        isSelf: true,
+        avatarIndex: 3,
+        hasImage: Boolean(imageData),
+        imageSrc: imageData ?? undefined,
+        imageAlt: "Shared image",
+      },
+    ]);
+
+    return true;
   };
 
   const handleSelectNav = (item: SlackNavItem) => {
@@ -332,6 +368,7 @@ export function SlackAppComponent({
   );
 
   const getWindowTitle = () => {
+    if (activeDMId === MAROM_DM_ID) return "Slack — Marom";
     if (activeNavItem === "threads") return "Slack — Threads";
     if (activeNavItem === "mentions") return "Slack — Mentions & Reactions";
     if (activeNavItem === "bookmarks") return "Slack — Bookmarks";
@@ -368,8 +405,35 @@ export function SlackAppComponent({
             isCollapsed={!isMobile && isSidebarCollapsed}
             activeNavItem={activeNavItem}
             onSelectNav={handleSelectNav}
+            activeDMId={activeDMId}
+            onSelectDM={handleSelectDM}
           />
-          {activeNavItem === "threads" ? (
+          {activeDMId === MAROM_DM_ID ? (
+            <main className="main">
+              <SlackDMHeader
+                onToggleSidebar={isMobile ? handleToggleSidebar : undefined}
+                isSidebarOpen={isSidebarOpen}
+              />
+              <SlackMessages
+                channel={{
+                  id: "marom" as SlackChannelId,
+                  name: "Marom",
+                  topic: "",
+                  memberCount: 0,
+                  members: [],
+                  composerPlaceholder: "Message Marom",
+                  messages: dmMessages,
+                }}
+                selectedThreadMessageId={null}
+                onOpenThread={() => {}}
+                onMessagesChange={() => {}}
+              />
+              <SlackComposer
+                isForeground={!!isForeground}
+                onSendMessage={handleSendDMMessage}
+              />
+            </main>
+          ) : activeNavItem === "threads" ? (
             <SlackThreadsView
               threads={threadsForMarom}
               onOpenThreadMessage={handleOpenThreadMessage}
