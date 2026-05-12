@@ -110,22 +110,22 @@ export function BouncingLogo() {
         }}
       >
         <svg
-          viewBox="0 0 120 60"
+          viewBox="0 0 180 60"
           className="w-full h-full"
           style={{ color: COLORS[colorIndex] }}
         >
-          {/* ryOS logo */}
+          {/* MaromOS logo */}
           <text
             x="50%"
             y="50%"
             dominantBaseline="middle"
             textAnchor="middle"
             fill="currentColor"
-            fontSize="36"
+            fontSize="28"
             fontFamily="system-ui, -apple-system, sans-serif"
             fontWeight="bold"
           >
-            ryOS
+            MaromOS
           </text>
         </svg>
       </div>

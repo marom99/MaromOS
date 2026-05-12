@@ -176,7 +176,7 @@ export const slackChannels: SlackChannelContent[] = [
         user: "Marom",
         time: "9:12 AM",
         content:
-          "Welcome to ryOS. I’m Marom, and this workspace is set up so you can explore the projects from inside the OS instead of reading a flat portfolio page.",
+          "Welcome to MaromOS. I’m Marom, and this workspace is set up so you can explore the projects from inside the OS instead of reading a flat portfolio page.",
         reactions: [
           { emoji: "👋", count: 4, hasReacted: false },
           { emoji: "✨", count: 2, hasReacted: false },
@@ -263,7 +263,7 @@ export const slackChannels: SlackChannelContent[] = [
               user: "Marom",
               time: "10:04 AM",
               content:
-                "I would use it for direction probes, then rebuild the real UI in ryOS components so the behavior, accessibility, and theme fidelity survive.",
+                "I would use it for direction probes, then rebuild the real UI in MaromOS components so the behavior, accessibility, and theme fidelity survive.",
               avatarIndex: 3,
             },
             {

@@ -48,6 +48,7 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "@radix-ui/react-visually-hidden": "^1.2.4",
     "@tailwindcss/vite": "^4.1.18",
+    "@tauri-apps/api": "^2.11.0",
     "@tiptap/core": "^2.27",
     "@tiptap/extension-task-item": "^2.27",
     "@tiptap/extension-task-list": "^2.27",
@@ -106,7 +107,7 @@
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "@tailwindcss/typography": "^0.5.19",
-"@types/dotenv": "^8.2.3",
+    "@types/dotenv": "^8.2.3",
     "@types/node": "^22",
     "@types/node-fetch": "^2.6.13",
     "@types/pako": "^2.0.4",

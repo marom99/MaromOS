@@ -384,13 +384,13 @@ export function DesktopErrorBoundary({
       fallback={(error) => (
         <CrashDialog
           scope="desktop"
-          titleBarLabel="ryOS"
+          titleBarLabel="MaromOS"
           heading={t("common.errorBoundaries.desktopHeading", {
             defaultValue: "Desktop quit unexpectedly.",
           })}
           description={t("common.errorBoundaries.desktopDescription", {
             defaultValue:
-              "Reload ryOS to restore the Dock, Desktop, and menu bar.",
+              "Reload MaromOS to restore the Dock, Desktop, and menu bar.",
           })}
           primaryActionLabel={t("common.errorBoundaries.reloadDesktop", {
             defaultValue: "Reload Desktop",

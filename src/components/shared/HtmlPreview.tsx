@@ -585,7 +585,7 @@ export default function HtmlPreview({
       .replace(/[:.]/g, "-")
       .substring(0, 19);
     a.href = url;
-    a.download = `ryOS-generated-${timestamp}.html`;
+    a.download = `MaromOS-generated-${timestamp}.html`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

@@ -387,8 +387,8 @@
           "title": "Tienda de Applets"
         },
         "createWithRyosChat": {
-          "description": "Pide a ryOS Chat que cree apps y applets personalizados para ti. Comparte tus ideas y obtén apps funcionales al instante.",
-          "title": "Crea con ryOS Chat"
+          "description": "Pide a MaromOS Chat que cree apps y applets personalizados para ti. Comparte tus ideas y obtén apps funcionales al instante.",
+          "title": "Crea con MaromOS Chat"
         },
         "keepUpdated": {
           "description": "Busca actualizaciones en el menú Tienda para obtener las últimas versiones de tus applets instalados.",
@@ -403,7 +403,7 @@
           "title": "Compartir Applets"
         },
         "viewApplets": {
-          "description": "Abre y ejecuta applets guardados desde ryOS Chat o descargados de la tienda.",
+          "description": "Abre y ejecuta applets guardados desde MaromOS Chat o descargados de la tienda.",
           "title": "Ver Applets"
         }
       },
@@ -429,7 +429,7 @@
         "noAppletsOpen": "No hay applets abiertos",
         "open": "Abrir...",
         "openAppletStore": "Abrir Tienda de Applets",
-        "ryosApp": "App de ryOS",
+        "ryosApp": "App de MaromOS",
         "shareApplet": "Compartir Applet...",
         "store": "Tienda",
         "untitled": "Sin título",
@@ -642,7 +642,7 @@
       },
       "help": {
         "chatWithRyo": {
-          "description": "Escribe tu mensaje para chatear con Ryo, generar código u obtener ayuda con ryOS.",
+          "description": "Escribe tu mensaje para chatear con Ryo, generar código u obtener ayuda con MaromOS.",
           "title": "Chatear con Ryo"
         },
         "controlApps": {
@@ -720,7 +720,7 @@
         "loginRequired": "Se requiere iniciar sesión",
         "loginToChat": "Iniciar sesión en el chat",
         "loginToContinue": "Inicia sesión para seguir chateando con Ryo.",
-        "loginToRyOS": "Iniciar sesión en ryOS",
+        "loginToRyOS": "Iniciar sesión en MaromOS",
         "newChat": "Nuevo chat",
         "noTranscriptionText": "No se recibió texto de transcripción",
         "nudgeSent": "👋 *toque enviado*",
@@ -1081,7 +1081,7 @@
           "title": "Editar detalles"
         },
         "importVCards": {
-          "description": "Importa archivos .vcf desde el menú Archivo para llevar los contactos a ryOS",
+          "description": "Importa archivos .vcf desde el menú Archivo para llevar los contactos a MaromOS",
           "title": "Importar vCards"
         },
         "useWithRyo": {
@@ -1185,7 +1185,7 @@
         "confirmForceUpload": "¿Subir a la nube?",
         "confirmForceUploadDesc": "Esto sobrescribirá los datos en la nube con los datos actuales de este dispositivo para cada elemento de Sincronización Automática habilitado.",
         "confirmRestore": "¿Restaurar desde la nube?",
-        "confirmRestoreDesc": "Esto reemplazará todos tus ajustes y archivos actuales con la copia de seguridad en la nube. ryOS se reiniciará.",
+        "confirmRestoreDesc": "Esto reemplazará todos tus ajustes y archivos actuales con la copia de seguridad en la nube. MaromOS se reiniciará.",
         "description": "Haz una copia de seguridad o restaura todos los ajustes y archivos en la nube. Máx. {{limit}} MB.",
         "forceDownload": "Descargar",
         "forceDownloadFailed": "Error al descargar desde la nube",
@@ -1237,7 +1237,7 @@
       "errorBoundaries": "Límites de error",
       "errorBoundariesDescription": "Activa los mecanismos de recuperación ante fallos de la aplicación o del escritorio para pruebas.",
       "formatFileSystem": "Formatear sistema de archivos",
-      "formatFileSystemDescription": "Esto borrará todos los archivos (excepto los documentos de muestra), imágenes y fondos de pantalla personalizados. ryOS se reiniciará después del formato.",
+      "formatFileSystemDescription": "Esto borrará todos los archivos (excepto los documentos de muestra), imágenes y fondos de pantalla personalizados. MaromOS se reiniciará después del formato.",
       "help": {
         "aiModel": {
           "description": "Selecciona el modelo de IA utilizado por los Chats y el asistente de Terminal",
@@ -1276,7 +1276,7 @@
       "logIn": "Iniciar sesión",
       "logOut": "Cerrar sesión",
       "logOutOfAllDevices": "Cerrar sesión en todos los dispositivos",
-      "loggedInToRyOS": "Sesión iniciada en ryOS",
+      "loggedInToRyOS": "Sesión iniciada en MaromOS",
       "loggingOut": "Cerrando sesión...",
       "login": "Iniciar sesión",
       "loginToSendMessages": "Inicia sesión para enviar mensajes y más",
@@ -1304,7 +1304,7 @@
       "resetAllSettings": "Restablecer todos los ajustes",
       "resetAllSettingsDescription": "Esto borrará todos los ajustes guardados y restaurará los valores predeterminados",
       "restore": "Restaurar",
-      "ryOSAccount": "Cuenta de ryOS",
+      "ryOSAccount": "Cuenta de MaromOS",
       "screenSaver": "Protector de pantalla",
       "screenSaverDescription": "Se activa después de un período de inactividad",
       "screenSaverExitHint": "Haz clic o pulsa cualquier tecla para salir",
@@ -1377,7 +1377,7 @@
         "linkPending": "Enlace listo - finalízalo en Telegram",
         "linkReady": "El enlace de Telegram está listo",
         "linkedAs": "Vinculado como {{account}}",
-        "loggedOutDescription": "Inicia sesión para vincular Telegram a tu cuenta de ryOS",
+        "loggedOutDescription": "Inicia sesión para vincular Telegram a tu cuenta de MaromOS",
         "loginRequired": "Por favor, inicia sesión para vincular Telegram",
         "manage": "Administrar",
         "openTelegram": "Abrir Telegram",
@@ -3090,7 +3090,7 @@
     "aboutThisMac": {
       "builtInMemory": "Memoria Integrada",
       "clickToToggle": "Clic para alternar",
-      "description": "Información sobre ryOS en este equipo",
+      "description": "Información sobre MaromOS en este equipo",
       "largestUnusedBlock": "Bloque Sin Usar Más Grande",
       "mb": "MB",
       "system": "Sistema",
@@ -3131,7 +3131,7 @@
     "auth": {
       "createAccount": "Crear cuenta",
       "creatingAccount": "Creando...",
-      "dialogTitle": "Inicio de sesión de ryOS",
+      "dialogTitle": "Inicio de sesión de MaromOS",
       "logIn": "Iniciar sesión",
       "logOut": "Cerrar sesión",
       "logOutDescription": "¿Estás seguro de que quieres cerrar sesión? Se cerrará tu sesión.",
@@ -3232,7 +3232,7 @@
     "errorBoundaries": {
       "appDescription": "Reiníciala para abrir una ventana nueva, o cierra esta ventana bloqueada. Otras aplicaciones abiertas seguirán ejecutándose.",
       "appHeading": "{{appName}} se cerró inesperadamente",
-      "desktopDescription": "Recarga ryOS para restaurar el Dock, el Escritorio y la barra de menú.",
+      "desktopDescription": "Recarga MaromOS para restaurar el Dock, el Escritorio y la barra de menú.",
       "desktopHeading": "El Escritorio se cerró inesperadamente",
       "relaunch": "Reiniciar",
       "reloadDesktop": "Recargar Escritorio"
@@ -3247,8 +3247,8 @@
     },
     "htmlPreview": {
       "bannerFallbackTitle": "Applet sin título",
-      "codePreviewTitle": "Vista previa de código de ryOS",
-      "codePreviewTitleFullscreen": "Vista previa de código de ryOS en pantalla completa",
+      "codePreviewTitle": "Vista previa de código de MaromOS",
+      "codePreviewTitleFullscreen": "Vista previa de código de MaromOS en pantalla completa",
       "copyHtml": "Copiar código HTML",
       "downloadHtml": "Descargar HTML",
       "exitFullscreen": "Salir de pantalla completa",
@@ -3323,16 +3323,16 @@
     "system": {
       "debugBootScreenTest": "Prueba de pantalla de arranque de depuración...",
       "formatFileSystem": "Formatear sistema de archivos",
-      "formatFileSystemDesc": "¿Está seguro de que desea formatear el sistema de archivos? Esto eliminará permanentemente todos los documentos (excepto los documentos de muestra), imágenes y fondos de pantalla personalizados. ryOS se reiniciará después del formato.",
+      "formatFileSystemDesc": "¿Está seguro de que desea formatear el sistema de archivos? Esto eliminará permanentemente todos los documentos (excepto los documentos de muestra), imágenes y fondos de pantalla personalizados. MaromOS se reiniciará después del formato.",
       "formattingFileSystem": "Formateando sistema de archivos...",
       "rebooting": "Reiniciando...",
       "resetAllSettings": "Restablecer todos los ajustes",
-      "resetAllSettingsDesc": "¿Está seguro de que desea restablecer todos los ajustes? Esto borrará todos los ajustes guardados y restaurará los estados predeterminados. ryOS se reiniciará después del restablecimiento.",
+      "resetAllSettingsDesc": "¿Está seguro de que desea restablecer todos los ajustes? Esto borrará todos los ajustes guardados y restaurará los estados predeterminados. MaromOS se reiniciará después del restablecimiento.",
       "resettingSystem": "Restableciendo sistema...",
       "restoringSystem": "Restaurando sistema...",
       "systemRestoring": "Restaurando sistema...",
-      "updatingToRyOS": "Actualizando a ryOS {{version}}...",
-      "updatingToRyOSWithBuild": "Actualizando a ryOS {{version}} ({{buildNumber}})..."
+      "updatingToRyOS": "Actualizando a MaromOS {{version}}...",
+      "updatingToRyOSWithBuild": "Actualizando a MaromOS {{version}} ({{buildNumber}})..."
     },
     "toast": {
       "alreadyLatestVersion": "Ya estás ejecutando la última versión",
@@ -3343,7 +3343,7 @@
       "noAssetsToCache": "No hay recursos para almacenar en caché",
       "reboot": "Reiniciar",
       "total": "total",
-      "updateReady": "Actualización lista para ryOS {{version}} ({{buildNumber}})",
+      "updateReady": "Actualización lista para MaromOS {{version}} ({{buildNumber}})",
       "updatingAssets": "Actualizando recursos",
       "updatingIcons": "Actualizando iconos",
       "updatingSounds": "Actualizando sonidos",
@@ -3369,7 +3369,7 @@
   "settings": {
     "language": {
       "chineseTraditional": "中文",
-      "description": "Selecciona tu idioma preferido para la interfaz de ryOS",
+      "description": "Selecciona tu idioma preferido para la interfaz de MaromOS",
       "english": "English",
       "french": "Français",
       "german": "Deutsch",
@@ -3392,7 +3392,7 @@
     "hintNavigate": "navegar",
     "hintOpen": "abrir",
     "noResults": "Sin resultados",
-    "placeholder": "Buscar en ryOS",
+    "placeholder": "Buscar en MaromOS",
     "sections": {
       "applets": "Applets",
       "apps": "Aplicaciones",
