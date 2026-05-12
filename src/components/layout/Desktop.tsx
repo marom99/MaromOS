@@ -44,20 +44,12 @@ interface DesktopProps {
 }
 
 const DEFAULT_SHORTCUT_ORDER: AppId[] = [
-  "ipod",
-  "chats",
   "applet-viewer",
   "internet-explorer",
   "textedit",
   "photo-booth",
   "videos",
   "paint",
-  "soundboard",
-  "minesweeper",
-  "synth",
-  "calendar",
-  "terminal",
-  "pc",
   "dashboard",
   "github-contributions",
 ];
@@ -551,12 +543,10 @@ export function Desktop({
       }
     });
 
-  // macOS X: Only show iPod and Applet Store icons by default (with Macintosh HD shown above)
+  // macOS X: Only show Applet Store by default (with Macintosh HD shown above)
   const displayedApps =
     currentTheme === "macosx"
-      ? sortedApps.filter(
-          (app) => app.id === "ipod" || app.id === "applet-viewer"
-        )
+      ? sortedApps.filter((app) => app.id === "applet-viewer")
       : sortedApps;
 
   // Create default shortcuts based on theme
@@ -1029,11 +1019,7 @@ export function Desktop({
               <FileIcon
                 name={getTranslatedAppName(app.id as AppId)}
                 isDirectory={false}
-                icon={
-                  isXpTheme && app.id === "pc"
-                    ? `/icons/${currentTheme}/games.png`
-                    : getAppIconPath(app.id)
-                }
+                icon={getAppIconPath(app.id)}
                 onClick={(e) =>
                   handleDesktopItemClick(getDesktopAppItemId(app.id), e)
                 }

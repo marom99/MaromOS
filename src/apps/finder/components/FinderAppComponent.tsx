@@ -40,7 +40,6 @@ import { useRegisterUndoRedo } from "@/hooks/useUndoRedo";
 import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 import { ThemedIcon } from "@/components/shared/ThemedIcon";
-import { AirDropView } from "./AirDropView";
 
 const FinderPanel = AppSidebarPanel;
 
@@ -92,7 +91,6 @@ export function FinderAppComponent({
     isSettingUsername,
     usernameError,
     submitUsernameDialog,
-    promptVerifyToken,
     isVerifyDialogOpen,
     setVerifyDialogOpen,
     verifyPasswordInput,
@@ -214,11 +212,6 @@ export function FinderAppComponent({
     // Helper functions
     getFileType,
     getDisplayPath,
-    // AirDrop
-    isAirDropView,
-    navigateToAirDrop,
-    navigateAwayFromAirDrop,
-    handleAirDropSendFile,
   } = useFinderLogic({
     isWindowOpen,
     isForeground,
@@ -266,7 +259,6 @@ export function FinderAppComponent({
       instanceId={instanceId}
       showSidebar={showSidebar}
       onToggleSidebar={() => setShowSidebar((s) => !s)}
-      onNavigateToAirDrop={navigateToAirDrop}
     />
   );
 
@@ -325,14 +317,8 @@ export function FinderAppComponent({
                 <ToolbarButtonGroup>
                   <ToolbarButton
                     icon
-                    onClick={() => {
-                      if (isAirDropView) {
-                        navigateAwayFromAirDrop();
-                      } else {
-                        navigateBack();
-                      }
-                    }}
-                    disabled={!isAirDropView && !canNavigateBack()}
+                    onClick={navigateBack}
+                    disabled={!canNavigateBack()}
                   >
                     <CaretLeft size={14} weight="fill" className="scale-x-150 scale-y-90" />
                   </ToolbarButton>
@@ -400,14 +386,8 @@ export function FinderAppComponent({
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => {
-                      if (isAirDropView) {
-                        navigateAwayFromAirDrop();
-                      } else {
-                        navigateBack();
-                      }
-                    }}
-                    disabled={!isAirDropView && !canNavigateBack()}
+                    onClick={navigateBack}
+                    disabled={!canNavigateBack()}
                     className="h-8 w-8"
                   >
                     <ArrowLeft size={14} weight="bold" />
@@ -463,12 +443,7 @@ export function FinderAppComponent({
                             icon={item.icon}
                             isActive={activeSidebarPath === item.path}
                             onClick={() => {
-                              if (item.isAirDrop) {
-                                navigateToAirDrop();
-                              } else {
-                                navigateAwayFromAirDrop();
-                                navigateToPath(item.path);
-                              }
+                              navigateToPath(item.path);
                             }}
                           />
                           {item.divider && (
@@ -480,51 +455,42 @@ export function FinderAppComponent({
                   </FinderPanel>
                 )}
                 <FinderPanel bordered className="flex-1 flex flex-col min-h-0 min-w-0 overflow-hidden">
-                  {isAirDropView ? (
-                    <div className="flex-1 bg-gradient-to-b from-[#e8ecf0] to-[#d1d5db]">
-                      <AirDropView
-                        onSendFile={handleAirDropSendFile}
-                        onRequestLogin={promptVerifyToken}
+                  <div
+                    className={cn(
+                      "flex-1 bg-white/90",
+                      viewType === "list"
+                        ? "overflow-auto"
+                        : "overflow-y-auto overflow-x-hidden"
+                    )}
+                    style={{ "--os-color-selection-bg": "#3875d7" } as CSSProperties}
+                  >
+                    {isLoading ? (
+                      <div className="flex items-center justify-center h-full">
+                        {t("apps.finder.messages.loading")}
+                      </div>
+                    ) : error ? (
+                      <div className="flex items-center justify-center h-full text-red-500">
+                        {error}
+                      </div>
+                    ) : (
+                      <FileList
+                        files={sortedFiles}
+                        onFileOpen={handleFileOpen}
+                        onFileSelect={handleFileSelect}
+                        selectedFile={selectedFile}
+                        selectedFiles={selectedFiles}
+                        selectionAnchorPath={selectionAnchorPath}
+                        viewType={viewType}
+                        getFileType={getFileType}
+                        onFileDrop={handleFileMoved}
+                        onDropToCurrentDirectory={handleDropToCurrentDirectory}
+                        canDropFiles={canCreateFolder}
+                        currentPath={currentPath}
+                        onRenameRequest={handleRenameRequest}
+                        onItemContextMenu={handleItemContextMenu}
                       />
-                    </div>
-                  ) : (
-                    <div
-                      className={cn(
-                        "flex-1 bg-white/90",
-                        viewType === "list"
-                          ? "overflow-auto"
-                          : "overflow-y-auto overflow-x-hidden"
-                      )}
-                      style={{ "--os-color-selection-bg": "#3875d7" } as CSSProperties}
-                    >
-                      {isLoading ? (
-                        <div className="flex items-center justify-center h-full">
-                          {t("apps.finder.messages.loading")}
-                        </div>
-                      ) : error ? (
-                        <div className="flex items-center justify-center h-full text-red-500">
-                          {error}
-                        </div>
-                      ) : (
-                        <FileList
-                          files={sortedFiles}
-                          onFileOpen={handleFileOpen}
-                          onFileSelect={handleFileSelect}
-                          selectedFile={selectedFile}
-                          selectedFiles={selectedFiles}
-                          selectionAnchorPath={selectionAnchorPath}
-                          viewType={viewType}
-                          getFileType={getFileType}
-                          onFileDrop={handleFileMoved}
-                          onDropToCurrentDirectory={handleDropToCurrentDirectory}
-                          canDropFiles={canCreateFolder}
-                          currentPath={currentPath}
-                          onRenameRequest={handleRenameRequest}
-                          onItemContextMenu={handleItemContextMenu}
-                        />
-                      )}
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </FinderPanel>
               </div>
               <div
@@ -545,50 +511,41 @@ export function FinderAppComponent({
             </>
           ) : (
             <>
-              {isAirDropView ? (
-                <div className="flex-1 bg-gradient-to-b from-gray-100 to-gray-200">
-                  <AirDropView
-                    onSendFile={handleAirDropSendFile}
-                    onRequestLogin={promptVerifyToken}
+              <div
+                className={cn(
+                  "flex-1 bg-white",
+                  viewType === "list"
+                    ? "overflow-auto"
+                    : "overflow-y-auto overflow-x-hidden"
+                )}
+              >
+                {isLoading ? (
+                  <div className="flex items-center justify-center h-full">
+                    {t("apps.finder.messages.loading")}
+                  </div>
+                ) : error ? (
+                  <div className="flex items-center justify-center h-full text-red-500">
+                    {error}
+                  </div>
+                ) : (
+                  <FileList
+                    files={sortedFiles}
+                    onFileOpen={handleFileOpen}
+                    onFileSelect={handleFileSelect}
+                    selectedFile={selectedFile}
+                    selectedFiles={selectedFiles}
+                    selectionAnchorPath={selectionAnchorPath}
+                    viewType={viewType}
+                    getFileType={getFileType}
+                    onFileDrop={handleFileMoved}
+                    onDropToCurrentDirectory={handleDropToCurrentDirectory}
+                    canDropFiles={canCreateFolder}
+                    currentPath={currentPath}
+                    onRenameRequest={handleRenameRequest}
+                    onItemContextMenu={handleItemContextMenu}
                   />
-                </div>
-              ) : (
-                <div
-                  className={cn(
-                    "flex-1 bg-white",
-                    viewType === "list"
-                      ? "overflow-auto"
-                      : "overflow-y-auto overflow-x-hidden"
-                  )}
-                >
-                  {isLoading ? (
-                    <div className="flex items-center justify-center h-full">
-                      {t("apps.finder.messages.loading")}
-                    </div>
-                  ) : error ? (
-                    <div className="flex items-center justify-center h-full text-red-500">
-                      {error}
-                    </div>
-                  ) : (
-                    <FileList
-                      files={sortedFiles}
-                      onFileOpen={handleFileOpen}
-                      onFileSelect={handleFileSelect}
-                      selectedFile={selectedFile}
-                      selectedFiles={selectedFiles}
-                      selectionAnchorPath={selectionAnchorPath}
-                      viewType={viewType}
-                      getFileType={getFileType}
-                      onFileDrop={handleFileMoved}
-                      onDropToCurrentDirectory={handleDropToCurrentDirectory}
-                      canDropFiles={canCreateFolder}
-                      currentPath={currentPath}
-                      onRenameRequest={handleRenameRequest}
-                      onItemContextMenu={handleItemContextMenu}
-                    />
-                  )}
-                </div>
-              )}
+                )}
+              </div>
               <div className="os-status-bar os-status-bar-text flex items-center justify-between px-2 py-1 text-[10px] font-geneva-12 bg-gray-100 border-t border-gray-300">
                 <span>
                   {sortedFiles.length}{" "}

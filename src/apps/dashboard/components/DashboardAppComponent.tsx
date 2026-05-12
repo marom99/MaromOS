@@ -8,10 +8,8 @@ import { appMetadata } from "../metadata";
 import { useDashboardLogic } from "../hooks/useDashboardLogic";
 import { WidgetChrome } from "@/components/layout/dashboard/WidgetChrome";
 import { ClockWidget, ClockBackPanel } from "@/components/layout/dashboard/ClockWidget";
-import { CalendarWidget, CalendarBackPanel } from "@/components/layout/dashboard/CalendarWidget";
 import { WeatherWidget, WeatherEmojiOverflow, WeatherBackPanel } from "@/components/layout/dashboard/WeatherWidget";
 import { StocksWidget, StocksBackPanel } from "@/components/layout/dashboard/StocksWidget";
-import { IpodWidget, IpodBackPanel } from "@/components/layout/dashboard/IpodWidget";
 import { TranslationWidget, TranslationBackPanel } from "@/components/layout/dashboard/TranslationWidget";
 import { StickyNoteWidget, StickyNoteBackPanel } from "@/components/layout/dashboard/StickyNoteWidget";
 import { DictionaryWidget, DictionaryBackPanel } from "@/components/layout/dashboard/DictionaryWidget";
@@ -26,14 +24,10 @@ function WidgetContent({ type, widgetId, isFlipped }: { type: string; widgetId: 
   switch (type) {
     case "clock":
       return <ClockWidget widgetId={widgetId} isFlipped={isFlipped} />;
-    case "calendar":
-      return <CalendarWidget widgetId={widgetId} />;
     case "weather":
       return <WeatherWidget widgetId={widgetId} />;
     case "stocks":
       return <StocksWidget widgetId={widgetId} />;
-    case "ipod":
-      return <IpodWidget widgetId={widgetId} />;
     case "translation":
       return <TranslationWidget widgetId={widgetId} />;
     case "stickynote":
@@ -51,14 +45,10 @@ function WidgetBackContent({ type, widgetId, onDone }: { type: string; widgetId:
   switch (type) {
     case "clock":
       return <ClockBackPanel widgetId={widgetId} onDone={onDone} />;
-    case "calendar":
-      return <CalendarBackPanel widgetId={widgetId} />;
     case "weather":
       return <WeatherBackPanel widgetId={widgetId} onDone={onDone} />;
     case "stocks":
       return <StocksBackPanel widgetId={widgetId} onDone={onDone} />;
-    case "ipod":
-      return <IpodBackPanel widgetId={widgetId} onDone={onDone} />;
     case "translation":
       return <TranslationBackPanel widgetId={widgetId} onDone={onDone} />;
     case "stickynote":
@@ -79,10 +69,8 @@ function WidgetOverflow({ type, widgetId }: { type: string; widgetId: string }) 
 
 const WIDGET_ICONS: Record<WidgetType, string> = {
   clock: "🕐",
-  calendar: "📅",
   weather: "🌤️",
   stocks: "📈",
-  ipod: "🎵",
   translation: "🌐",
   stickynote: "📝",
   dictionary: "📖",
@@ -117,10 +105,8 @@ function WidgetStrip({
 
   const widgets: { type: WidgetType; label: string }[] = [
     { type: "clock", label: t("apps.dashboard.widgets.clock") },
-    { type: "calendar", label: t("apps.dashboard.widgets.calendar") },
     { type: "weather", label: t("apps.dashboard.widgets.weather") },
     { type: "stocks", label: t("apps.dashboard.widgets.stocks") },
-    { type: "ipod", label: t("apps.dashboard.widgets.ipod", "iPod") },
     { type: "translation", label: t("apps.dashboard.widgets.translation", "Translation") },
     { type: "stickynote", label: t("apps.dashboard.widgets.stickyNote", "Sticky Note") },
     { type: "dictionary", label: t("apps.dashboard.widgets.dictionary", "Dictionary") },
@@ -294,10 +280,8 @@ export function DashboardAppComponent({
       onShowHelp={() => setIsHelpDialogOpen(true)}
       onShowAbout={() => setIsAboutDialogOpen(true)}
       onAddClock={() => handleAddWidget("clock")}
-      onAddCalendar={() => handleAddWidget("calendar")}
       onAddWeather={() => handleAddWidget("weather")}
       onAddStocks={() => handleAddWidget("stocks")}
-      onAddIpod={() => handleAddWidget("ipod")}
       onAddTranslation={() => handleAddWidget("translation")}
       onAddStickyNote={() => handleAddWidget("stickynote")}
       onAddDictionary={() => handleAddWidget("dictionary")}
@@ -408,8 +392,8 @@ export function DashboardAppComponent({
                       x={widget.position.x}
                       y={widget.position.y}
                       zIndex={widget.zIndex ?? 1}
-                      borderRadius={widget.type === "ipod" ? "9999px" : undefined}
-                      hideDoneButton={widget.type === "ipod"}
+                      borderRadius={undefined}
+                      hideDoneButton={false}
                       onRemove={() => removeWidget(widget.id)}
                       onMove={(pos) => moveWidget(widget.id, pos)}
                       onBringToFront={() => bringToFront(widget.id)}

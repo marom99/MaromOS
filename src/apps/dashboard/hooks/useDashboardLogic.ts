@@ -37,10 +37,8 @@ export function useDashboardLogic() {
     (type: WidgetType) => {
       const sizeMap: Record<WidgetType, { width: number; height: number }> = {
         clock: { width: 170, height: 170 },
-        calendar: { width: 240, height: 350 },
         weather: { width: 340, height: 180 },
         stocks: { width: 240, height: 340 },
-        ipod: { width: 320, height: 125 },
         dictionary: { width: 240, height: 220 },
         stickynote: { width: 200, height: 200 },
         translation: { width: 300, height: 170 },

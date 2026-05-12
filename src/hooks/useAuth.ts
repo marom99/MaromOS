@@ -31,10 +31,15 @@ export function useAuth() {
   }));
 
   const [isVerifyDialogOpen, setVerifyDialogOpen] = useState(false);
+  const [isUsernameDialogOpen, setIsUsernameDialogOpen] = useState(false);
   const [verifyPasswordInput, setVerifyPasswordInput] = useState("");
   const [verifyUsernameInput, setVerifyUsernameInput] = useState("");
+  const [newUsername, setNewUsername] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [isVerifyingToken, setIsVerifyingToken] = useState(false);
+  const [isSettingUsername, setIsSettingUsername] = useState(false);
   const [verifyError, setVerifyError] = useState<string | null>(null);
+  const [usernameError, setUsernameError] = useState<string | null>(null);
 
   const [isLogoutConfirmDialogOpen, setIsLogoutConfirmDialogOpen] =
     useState(false);
@@ -45,6 +50,57 @@ export function useAuth() {
     setVerifyError(null);
     setVerifyDialogOpen(true);
   }, [username]);
+
+  const promptSetUsername = useCallback(() => {
+    setNewUsername(username && username !== "you" ? username : "");
+    setNewPassword("");
+    setUsernameError(null);
+    setIsUsernameDialogOpen(true);
+  }, [username]);
+
+  const submitUsernameDialog = useCallback(async () => {
+    const trimmedUsername = newUsername.trim();
+    const trimmedPassword = newPassword.trim();
+
+    if (!trimmedUsername) {
+      setUsernameError("Username required");
+      return;
+    }
+
+    if (!trimmedPassword) {
+      setUsernameError("Password required");
+      return;
+    }
+
+    setIsSettingUsername(true);
+    setUsernameError(null);
+
+    try {
+      setUsername(trimmedUsername);
+      await storeSetPassword(trimmedPassword);
+      setAuthenticated(true);
+      setIsOwner(true);
+      setIsUsernameDialogOpen(false);
+      setNewPassword("");
+      toast.success("Success", {
+        description: "Profile created successfully",
+      });
+    } catch (err) {
+      console.error("[useAuth] Error setting username:", err);
+      const message =
+        err instanceof Error ? err.message : "Network error while saving profile";
+      setUsernameError(message);
+    } finally {
+      setIsSettingUsername(false);
+    }
+  }, [
+    newPassword,
+    newUsername,
+    setAuthenticated,
+    setIsOwner,
+    setUsername,
+    storeSetPassword,
+  ]);
 
   const handleVerifyTokenSubmit = useCallback(
     async (input: string, isPassword: boolean = false) => {
@@ -162,6 +218,17 @@ export function useAuth() {
     isAuthenticated,
     isOwner,
     hasPassword,
+
+    promptSetUsername,
+    isUsernameDialogOpen,
+    setIsUsernameDialogOpen,
+    newUsername,
+    setNewUsername,
+    newPassword,
+    setNewPassword,
+    isSettingUsername,
+    usernameError,
+    submitUsernameDialog,
 
     promptVerifyToken,
     isVerifyDialogOpen,

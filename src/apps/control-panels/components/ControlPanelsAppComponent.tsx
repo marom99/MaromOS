@@ -152,9 +152,9 @@ function getUsernameInitials(username: string): string {
 const AUTO_SYNC_ITEM_ICONS = {
   files: "finder",
   settings: "control-panels",
-  calendar: "calendar",
-  contacts: "contacts",
-  songs: "ipod",
+  calendar: "control-panels",
+  contacts: "control-panels",
+  songs: "admin",
   videos: "videos",
   stickies: "stickies",
 } as const;

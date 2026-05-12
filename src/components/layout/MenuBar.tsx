@@ -46,7 +46,7 @@ import { useTranslatedHelpItems } from "@/hooks/useTranslatedHelpItems";
 import { useIsPhone } from "@/hooks/useIsPhone";
 import { isTauri, isTauriWindows } from "@/utils/platform";
 import { useSpotlightStore } from "@/stores/useSpotlightStore";
-import { toggleExposeView, toggleSpotlightSearch, requestAppLaunch } from "@/utils/appEventBus";
+import { toggleExposeView, toggleSpotlightSearch } from "@/utils/appEventBus";
 import { useUndoRedoStore } from "@/stores/useUndoRedoStore";
 import { useCloudSyncStore } from "@/stores/useCloudSyncStore";
 
@@ -301,10 +301,7 @@ function Clock({ enableExposeToggle = false, enableCalendarOpen = false }: Clock
   
   // Handle click on clock
   const handleClick = () => {
-    if (enableCalendarOpen) {
-      // Open Calendar app when clicking the clock/date
-      requestAppLaunch({ appId: "calendar" });
-    } else if (enableExposeToggle) {
+    if (enableExposeToggle || enableCalendarOpen) {
       toggleExposeView();
     }
   };
@@ -412,7 +409,7 @@ function Clock({ enableExposeToggle = false, enableCalendarOpen = false }: Clock
             : undefined,
       }}
       onClick={handleClick}
-      title={enableCalendarOpen ? t("apps.calendar.title") : enableExposeToggle ? t("common.menuBar.showAllWindows") : undefined}
+      title={enableCalendarOpen || enableExposeToggle ? t("common.menuBar.showAllWindows") : undefined}
     >
       {displayTime}
     </div>
@@ -1747,4 +1744,3 @@ function CloudSyncIndicator() {
     </AnimatePresence>
   );
 }
-

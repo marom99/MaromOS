@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Dialog,
   DialogContent,
@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 
 interface LoginDialogProps {
+  initialTab?: "login" | "signup" | string;
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
 
@@ -24,9 +25,18 @@ interface LoginDialogProps {
   onLoginSubmit: () => Promise<void>;
   isLoginLoading: boolean;
   loginError: string | null;
+
+  newUsername?: string;
+  onNewUsernameChange?: (value: string) => void;
+  newPassword?: string;
+  onNewPasswordChange?: (value: string) => void;
+  onSignUpSubmit?: () => Promise<void>;
+  isSignUpLoading?: boolean;
+  signUpError?: string | null;
 }
 
 export function LoginDialog({
+  initialTab = "login",
   isOpen,
   onOpenChange,
   usernameInput,
@@ -36,11 +46,21 @@ export function LoginDialog({
   onLoginSubmit,
   isLoginLoading,
   loginError,
+  newUsername = "",
+  onNewUsernameChange,
+  newPassword = "",
+  onNewPasswordChange,
+  onSignUpSubmit,
+  isSignUpLoading = false,
+  signUpError = null,
 }: LoginDialogProps) {
   const currentTheme = useThemeStore((state) => state.current);
   const isXpTheme = currentTheme === "xp" || currentTheme === "win98";
   const { t } = useTranslation();
-  const dialogTitle = t("common.auth.dialogTitle");
+  const isSignUpMode = initialTab === "signup" && Boolean(onSignUpSubmit);
+  const dialogTitle = isSignUpMode
+    ? t("common.auth.createProfile", "Create Profile")
+    : t("common.auth.dialogTitle");
 
   const themeFont = isXpTheme
     ? "font-['Pixelated_MS_Sans_Serif',Arial] text-[11px]"
@@ -55,7 +75,9 @@ export function LoginDialog({
 
   const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
-    if (!isLoginLoading) {
+    if (isSignUpMode && onSignUpSubmit && !isSignUpLoading) {
+      await onSignUpSubmit();
+    } else if (!isLoginLoading) {
       await onLoginSubmit();
     }
   };
@@ -81,11 +103,15 @@ export function LoginDialog({
             </Label>
             <Input
               autoFocus
-              value={usernameInput}
-              onChange={(e) => onUsernameInputChange(e.target.value)}
+              value={isSignUpMode ? newUsername : usernameInput}
+              onChange={(e) =>
+                isSignUpMode
+                  ? onNewUsernameChange?.(e.target.value)
+                  : onUsernameInputChange(e.target.value)
+              }
               className={cn("shadow-none h-8", themeFont)}
               style={themeFontStyle}
-              disabled={isLoginLoading}
+              disabled={isSignUpMode ? isSignUpLoading : isLoginLoading}
             />
           </div>
           <div className="space-y-2">
@@ -94,18 +120,22 @@ export function LoginDialog({
             </Label>
             <Input
               type="password"
-              value={passwordInput}
-              onChange={(e) => onPasswordInputChange(e.target.value)}
+              value={isSignUpMode ? newPassword : passwordInput}
+              onChange={(e) =>
+                isSignUpMode
+                  ? onNewPasswordChange?.(e.target.value)
+                  : onPasswordInputChange(e.target.value)
+              }
               className={cn("shadow-none h-8", themeFont)}
               style={themeFontStyle}
-              disabled={isLoginLoading}
+              disabled={isSignUpMode ? isSignUpLoading : isLoginLoading}
             />
           </div>
         </div>
 
-        {loginError && (
+        {(isSignUpMode ? signUpError : loginError) && (
           <p className={cn("text-red-600 mt-3", themeFont)} style={themeFontStyle}>
-            {loginError}
+            {isSignUpMode ? signUpError : loginError}
           </p>
         )}
 
@@ -113,11 +143,21 @@ export function LoginDialog({
           <Button
             type="submit"
             variant="retro"
-            disabled={isLoginLoading || !usernameInput.trim() || !passwordInput.trim()}
+            disabled={
+              isSignUpMode
+                ? isSignUpLoading || !newUsername.trim() || !newPassword.trim()
+                : isLoginLoading || !usernameInput.trim() || !passwordInput.trim()
+            }
             className={cn("w-full sm:w-auto h-7", themeFont)}
             style={themeFontStyle}
           >
-            {isLoginLoading ? t("common.auth.loggingIn") : t("common.auth.logIn")}
+            {isSignUpMode
+              ? isSignUpLoading
+                ? t("common.auth.creating", "Creating...")
+                : t("common.auth.createProfile", "Create Profile")
+              : isLoginLoading
+              ? t("common.auth.loggingIn")
+              : t("common.auth.logIn")}
           </Button>
         </DialogFooter>
       </form>

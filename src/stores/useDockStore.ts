@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+import { appIds } from "@/config/appRegistryData";
 
 // Dock item can be an app or a file/applet
 export interface DockItem {
@@ -19,8 +20,26 @@ const DEFAULT_PINNED_ITEMS: DockItem[] = [
   { type: "app", id: "dashboard" },
   { type: "app", id: "chats" },
   { type: "app", id: "internet-explorer" },
-  { type: "app", id: "karaoke" },
+  { type: "app", id: "slack" },
 ];
+
+const validAppIds = new Set<string>(appIds);
+
+const sanitizeDockItems = (items: DockItem[]): DockItem[] => {
+  const seen = new Set<string>();
+  const sanitized = items.filter((item) => {
+    if (item.type === "app" && !validAppIds.has(item.id)) return false;
+    if (seen.has(item.id)) return false;
+    seen.add(item.id);
+    return true;
+  });
+
+  if (!sanitized.some((item) => item.id === "finder")) {
+    return [DEFAULT_PINNED_ITEMS[0], ...sanitized];
+  }
+
+  return sanitized;
+};
 
 interface DockStoreState {
   pinnedItems: DockItem[];
@@ -47,6 +66,10 @@ export const useDockStore = create<DockStoreState>()(
       magnification: true, // Default: magnification enabled
 
       addItem: (item: DockItem, insertIndex?: number) => {
+        if (item.type === "app" && !validAppIds.has(item.id)) {
+          return false;
+        }
+
         const { pinnedItems } = get();
         
         // Check for duplicates
@@ -93,7 +116,7 @@ export const useDockStore = create<DockStoreState>()(
 
       reorderItems: (fromIndex: number, toIndex: number) => {
         set((state) => {
-          const newItems = [...state.pinnedItems];
+          const newItems = sanitizeDockItems(state.pinnedItems);
           const movedItem = newItems[fromIndex];
           
           // Don't allow moving Finder (always stays at position 0)
@@ -138,8 +161,23 @@ export const useDockStore = create<DockStoreState>()(
     }),
     {
       name: "dock-storage",
+      version: 2,
       storage: createJSONStorage(() => localStorage),
+      migrate: (persistedState) => {
+        if (!persistedState || typeof persistedState !== "object") {
+          return persistedState;
+        }
+
+        const state = persistedState as Partial<DockStoreState>;
+        return {
+          ...state,
+          pinnedItems: sanitizeDockItems(
+            Array.isArray(state.pinnedItems)
+              ? state.pinnedItems
+              : DEFAULT_PINNED_ITEMS
+          ),
+        };
+      },
     }
   )
 );
-

@@ -117,7 +117,7 @@ export function LinkPreview({ url, className = "" }: LinkPreviewProps) {
     try {
       const videoId = extractYouTubeVideoId(url);
       if (videoId) {
-        launchApp("ipod", { initialData: { videoId } });
+        launchApp("videos", { initialData: { videoId } });
       } else {
         toast.error("Could not extract video ID from this YouTube URL");
         console.warn("Could not extract video ID from YouTube URL:", url);
@@ -134,7 +134,7 @@ export function LinkPreview({ url, className = "" }: LinkPreviewProps) {
     try {
       const videoId = extractYouTubeVideoId(url);
       if (videoId) {
-        launchApp("karaoke", { initialData: { videoId } });
+        launchApp("videos", { initialData: { videoId } });
       } else {
         toast.error("Could not extract video ID from this URL");
         console.warn("Could not extract video ID from URL:", url);
@@ -343,7 +343,7 @@ export function LinkPreview({ url, className = "" }: LinkPreviewProps) {
             console.log(
               `[LinkPreview] Adding iPod link to iPod with videoId: ${videoId}`
             );
-            launchApp("ipod", { initialData: { videoId } });
+            launchApp("videos", { initialData: { videoId } });
           } else {
             toast.error("Could not extract video ID from this iPod URL");
             console.warn("Could not extract video ID from iPod URL:", url);
@@ -360,7 +360,7 @@ export function LinkPreview({ url, className = "" }: LinkPreviewProps) {
             console.log(
               `[LinkPreview] Adding Karaoke link to Karaoke with videoId: ${videoId}`
             );
-            launchApp("karaoke", { initialData: { videoId } });
+            launchApp("videos", { initialData: { videoId } });
           } else {
             toast.error("Could not extract video ID from this Karaoke URL");
             console.warn("Could not extract video ID from Karaoke URL:", url);

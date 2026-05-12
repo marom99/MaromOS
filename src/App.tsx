@@ -19,7 +19,6 @@ import { ScreenSaverOverlay } from "./components/screensavers/ScreenSaverOverlay
 import { useBackgroundChatNotifications } from "./hooks/useBackgroundChatNotifications";
 import { DesktopErrorBoundary } from "@/components/errors/ErrorBoundaries";
 import { useAutoCloudSync } from "@/hooks/useAutoCloudSync";
-import { AirDropListener } from "@/components/AirDropListener";
 import { useFilesStore } from "@/stores/useFilesStore";
 import { ReactScanDebug } from "@/components/ReactScanDebug";
 import { Agentation } from "agentation";
@@ -197,7 +196,6 @@ export function App() {
         <AppManager apps={apps} />
       </DesktopErrorBoundary>
       <Toaster position={toastConfig.position} offset={toastConfig.offset} />
-      <AirDropListener />
       <ScreenSaverOverlay />
       {import.meta.env.DEV && <Agentation />}
     </>

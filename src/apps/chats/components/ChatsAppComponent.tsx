@@ -92,6 +92,7 @@ export function ChatsAppComponent({
   const {
     username,
     isAuthenticated,
+    isOwner,
     isUsernameDialogOpen,
     setIsUsernameDialogOpen,
     newUsername,
@@ -435,7 +436,7 @@ export function ChatsAppComponent({
     handleOpenTelegramLink,
     handleCopyTelegramCode,
     handleDisconnectTelegramLink,
-  } = useTelegramLink({ username, isAuthenticated });
+  } = useTelegramLink({ username, isOwner });
 
   const menuBar = (
     <ChatsMenuBar

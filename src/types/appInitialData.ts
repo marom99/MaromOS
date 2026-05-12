@@ -26,11 +26,6 @@ export interface InternetExplorerInitialData {
   shareCode?: string;
 }
 
-/** iPod initial data - for playing specific videos */
-export interface IpodInitialData {
-  videoId?: string;
-}
-
 /** Videos initial data - for playing specific videos */
 export interface VideosInitialData {
   videoId?: string;
@@ -50,6 +45,12 @@ export interface FinderInitialData {
   path?: string;
 }
 
+/** Chats initial data - for prefilled chat prompts */
+export interface ChatsInitialData {
+  prefillMessage?: string;
+  autoSend?: boolean;
+}
+
 /**
  * Map of app IDs to their initialData types.
  * Apps not in this map don't use initialData.
@@ -58,10 +59,10 @@ export interface AppInitialDataMap {
   textedit: TextEditInitialData;
   paint: PaintInitialData;
   "internet-explorer": InternetExplorerInitialData;
-  ipod: IpodInitialData;
   videos: VideosInitialData;
   "applet-viewer": AppletViewerInitialData;
   finder: FinderInitialData;
+  chats: ChatsInitialData;
 }
 
 /**
@@ -80,10 +81,10 @@ export type AnyAppInitialData =
   | TextEditInitialData
   | PaintInitialData
   | InternetExplorerInitialData
-  | IpodInitialData
   | VideosInitialData
   | AppletViewerInitialData
   | FinderInitialData
+  | ChatsInitialData
   | undefined;
 
 /**
@@ -125,18 +126,6 @@ export function isInternetExplorerInitialData(
     ("url" in ie && typeof ie.url === "string") ||
     ("shareCode" in ie && typeof ie.shareCode === "string") ||
     ("year" in ie && typeof ie.year === "string")
-  );
-}
-
-/**
- * Type guard to check if initialData is for iPod.
- */
-export function isIpodInitialData(data: unknown): data is IpodInitialData {
-  return (
-    typeof data === "object" &&
-    data !== null &&
-    "videoId" in data &&
-    typeof (data as IpodInitialData).videoId === "string"
   );
 }
 
