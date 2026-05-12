@@ -1136,12 +1136,12 @@ export function CalendarAppComponent({
   isWindowOpen, onClose, isForeground, skipInitialSound, instanceId, onNavigateNext, onNavigatePrevious,
 }: AppProps) {
   const username = useChatsStore((s) => s.username);
-  const isAuthenticated = useChatsStore((s) => s.isAuthenticated);
+  const isOwner = useChatsStore((s) => s.isOwner);
   const calendarSyncReady = useCloudSyncStore(
     (s) => s.autoSyncEnabled && s.syncCalendar
   );
   const canSyncCalendar = Boolean(
-    username && isAuthenticated && calendarSyncReady
+    isOwner && calendarSyncReady
   );
   useEffect(() => {
     if (canSyncCalendar) {

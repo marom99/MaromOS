@@ -80,19 +80,8 @@ export function AppleMenu() {
   // Auth state and handlers from useAuth
   const {
     username,
-    isAuthenticated,
+    isOwner,
     hasPassword,
-    // Username/signup dialog
-    promptSetUsername,
-    isUsernameDialogOpen,
-    setIsUsernameDialogOpen,
-    newUsername,
-    setNewUsername,
-    newPassword,
-    setNewPassword,
-    isSettingUsername,
-    usernameError,
-    submitUsernameDialog,
     // Token/login verification dialog
     promptVerifyToken,
     isVerifyDialogOpen,
@@ -110,8 +99,6 @@ export function AppleMenu() {
     isLogoutConfirmDialogOpen,
     setIsLogoutConfirmDialogOpen,
   } = useAuth();
-
-  const isLoggedIn = !!(username && isAuthenticated);
 
   const handleAppClick = (appId: string) => {
     launchApp(appId as AppId);
@@ -284,25 +271,17 @@ export function AppleMenu() {
           <MenubarSeparator className="h-[2px] bg-black my-1" />
 
           {/* Account section */}
-          {isLoggedIn ? (
+          {isOwner ? (
             <MenubarItem onClick={logout} className="text-md h-6 px-3">
               {t("common.appleMenu.logOut", { username })}
             </MenubarItem>
           ) : (
-            <>
-              <MenubarItem
-                onClick={promptSetUsername}
-                className="text-md h-6 px-3"
-              >
-                {t("common.appleMenu.createAccount")}
-              </MenubarItem>
-              <MenubarItem
-                onClick={promptVerifyToken}
-                className="text-md h-6 px-3"
-              >
-                {t("common.appleMenu.login")}
-              </MenubarItem>
-            </>
+            <MenubarItem
+              onClick={promptVerifyToken}
+              className="text-md h-6 px-3"
+            >
+              {t("common.appleMenu.login")}
+            </MenubarItem>
           )}
         </MenubarContent>
       </MenubarMenu>
@@ -313,36 +292,10 @@ export function AppleMenu() {
         onOpenChange={setAboutFinderOpen}
       />
 
-      {/* Sign Up Dialog */}
-      <LoginDialog
-        initialTab="signup"
-        isOpen={isUsernameDialogOpen}
-        onOpenChange={setIsUsernameDialogOpen}
-        /* Login props */
-        usernameInput={verifyUsernameInput}
-        onUsernameInputChange={setVerifyUsernameInput}
-        passwordInput={verifyPasswordInput}
-        onPasswordInputChange={setVerifyPasswordInput}
-        onLoginSubmit={async () => {
-          await handleVerifyTokenSubmit(verifyPasswordInput, true);
-        }}
-        isLoginLoading={isVerifyingToken}
-        loginError={verifyError}
-        /* Sign-up props */
-        newUsername={newUsername}
-        onNewUsernameChange={setNewUsername}
-        newPassword={newPassword}
-        onNewPasswordChange={setNewPassword}
-        onSignUpSubmit={submitUsernameDialog}
-        isSignUpLoading={isSettingUsername}
-        signUpError={usernameError}
-      />
-
-      {/* Log In Dialog */}
+      {/* Owner Log In Dialog */}
       <LoginDialog
         isOpen={isVerifyDialogOpen}
         onOpenChange={setVerifyDialogOpen}
-        /* Login props */
         usernameInput={verifyUsernameInput}
         onUsernameInputChange={setVerifyUsernameInput}
         passwordInput={verifyPasswordInput}
@@ -352,17 +305,6 @@ export function AppleMenu() {
         }}
         isLoginLoading={isVerifyingToken}
         loginError={verifyError}
-        /* Sign-up props */
-        newUsername={newUsername}
-        onNewUsernameChange={setNewUsername}
-        newPassword={newPassword}
-        onNewPasswordChange={setNewPassword}
-        onSignUpSubmit={async () => {
-          setVerifyDialogOpen(false);
-          promptSetUsername();
-        }}
-        isSignUpLoading={false}
-        signUpError={null}
       />
 
       {/* Logout Confirmation Dialog */}
@@ -372,7 +314,6 @@ export function AppleMenu() {
         onConfirm={confirmLogout}
         hasPassword={hasPassword}
         onSetPassword={() => {
-          // For now, just close and prompt login to set password
           setIsLogoutConfirmDialogOpen(false);
         }}
       />

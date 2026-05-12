@@ -54,7 +54,6 @@ export function useChatRoom(
   const { t } = useTranslation();
   const {
     username,
-    isAuthenticated,
     rooms,
     currentRoomId,
     roomMessages,
@@ -74,7 +73,6 @@ export function useChatRoom(
     messageRenderLimit,
   } = useChatsStoreShallow((state) => ({
     username: state.username,
-    isAuthenticated: state.isAuthenticated,
     rooms: state.rooms,
     currentRoomId: state.currentRoomId,
     roomMessages: state.roomMessages,
@@ -419,7 +417,7 @@ export function useChatRoom(
 
   const emitTyping = useCallback(
     (roomId: string) => {
-      if (!username || !isAuthenticated || !roomId) return;
+      if (!username || !roomId) return;
       const now = Date.now();
       if (now - lastTypingEmitRef.current < TYPING_THROTTLE_MS) return;
       lastTypingEmitRef.current = now;
@@ -433,7 +431,7 @@ export function useChatRoom(
         retry: { maxAttempts: 1, initialDelayMs: 100 },
       }).catch(() => {});
     },
-    [username, isAuthenticated]
+    [username]
   );
 
   // Helper to get typing users for the current room
@@ -471,32 +469,12 @@ export function useChatRoom(
 
       const result = await sendMessage(currentRoomId, content.trim());
       if (!result.ok) {
-        // Check if this is an authentication error
-        const isAuthError =
-          result.error?.toLowerCase().includes("authentication required") ||
-          result.error?.toLowerCase().includes("unauthorized") ||
-          result.error?.toLowerCase().includes("authentication failed") ||
-          result.error?.toLowerCase().includes("username mismatch");
-
-        if (isAuthError) {
-          toast.error(t("apps.chats.status.loginRequired"), {
-            description: t("apps.chats.status.pleaseLoginToSendMessages"),
-            duration: 5000,
-            action: onPromptSetUsername
-              ? {
-                  label: t("apps.chats.status.loginButton"),
-                  onClick: onPromptSetUsername,
-                }
-              : undefined,
-          });
-        } else {
-          toast("Error", {
-            description: result.error || "Failed to send message.",
-          });
-        }
+        toast("Error", {
+          description: result.error || "Failed to send message.",
+        });
       }
     },
-    [currentRoomId, username, sendMessage, onPromptSetUsername, t]
+    [currentRoomId, username, sendMessage]
   );
 
   const handleAddRoom = useCallback(

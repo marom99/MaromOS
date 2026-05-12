@@ -117,16 +117,18 @@ const clearApiUnavailable = (key: string): void => {
  */
 function forceLogoutOnUnauthorized() {
   const store = useChatsStore.getState();
-  if (!store.username) return;
-  console.log("[ChatsStore] Unauthorized — clearing auth state for", store.username);
+  if (!store.username || store.username === "you") return;
+  console.log("[ChatsStore] Unauthorized — restoring visitor state for", store.username);
   localStorage.removeItem(USERNAME_RECOVERY_KEY);
   clearLegacyTokenRecovery();
   useChatsStore.setState({
-    username: null,
+    username: null, // will be set to "you" after fetchGuestSession
     isAuthenticated: false,
+    isOwner: false,
     hasPassword: null,
     currentRoomId: null,
   });
+  fetchGuestSession();
 }
 
 // Ensure username recovery key is set if username exists but recovery key doesn't.
@@ -150,6 +152,7 @@ export interface ChatsStoreState {
   // Room State
   username: string | null;
   isAuthenticated: boolean;
+  isOwner: boolean; // true only when logged in as the real owner (has a valid server session)
   hasPassword: boolean | null; // Whether user has password set (null = unknown/not checked)
   rooms: ChatRoom[];
   currentRoomId: string | null; // ID of the currently selected room, null for AI chat (@ryo)
@@ -168,6 +171,7 @@ export interface ChatsStoreState {
   setAiMessages: (messages: AIChatMessage[]) => void;
   setUsername: (username: string | null) => void;
   setAuthenticated: (authenticated: boolean) => void;
+  setIsOwner: (isOwner: boolean) => void;
   setHasPassword: (hasPassword: boolean | null) => void; // Set password status
   checkHasPassword: () => Promise<{ ok: boolean; error?: string }>; // Check if user has password
   setPassword: (password: string) => Promise<{ ok: boolean; error?: string }>; // Set password for user
@@ -245,6 +249,7 @@ const getInitialState = (): Omit<
   | "setAiMessages"
   | "setUsername"
   | "setAuthenticated"
+  | "setIsOwner"
   | "setHasPassword"
   | "checkHasPassword"
   | "setPassword"
@@ -278,6 +283,7 @@ const getInitialState = (): Omit<
     aiMessages: [getInitialAiMessage()],
     username: recoveredUsername,
     isAuthenticated: false,
+    isOwner: false,
     hasPassword: null,
     rooms: [],
     currentRoomId: null,
@@ -309,7 +315,13 @@ export const useChatsStore = create<ChatsStoreState>()(
         // --- Actions ---
         setAiMessages: (messages) => set({ aiMessages: messages }),
         setUsername: (username) => {
-          saveUsernameToRecovery(username);
+          // Never persist the visitor identity — recovery key is for real owner usernames only
+          if (username && username !== "you") {
+            saveUsernameToRecovery(username);
+          }
+          if (!username || username === "you") {
+            localStorage.removeItem(USERNAME_RECOVERY_KEY);
+          }
           set({ username });
 
           // Re-filter rooms: drop private rooms the new identity cannot see.
@@ -328,7 +340,7 @@ export const useChatsStore = create<ChatsStoreState>()(
             }
           }
 
-          if (username) {
+          if (username && username !== "you") {
             setTimeout(() => {
               get().checkHasPassword();
             }, 100);
@@ -338,6 +350,9 @@ export const useChatsStore = create<ChatsStoreState>()(
         },
         setAuthenticated: (authenticated) => {
           set({ isAuthenticated: authenticated });
+        },
+        setIsOwner: (isOwner) => {
+          set({ isOwner });
         },
         setHasPassword: (hasPassword) => {
           set({ hasPassword });
@@ -688,14 +703,18 @@ export const useChatsStore = create<ChatsStoreState>()(
           set((state) => ({
             ...state,
             aiMessages: [getInitialAiMessage()],
-            username: null,
+            username: null, // will be set to "you" after fetchGuestSession
             isAuthenticated: false,
+            isOwner: false,
             hasPassword: null,
             currentRoomId: null,
             rooms: [],
             roomMessages: {},
             unreadCounts: {},
           }));
+
+          // Restore visitor ("you") state
+          await fetchGuestSession();
 
           try {
             await get().fetchRooms();
@@ -706,7 +725,7 @@ export const useChatsStore = create<ChatsStoreState>()(
             );
           }
 
-          console.log("[ChatsStore] User logged out successfully");
+          console.log("[ChatsStore] User logged out — visitor mode restored");
         },
         fetchRooms: async () => {
           console.log("[ChatsStore] Fetching rooms...");
@@ -1205,7 +1224,7 @@ export const useChatsStore = create<ChatsStoreState>()(
 
             const data = await response.json();
             if (data.user) {
-              set({ username: data.user.username, isAuthenticated: true });
+              set({ username: data.user.username, isAuthenticated: true, isOwner: true });
 
               setTimeout(() => {
                 get().checkHasPassword();
@@ -1467,6 +1486,9 @@ export const useChatsStore = create<ChatsStoreState>()(
             // the server can set the cookie for future loads.
             if (state.username) {
               restoreSessionFromCookie(state.username, legacyToken);
+            } else {
+              // No owner session — initialize as visitor
+              fetchGuestSession();
             }
           }
         };
@@ -1526,15 +1548,46 @@ async function restoreSessionFromCookie(
 
       if (store.username === expectedUsername) {
         store.setAuthenticated(true);
+        store.setIsOwner(true);
         store.checkHasPassword();
       }
     } else {
-      console.log("[ChatsStore] No valid session — logging out.");
+      console.log("[ChatsStore] No valid session — restoring visitor state.");
       forceLogoutOnUnauthorized();
     }
   } catch (err) {
     // Network error — keep state, don't force-logout.
     // The user may come back online and the cookie will still be valid.
     console.warn("[ChatsStore] Session restore request failed:", err);
+  }
+}
+
+/**
+ * Fetch a guest session for the "you" visitor identity.
+ * Sets an httpOnly cookie on the server so subsequent requests
+ * from the visitor work with credentials: "include".
+ * Does NOT set isAuthenticated — visitors are not authenticated owners.
+ */
+async function fetchGuestSession() {
+  try {
+    const response = await abortableFetch(getApiUrl("/api/auth/guest"), {
+      method: "GET",
+      timeout: 10000,
+      throwOnHttpError: false,
+      retry: { maxAttempts: 2, initialDelayMs: 500 },
+    });
+
+    if (response.ok) {
+      console.log("[ChatsStore] Guest session established — visitor is 'you'");
+      useChatsStore.setState({ username: "you", isOwner: false, isAuthenticated: false });
+    } else {
+      // Guest endpoint not yet deployed — set visitor username locally so UI still works
+      console.warn("[ChatsStore] Guest session unavailable (status:", response.status, ") — falling back to local visitor state");
+      useChatsStore.setState({ username: "you", isOwner: false, isAuthenticated: false });
+    }
+  } catch (err) {
+    console.warn("[ChatsStore] Guest session request failed:", err);
+    // Still set visitor username so UI is functional even without the server endpoint
+    useChatsStore.setState({ username: "you", isOwner: false, isAuthenticated: false });
   }
 }

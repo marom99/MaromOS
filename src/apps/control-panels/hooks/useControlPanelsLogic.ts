@@ -290,17 +290,7 @@ export function useControlPanelsLogic({
   // Use auth hook
   const {
     username,
-    isAuthenticated,
-    promptSetUsername,
-    isUsernameDialogOpen,
-    setIsUsernameDialogOpen,
-    newUsername,
-    setNewUsername,
-    newPassword,
-    setNewPassword,
-    isSettingUsername,
-    usernameError,
-    submitUsernameDialog,
+    isOwner,
     promptVerifyToken,
     isVerifyDialogOpen,
     setVerifyDialogOpen,
@@ -441,7 +431,7 @@ export function useControlPanelsLogic({
 
     try {
       // Ensure we have auth info from the auth hook
-      if (!isAuthenticated || !username) {
+      if (!isOwner || !username) {
         toast.error("Authentication Error", {
           description: "Not authenticated",
         });
@@ -495,7 +485,7 @@ export function useControlPanelsLogic({
     handleOpenTelegramLink,
     handleCopyTelegramCode,
     handleDisconnectTelegramLink,
-  } = useTelegramLink({ username, isAuthenticated });
+  } = useTelegramLink({ username, isOwner });
 
   // ====================================================================
   // Cloud Sync state
@@ -530,7 +520,7 @@ export function useControlPanelsLogic({
 
   /** Fetch cloud backup status */
   const fetchCloudSyncStatus = useCallback(async () => {
-    if (!username || !isAuthenticated) return;
+    if (!username || !isOwner) return;
 
     setIsCloudStatusLoading(true);
     try {
@@ -551,20 +541,20 @@ export function useControlPanelsLogic({
     } finally {
       setIsCloudStatusLoading(false);
     }
-  }, [username, isAuthenticated]);
+  }, [username, isOwner]);
 
   // Fetch cloud sync status when user is logged in
   useEffect(() => {
-    if (username && isAuthenticated) {
+    if (username && isOwner) {
       fetchCloudSyncStatus();
     } else {
       setCloudSyncStatus(null);
     }
-  }, [username, isAuthenticated, fetchCloudSyncStatus]);
+  }, [username, isOwner, fetchCloudSyncStatus]);
 
   /** Upload current state to cloud */
   const handleCloudBackup = useCallback(async () => {
-    if (!username || !isAuthenticated) {
+    if (!username || !isOwner) {
       toast.error(t("apps.control-panels.cloudSync.loginRequired"));
       return;
     }
@@ -744,11 +734,11 @@ export function useControlPanelsLogic({
       // Clear progress after a short delay so user can see completion
       setTimeout(() => setCloudProgress(null), 1500);
     }
-  }, [username, isAuthenticated, t, fetchCloudSyncStatus]);
+  }, [username, isOwner, t, fetchCloudSyncStatus]);
 
   /** Force-upload enabled auto sync domains so local state wins. */
   const handleCloudForceUpload = useCallback(async () => {
-    if (!username || !isAuthenticated) {
+    if (!username || !isOwner) {
       toast.error(t("apps.control-panels.cloudSync.loginRequired"));
       return;
     }
@@ -786,7 +776,7 @@ export function useControlPanelsLogic({
             domain,
             {
               username,
-              isAuthenticated,
+              isAuthenticated: isOwner,
             },
             undefined,
             { forceFullSettingsUpload: true }
@@ -819,11 +809,11 @@ export function useControlPanelsLogic({
     } finally {
       setIsCloudForceUploading(false);
     }
-  }, [isAuthenticated, t, username]);
+  }, [isOwner, t, username]);
 
   /** Force-download enabled auto sync domains so cloud state wins. */
   const handleCloudForceDownload = useCallback(async () => {
-    if (!username || !isAuthenticated) {
+    if (!username || !isOwner) {
       toast.error(t("apps.control-panels.cloudSync.loginRequired"));
       return;
     }
@@ -913,11 +903,11 @@ export function useControlPanelsLogic({
     } finally {
       setIsCloudForceDownloading(false);
     }
-  }, [isAuthenticated, t, username]);
+  }, [isOwner, t, username]);
 
   /** Download and restore backup from cloud */
   const handleCloudRestore = useCallback(async () => {
-    if (!username || !isAuthenticated) {
+    if (!username || !isOwner) {
       toast.error(t("apps.control-panels.cloudSync.loginRequired"));
       return;
     }
@@ -1087,7 +1077,7 @@ export function useControlPanelsLogic({
       setIsCloudRestoring(false);
       setCloudProgress(null);
     }
-  }, [username, isAuthenticated, t, setCurrentWallpaper]);
+  }, [username, isOwner, t, setCurrentWallpaper]);
 
   // States for previous volume levels for mute/unmute functionality
   const [prevMasterVolume, setPrevMasterVolume] = useState(
@@ -1605,16 +1595,6 @@ export function useControlPanelsLogic({
     ttsVoice,
     setTtsVoice,
     username,
-    promptSetUsername,
-    isUsernameDialogOpen,
-    setIsUsernameDialogOpen,
-    newUsername,
-    setNewUsername,
-    newPassword,
-    setNewPassword,
-    isSettingUsername,
-    usernameError,
-    submitUsernameDialog,
     promptVerifyToken,
     isVerifyDialogOpen,
     setVerifyDialogOpen,
