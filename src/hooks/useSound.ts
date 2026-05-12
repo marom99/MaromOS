@@ -80,6 +80,19 @@ export const preloadSounds = async (sounds: string[]) => {
   await Promise.all(sounds.map(preloadSound));
 };
 
+const scheduleIdleSoundPreload = (sounds: string[]) => {
+  const preload = () => {
+    void preloadSounds(sounds);
+  };
+
+  if ("requestIdleCallback" in window) {
+    window.requestIdleCallback(preload, { timeout: 5000 });
+    return;
+  }
+
+  globalThis.setTimeout(preload, 1200);
+};
+
 export function useSound(soundPath: string, volume: number = 0.3) {
   const gainNodeRef = useRef<GainNode | null>(null);
   // Track active sources for this specific hook instance so we can stop them
@@ -278,7 +291,6 @@ export const Sounds = {
   WINDOW_ZOOM_MINIMIZE: "/sounds/WindowZoomMinimize.mp3",
   WINDOW_ZOOM_MAXIMIZE: "/sounds/WindowZoomMaximize.mp3",
   BUTTON_CLICK: "/sounds/ButtonClickDown.mp3",
-  INPUT_RADIO_CLICK: "/sounds/InputRadioClickDown.mp3",
   MENU_OPEN: "/sounds/MenuOpen.mp3",
   MENU_CLOSE: "/sounds/MenuClose.mp3",
   // Window movement and resize sounds
@@ -305,16 +317,24 @@ export const Sounds = {
 // Lazily preload sounds after the first user interaction (click or touch)
 if (typeof document !== "undefined") {
   const handleFirstInteraction = () => {
-    // On mobile, only preload essential sounds to conserve memory
-    const soundsToPreload = isMobileDevice
+    const firstInteractionSounds: string[] = [
+      Sounds.BUTTON_CLICK,
+      Sounds.WINDOW_OPEN,
+      Sounds.MENU_OPEN,
+    ];
+    // On mobile, keep the cache small; on desktop, warm the remaining sounds
+    // during idle time so the first click is not competing with full preload.
+    const deferredSounds = isMobileDevice
       ? [
-          Sounds.BUTTON_CLICK,
           Sounds.WINDOW_OPEN,
           Sounds.WINDOW_CLOSE,
-          Sounds.MENU_OPEN,
         ]
-      : Object.values(Sounds);
-    preloadSounds(soundsToPreload);
+      : Object.values(Sounds).filter(
+          (sound) => !firstInteractionSounds.includes(sound)
+        );
+
+    void preloadSounds(firstInteractionSounds);
+    scheduleIdleSoundPreload(deferredSounds);
     // Remove listeners after first invocation to avoid repeated work
     document.removeEventListener("click", handleFirstInteraction);
     document.removeEventListener("touchstart", handleFirstInteraction);
