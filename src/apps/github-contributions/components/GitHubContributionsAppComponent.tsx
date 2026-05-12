@@ -5,11 +5,10 @@ import { GitHubContributionsMenuBar } from "./GitHubContributionsMenuBar";
 import { WindowFrame } from "@/components/layout/WindowFrame";
 import { AppProps } from "@/apps/base/types";
 import { useThemeStore } from "@/stores/useThemeStore";
-import { useResizeObserver } from "@/hooks/useResizeObserver";
 
 const SCROLLBAR_COLORS = {
-  dark: { thumb: "oklch(0.32 0.05 145)", thumbHover: "oklch(0.42 0.08 145)", bg: "oklch(0.13 0.018 145)" },
-  light: { thumb: "oklch(0.78 0.06 145)", thumbHover: "oklch(0.65 0.07 145)", bg: "oklch(0.98 0.008 145)" },
+  dark: { thumb: "oklch(0.32 0.02 0)", thumbHover: "oklch(0.42 0.02 0)", bg: "oklch(0.13 0.005 0)" },
+  light: { thumb: "oklch(0.78 0.01 0)", thumbHover: "oklch(0.65 0.01 0)", bg: "oklch(0.98 0.002 0)" },
 };
 
 export const GitHubContributionsAppComponent: React.FC<AppProps> = ({
@@ -25,10 +24,6 @@ export const GitHubContributionsAppComponent: React.FC<AppProps> = ({
   const [isDark, setIsDark] = useState(
     () => localStorage.getItem("ryos:github-contributions:color-mode") !== "light"
   );
-  const [containerWidth, setContainerWidth] = useState(0);
-  const containerRef = useResizeObserver<HTMLDivElement>((entry) => {
-    setContainerWidth(entry.contentRect.width);
-  });
 
   const currentTheme = useThemeStore((state) => state.current);
   const isXpTheme = currentTheme === "xp" || currentTheme === "win98";
@@ -74,14 +69,11 @@ export const GitHubContributionsAppComponent: React.FC<AppProps> = ({
             .gh-heatmap-scroll::-webkit-scrollbar-thumb:hover { background: ${colors.thumbHover}; }
           `}</style>
           <div
-            ref={containerRef}
             className="flex-1 flex flex-col justify-center items-center overflow-auto gh-heatmap-scroll"
             style={{
-              backgroundColor: "#F0F2F5",
               padding: "12px 14px 10px",
               scrollbarWidth: "thin",
               scrollbarColor: `${colors.thumb} transparent`,
-              transition: "background-color 0.2s ease",
             }}
           >
             {isLoading && !calendar ? (
@@ -95,7 +87,6 @@ export const GitHubContributionsAppComponent: React.FC<AppProps> = ({
                 longestStreak={longestStreak}
                 maxInDay={maxInDay}
                 isDark={isDark}
-                containerWidth={containerWidth}
               />
             ) : null}
           </div>
