@@ -1168,7 +1168,6 @@ export function useFinderLogic({
 
   // AirDrop state
   const [isAirDropView, setIsAirDropView] = useState(false);
-  const isAuthenticated = useChatsStore((s) => s.isAuthenticated);
   const chatUsername = useChatsStore((s) => s.username);
   const nearbyUsers = useAirDropStore((s) => s.nearbyUsers);
   const isDiscovering = useAirDropStore((s) => s.isDiscovering);
@@ -1186,7 +1185,7 @@ export function useFinderLogic({
   const canShareViaAirDrop = (file: FileItem): boolean => {
     if (file.isDirectory) return false;
     if (file.path.startsWith("/Applications")) return false;
-    if (!isAuthenticated || !chatUsername) return false;
+    if (!chatUsername) return false;
     return true;
   };
 

@@ -57,7 +57,6 @@ export function useAppletViewerLogic({
   const isXpTheme = currentTheme === "xp" || currentTheme === "win98";
   const isMacTheme = currentTheme === "macosx";
   const username = useChatsStore((state) => state.username);
-  const isAuthenticated = useChatsStore((state) => state.isAuthenticated);
   const { t } = useTranslation();
 
   const authResult = useAuth();
@@ -1111,10 +1110,7 @@ export function useAppletViewerLogic({
       return;
     }
 
-    if (!username || !isAuthenticated) {
-      toast.error("Login required", {
-        description: "You must be logged in to share applets.",
-      });
+    if (!username) {
       return;
     }
 

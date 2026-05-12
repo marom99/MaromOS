@@ -156,7 +156,7 @@ const RANGE_DAYS = [1, 7, 14, 30] as const;
 
 export function DashboardPanel({ onRefresh }: DashboardPanelProps) {
   const { t } = useTranslation();
-  const { username, isAuthenticated } = useAuth();
+  const { username, isOwner } = useAuth();
   const [data, setData] = useState<AnalyticsDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -168,7 +168,7 @@ export function DashboardPanel({ onRefresh }: DashboardPanelProps) {
     d === 1 ? t("apps.admin.dashboard.range.today") : `${d}d`;
 
   const fetchData = useCallback(async () => {
-    if (!username || !isAuthenticated) return;
+    if (!username || !isOwner) return;
 
     setIsLoading(true);
     setError(null);
@@ -185,7 +185,7 @@ export function DashboardPanel({ onRefresh }: DashboardPanelProps) {
     } finally {
       setIsLoading(false);
     }
-  }, [username, isAuthenticated, rangeDays, t]);
+  }, [username, isOwner, rangeDays, t]);
 
   useEffect(() => {
     fetchData();

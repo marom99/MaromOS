@@ -9,33 +9,28 @@ export function useAuth() {
   const {
     username,
     isAuthenticated,
+    isOwner,
     hasPassword,
     setAuthenticated,
+    setIsOwner,
     setUsername,
-    createUser,
     logout,
     checkHasPassword: storeCheckHasPassword,
     setPassword: storeSetPassword,
   } = useChatsStoreShallow((state) => ({
     username: state.username,
     isAuthenticated: state.isAuthenticated,
+    isOwner: state.isOwner,
     hasPassword: state.hasPassword,
     setAuthenticated: state.setAuthenticated,
+    setIsOwner: state.setIsOwner,
     setUsername: state.setUsername,
-    createUser: state.createUser,
     logout: state.logout,
     checkHasPassword: state.checkHasPassword,
     setPassword: state.setPassword,
   }));
 
-  const [isUsernameDialogOpen, setIsUsernameDialogOpen] = useState(false);
-  const [newUsername, setNewUsername] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [isSettingUsername, setIsSettingUsername] = useState(false);
-  const [usernameError, setUsernameError] = useState<string | null>(null);
-
   const [isVerifyDialogOpen, setVerifyDialogOpen] = useState(false);
-  const [verifyTokenInput, setVerifyTokenInput] = useState("");
   const [verifyPasswordInput, setVerifyPasswordInput] = useState("");
   const [verifyUsernameInput, setVerifyUsernameInput] = useState("");
   const [isVerifyingToken, setIsVerifyingToken] = useState(false);
@@ -44,60 +39,9 @@ export function useAuth() {
   const [isLogoutConfirmDialogOpen, setIsLogoutConfirmDialogOpen] =
     useState(false);
 
-  const promptSetUsername = useCallback(() => {
-    setNewUsername("");
-    setNewPassword("");
-    setUsernameError(null);
-    setIsUsernameDialogOpen(true);
-  }, []);
-
-  const submitUsernameDialog = useCallback(async () => {
-    setIsSettingUsername(true);
-    setUsernameError(null);
-
-    const trimmedUsername = newUsername.trim();
-    if (!trimmedUsername) {
-      setUsernameError("Username cannot be empty.");
-      setIsSettingUsername(false);
-      return;
-    }
-
-    if (username && username !== trimmedUsername) {
-      await logout();
-    }
-
-    if (!newPassword.trim()) {
-      setUsernameError("Password is required.");
-      setIsSettingUsername(false);
-      return;
-    }
-
-    if (newPassword.length < 8) {
-      setUsernameError("Password must be at least 8 characters.");
-      setIsSettingUsername(false);
-      return;
-    }
-
-    const result = await createUser(trimmedUsername, newPassword);
-
-    if (result.ok) {
-      setIsUsernameDialogOpen(false);
-      setNewUsername("");
-      setNewPassword("");
-      toast.success("Logged In", {
-        description: `Welcome, ${trimmedUsername}!`,
-      });
-    } else {
-      setUsernameError(result.error || "Failed to set username");
-    }
-
-    setIsSettingUsername(false);
-  }, [newUsername, newPassword, createUser, username, logout]);
-
   const promptVerifyToken = useCallback(() => {
-    setVerifyTokenInput("");
     setVerifyPasswordInput("");
-    setVerifyUsernameInput(username || "");
+    setVerifyUsernameInput(username && username !== "you" ? username : "");
     setVerifyError(null);
     setVerifyDialogOpen(true);
   }, [username]);
@@ -114,9 +58,16 @@ export function useAuth() {
 
       try {
         if (isPassword) {
-          const targetUsername = verifyUsernameInput.trim() || username || "";
+          const targetUsername = verifyUsernameInput.trim() || "";
 
-          if (username && username !== targetUsername) {
+          if (!targetUsername) {
+            setVerifyError("Username required");
+            setIsVerifyingToken(false);
+            return;
+          }
+
+          // If currently logged in as a different owner, log out first
+          if (isOwner && username !== targetUsername) {
             await logout();
           }
 
@@ -127,6 +78,7 @@ export function useAuth() {
           if (result.username) {
             setUsername(result.username);
             setAuthenticated(true);
+            setIsOwner(true);
             track(APP_ANALYTICS.USER_LOGIN_PASSWORD, {
               username: result.username,
             });
@@ -135,10 +87,9 @@ export function useAuth() {
             });
             setVerifyDialogOpen(false);
             setVerifyPasswordInput("");
-            setIsUsernameDialogOpen(false);
           }
         } else {
-          if (username || isAuthenticated) {
+          if (isOwner) {
             await logout();
           }
 
@@ -150,6 +101,7 @@ export function useAuth() {
           if (result.valid && result.username) {
             setUsername(result.username);
             setAuthenticated(true);
+            setIsOwner(true);
             track(APP_ANALYTICS.USER_LOGIN_TOKEN, {
               username: result.username,
             });
@@ -157,8 +109,6 @@ export function useAuth() {
               description: "Token verified and set successfully",
             });
             setVerifyDialogOpen(false);
-            setVerifyTokenInput("");
-            setIsUsernameDialogOpen(false);
           }
         }
       } catch (err) {
@@ -170,7 +120,7 @@ export function useAuth() {
         setIsVerifyingToken(false);
       }
     },
-    [setAuthenticated, setUsername, username, verifyUsernameInput, isAuthenticated, logout]
+    [setAuthenticated, setIsOwner, setUsername, username, verifyUsernameInput, isOwner, logout]
   );
 
   const checkHasPassword = useCallback(async () => {
@@ -185,15 +135,10 @@ export function useAuth() {
   );
 
   const handleLogout = useCallback(async () => {
-    setIsUsernameDialogOpen(false);
     setVerifyDialogOpen(false);
     setIsLogoutConfirmDialogOpen(false);
-    setNewUsername("");
-    setNewPassword("");
-    setVerifyTokenInput("");
     setVerifyPasswordInput("");
     setVerifyUsernameInput("");
-    setUsernameError(null);
     setVerifyError(null);
 
     await logout();
@@ -215,25 +160,12 @@ export function useAuth() {
   return {
     username,
     isAuthenticated,
+    isOwner,
     hasPassword,
-
-    promptSetUsername,
-    isUsernameDialogOpen,
-    setIsUsernameDialogOpen,
-    newUsername,
-    setNewUsername,
-    newPassword,
-    setNewPassword,
-    isSettingUsername,
-    usernameError,
-    submitUsernameDialog,
-    setUsernameError,
 
     promptVerifyToken,
     isVerifyDialogOpen,
     setVerifyDialogOpen,
-    verifyTokenInput,
-    setVerifyTokenInput,
     verifyPasswordInput,
     setVerifyPasswordInput,
     verifyUsernameInput,

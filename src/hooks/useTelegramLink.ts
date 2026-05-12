@@ -13,7 +13,7 @@ import {
 
 interface UseTelegramLinkOptions {
   username?: string | null;
-  isAuthenticated?: boolean;
+  isOwner?: boolean;
 }
 
 export function getTelegramLinkedAccountLabel(
@@ -33,7 +33,7 @@ export function getTelegramLinkedAccountLabel(
 
 export function useTelegramLink({
   username,
-  isAuthenticated,
+  isOwner,
 }: UseTelegramLinkOptions) {
   const { t } = useTranslation();
   const [telegramLinkedAccount, setTelegramLinkedAccount] =
@@ -47,7 +47,7 @@ export function useTelegramLink({
 
   const refreshTelegramLinkStatus = useCallback(
     async (): Promise<TelegramLinkStatusResponse | null> => {
-    if (!username || !isAuthenticated) {
+    if (!username || !isOwner) {
       setTelegramLinkedAccount(null);
       setTelegramLinkSession(null);
       setIsTelegramStatusLoading(false);
@@ -67,7 +67,7 @@ export function useTelegramLink({
       setIsTelegramStatusLoading(false);
     }
     },
-    [username, isAuthenticated]
+    [username, isOwner]
   );
 
   useEffect(() => {
@@ -76,7 +76,7 @@ export function useTelegramLink({
 
   const handleCreateTelegramLink = useCallback(
     async (): Promise<TelegramLinkCreateResponse | null> => {
-      if (!username || !isAuthenticated) {
+      if (!username || !isOwner) {
         toast.error(t("apps.control-panels.telegram.loginRequired"));
         return null;
       }
@@ -102,7 +102,7 @@ export function useTelegramLink({
         setIsCreatingTelegramLink(false);
       }
     },
-    [username, isAuthenticated, t]
+    [username, isOwner, t]
   );
 
   const handleOpenTelegramLink = useCallback(() => {
@@ -129,7 +129,7 @@ export function useTelegramLink({
   }, [telegramLinkSession, t]);
 
   const handleDisconnectTelegramLink = useCallback(async () => {
-    if (!username || !isAuthenticated) {
+    if (!username || !isOwner) {
       toast.error(t("apps.control-panels.telegram.loginRequired"));
       return;
     }
@@ -146,7 +146,7 @@ export function useTelegramLink({
     } finally {
       setIsDisconnectingTelegramLink(false);
     }
-  }, [username, isAuthenticated, t]);
+  }, [username, isOwner, t]);
 
   return {
     telegramLinkedAccount,
