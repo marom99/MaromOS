@@ -3,8 +3,9 @@ dist/
 .vercel/output/
 .vercel/cache/
 
-# Backend (removed — frontend-only showcase)
+# Backend (frontend-only showcase, except GitHub contributions API)
 api/
+!api/github-contributions.ts
 middleware.ts
 
 # Dependencies

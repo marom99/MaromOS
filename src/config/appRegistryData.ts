@@ -68,7 +68,7 @@ export const appNames: Record<AppId, string> = {
   "dashboard": "Dashboard",
   "candybar": "CandyBar",
   "slack": "Slack",
-  "github-contributions": "GitHub",
+  "github-contributions": "GitHub Daily Streak",
 };
 
 /** Get list of apps with basic info for stores */

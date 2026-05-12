@@ -3,11 +3,11 @@ date: 2026-05-11
 topic: github-contributions
 ---
 
-# GitHub Contributions App
+# GitHub Daily Streak App
 
 ## Problem Frame
 
-ryOS has no way to display GitHub activity. A dedicated GitHub app shows the site owner's contribution history — a public showcase widget, not a per-user configurable tool. Visitors see the owner's contribution heatmap and stats; they configure nothing. Data is fetched server-side using a Vercel environment variable for the token.
+ryOS has no way to display GitHub activity. A dedicated GitHub Daily Streak app shows the site owner's contribution history — a public showcase widget, not a per-user configurable tool. Visitors see the owner's contribution heatmap and stats; they configure nothing. Data is fetched server-side using a Vercel environment variable for the token.
 
 ## Requirements
 
@@ -56,7 +56,7 @@ ryOS has no way to display GitHub activity. A dedicated GitHub app shows the sit
 
 ### Deferred to Planning
 
-- [Affects R10][Technical] Confirm the icon asset to use for the GitHub app in the dock/registry.
+- [Affects R10][Technical] Confirm the icon asset to use for the GitHub Daily Streak app in the dock/registry.
 - [Affects R11][Technical] Finalize window min/default size after implementing the heatmap layout.
 
 ## Next Steps
