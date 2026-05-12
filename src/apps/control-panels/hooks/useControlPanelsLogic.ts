@@ -36,7 +36,6 @@ import {
   getLatestCloudSyncTimestamp,
 } from "@/utils/cloudSyncShared";
 import { useShallow } from "zustand/react/shallow";
-import { useTelegramLink } from "@/hooks/useTelegramLink";
 import {
   downloadAndApplyLogicalCloudSyncDomain,
   uploadLogicalCloudSyncDomain,
@@ -473,19 +472,6 @@ export function useControlPanelsLogic({
       setIsLoggingOutAllDevices(false);
     }
   };
-
-  const {
-    telegramLinkedAccount,
-    telegramLinkSession,
-    isTelegramStatusLoading,
-    isCreatingTelegramLink,
-    isDisconnectingTelegramLink,
-    refreshTelegramLinkStatus,
-    handleCreateTelegramLink,
-    handleOpenTelegramLink,
-    handleCopyTelegramCode,
-    handleDisconnectTelegramLink,
-  } = useTelegramLink({ username, isOwner });
 
   // ====================================================================
   // Cloud Sync state
@@ -1612,16 +1598,6 @@ export function useControlPanelsLogic({
     handleVerifyTokenSubmit,
     handleSetPassword,
     handleLogoutAllDevices,
-    telegramLinkedAccount,
-    telegramLinkSession,
-    isTelegramStatusLoading,
-    isCreatingTelegramLink,
-    isDisconnectingTelegramLink,
-    refreshTelegramLinkStatus,
-    handleCreateTelegramLink,
-    handleOpenTelegramLink,
-    handleCopyTelegramCode,
-    handleDisconnectTelegramLink,
     autoSyncEnabled,
     setAutoSyncEnabled,
     syncFiles,

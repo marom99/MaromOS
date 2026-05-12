@@ -37,14 +37,11 @@ import { useTranslation } from "react-i18next";
 import { useAppStoreShallow } from "@/stores/helpers";
 import { AIModel } from "@/types/aiModels";
 import { useControlPanelsLogic } from "../hooks/useControlPanelsLogic";
-import { TelegramLinkDialog } from "@/components/dialogs/TelegramLinkDialog";
-import { getTelegramLinkedAccountLabel } from "@/hooks/useTelegramLink";
 import { ThemedIcon } from "@/components/shared/ThemedIcon";
 import { getAppIconPath } from "@/config/appRegistry";
 import { useContactsStore } from "@/stores/useContactsStore";
 import { getContactInitials } from "@/utils/contacts";
 import { requestCloudSyncCheck } from "@/utils/cloudSyncEvents";
-import { PaperPlaneRight } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import { useRealtimeConnectionStatus } from "@/hooks/useRealtimeConnectionStatus";
 
@@ -339,16 +336,6 @@ export function ControlPanelsAppComponent({
     handleVerifyTokenSubmit,
     handleSetPassword,
     handleLogoutAllDevices,
-    telegramLinkedAccount,
-    telegramLinkSession,
-    isTelegramStatusLoading,
-    isCreatingTelegramLink,
-    isDisconnectingTelegramLink,
-    refreshTelegramLinkStatus,
-    handleCreateTelegramLink,
-    handleOpenTelegramLink,
-    handleCopyTelegramCode,
-    handleDisconnectTelegramLink,
     autoSyncEnabled,
     setAutoSyncEnabled,
     syncFiles,
@@ -398,24 +385,6 @@ export function ControlPanelsAppComponent({
       : null
   );
   const realtimeStatus = useRealtimeConnectionStatus();
-  const [isTelegramDialogOpen, setIsTelegramDialogOpen] = React.useState(false);
-
-  const openTelegramDialog = React.useCallback(async () => {
-    const status = await refreshTelegramLinkStatus();
-
-    if (!status?.account && !status?.pendingLink && !telegramLinkSession) {
-      const createdLink = await handleCreateTelegramLink();
-      if (!createdLink) {
-        return;
-      }
-    }
-
-    setIsTelegramDialogOpen(true);
-  }, [
-    refreshTelegramLinkStatus,
-    telegramLinkSession,
-    handleCreateTelegramLink,
-  ]);
   const accountAvatarLabel = myContact?.displayName || username || "";
   const accountAvatarInitials = myContact
     ? getContactInitials(myContact)
@@ -1078,58 +1047,6 @@ export function ControlPanelsAppComponent({
                 </div>
 
                 <div className="space-y-2">
-                  <div
-                    className={cn(
-                      "flex items-center justify-between gap-3",
-                      !username && "opacity-50"
-                    )}
-                  >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div
-                        className={cn(
-                          controlPanelItemIconShell,
-                          "rounded-full bg-[#229ED9] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_1px_2px_rgba(0,0,0,0.18)] flex items-center justify-center"
-                        )}
-                      >
-                        <PaperPlaneRight size={16} weight="fill" className="-rotate-[32deg] translate-x-[1px] -translate-y-[1px]" />
-                      </div>
-                      <div className="flex flex-col min-w-0">
-                        <span className="text-[13px] font-geneva-12 font-medium">
-                          {t("apps.control-panels.telegram.title")}
-                        </span>
-                        <span className="text-[11px] text-neutral-600 font-geneva-12">
-                          {username
-                            ? telegramLinkedAccount
-                              ? t("apps.control-panels.telegram.linkedAs", {
-                                  account: getTelegramLinkedAccountLabel(
-                                    telegramLinkedAccount
-                                  ),
-                                })
-                              : t("apps.control-panels.telegram.description")
-                            : t("apps.control-panels.telegram.description")}
-                        </span>
-                      </div>
-                    </div>
-
-                    <Button
-                      variant="retro"
-                      onClick={openTelegramDialog}
-                      disabled={!username || isTelegramStatusLoading}
-                      className="h-7"
-                    >
-                      {telegramLinkedAccount
-                        ? t("apps.control-panels.telegram.manage")
-                        : t("apps.control-panels.telegram.link")}
-                    </Button>
-                  </div>
-                </div>
-
-                <hr
-                  className="my-4 border-t"
-                  style={tabStyles.separatorStyle}
-                />
-
-                <div className="space-y-2">
                   <Button
                     variant="retro"
                     onClick={handleCheckForUpdates}
@@ -1532,19 +1449,6 @@ export function ControlPanelsAppComponent({
           description={t(
             "apps.control-panels.cloudSync.confirmForceDownloadDesc"
           )}
-        />
-        <TelegramLinkDialog
-          isOpen={isTelegramDialogOpen}
-          onClose={() => setIsTelegramDialogOpen(false)}
-          linkedAccount={telegramLinkedAccount}
-          linkSession={telegramLinkSession}
-          isStatusLoading={isTelegramStatusLoading}
-          isCreatingLink={isCreatingTelegramLink}
-          isDisconnectingLink={isDisconnectingTelegramLink}
-          onCreateLink={handleCreateTelegramLink}
-          onOpenTelegramLink={handleOpenTelegramLink}
-          onCopyTelegramCode={handleCopyTelegramCode}
-          onDisconnectTelegramLink={handleDisconnectTelegramLink}
         />
       </WindowFrame>
     </>
