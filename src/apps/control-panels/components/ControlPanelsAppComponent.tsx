@@ -322,16 +322,6 @@ export function ControlPanelsAppComponent({
     ttsVoice,
     setTtsVoice,
     username,
-    promptSetUsername,
-    isUsernameDialogOpen,
-    setIsUsernameDialogOpen,
-    newUsername,
-    setNewUsername,
-    newPassword,
-    setNewPassword,
-    isSettingUsername,
-    usernameError,
-    submitUsernameDialog,
     promptVerifyToken,
     isVerifyDialogOpen,
     setVerifyDialogOpen,
@@ -723,7 +713,7 @@ export function ControlPanelsAppComponent({
                       />
                       <Button
                         variant="default"
-                        onClick={promptSetUsername}
+                        onClick={promptVerifyToken}
                         className="h-7"
                       >
                         {t("apps.control-panels.login")}
@@ -1077,7 +1067,7 @@ export function ControlPanelsAppComponent({
                         </div>
                         <Button
                           variant="default"
-                          onClick={promptSetUsername}
+                          onClick={promptVerifyToken}
                           className="h-7"
                         >
                           {t("apps.control-panels.login")}
@@ -1466,36 +1456,10 @@ export function ControlPanelsAppComponent({
           title={t("common.system.formatFileSystem")}
           description={t("common.system.formatFileSystemDesc")}
         />
-        {/* Sign Up Dialog (was SetUsernameDialog) */}
-        <LoginDialog
-          initialTab="signup"
-          isOpen={isUsernameDialogOpen}
-          onOpenChange={setIsUsernameDialogOpen}
-          /* Login props (inactive) */
-          usernameInput={verifyUsernameInput}
-          onUsernameInputChange={setVerifyUsernameInput}
-          passwordInput={verifyPasswordInput}
-          onPasswordInputChange={setVerifyPasswordInput}
-          onLoginSubmit={async () => {
-            await handleVerifyTokenSubmit(verifyPasswordInput, true);
-          }}
-          isLoginLoading={isVerifyingToken}
-          loginError={verifyError}
-          /* Sign Up props */
-          newUsername={newUsername}
-          onNewUsernameChange={setNewUsername}
-          newPassword={newPassword}
-          onNewPasswordChange={setNewPassword}
-          onSignUpSubmit={submitUsernameDialog}
-          isSignUpLoading={isSettingUsername}
-          signUpError={usernameError}
-        />
-
         {/* Log In Dialog */}
         <LoginDialog
           isOpen={isVerifyDialogOpen}
           onOpenChange={setVerifyDialogOpen}
-          /* Login props */
           usernameInput={verifyUsernameInput}
           onUsernameInputChange={setVerifyUsernameInput}
           passwordInput={verifyPasswordInput}
@@ -1505,17 +1469,6 @@ export function ControlPanelsAppComponent({
           }}
           isLoginLoading={isVerifyingToken}
           loginError={verifyError}
-          /* Sign Up props (inactive) */
-          newUsername={verifyUsernameInput}
-          onNewUsernameChange={setVerifyUsernameInput}
-          newPassword={verifyPasswordInput}
-          onNewPasswordChange={setVerifyPasswordInput}
-          onSignUpSubmit={async () => {
-            setVerifyDialogOpen(false);
-            promptSetUsername();
-          }}
-          isSignUpLoading={false}
-          signUpError={null}
         />
         <InputDialog
           isOpen={isPasswordDialogOpen}
