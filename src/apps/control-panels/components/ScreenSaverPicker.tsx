@@ -111,11 +111,15 @@ function ScreenSaverPreview({ type, onClick, disabled, label }: ScreenSaverPrevi
           break;
         }
         case "bouncing-logo": {
-          const x = Math.abs(((frame * 2) % (canvas.width * 2)) - canvas.width);
-          const y = Math.abs(((frame * 1.5) % (canvas.height * 2)) - canvas.height);
           ctx.fillStyle = `hsl(${frame * 5 % 360}, 100%, 50%)`;
           ctx.font = "bold 12px sans-serif";
-          ctx.fillText("ryOS", x - 15, y + 5);
+          const text = "MaromOS";
+          const metrics = ctx.measureText(text);
+          const textWidth = metrics.width;
+          const maxX = Math.max(0, canvas.width - textWidth);
+          const x = Math.abs(((frame * 2) % (maxX * 2 || 1)) - maxX);
+          const y = Math.abs(((frame * 1.5) % (canvas.height * 2)) - canvas.height);
+          ctx.fillText(text, x, y + 5);
           break;
         }
         case "pipes": {

@@ -1274,7 +1274,7 @@ export function useControlPanelsLogic({
         .split("T")
         .join("-")
         .slice(0, -5);
-      a.download = `ryOS-backup-${timestamp}.gz`;
+      a.download = `MaromOS-backup-${timestamp}.gz`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);

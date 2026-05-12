@@ -318,7 +318,7 @@ async function checkAndUpdate(isManual: boolean = false): Promise<void> {
     if (isManual) {
       const stored = getStoredVersion();
       toast.success('Already running the latest version', {
-        description: stored.version ? `ryOS ${stored.version} (${stored.buildNumber})` : undefined,
+        description: stored.version ? `MaromOS ${stored.version} (${stored.buildNumber})` : undefined,
       });
     }
     return;
@@ -379,7 +379,7 @@ export async function forceRefreshCache(): Promise<void> {
   // If already on latest version, just show success message without reboot
   if (!isNewVersion) {
     toast.success('Already running the latest version', {
-      description: stored.version ? `ryOS ${stored.version} (${stored.buildNumber})` : undefined,
+      description: stored.version ? `MaromOS ${stored.version} (${stored.buildNumber})` : undefined,
     });
     return;
   }

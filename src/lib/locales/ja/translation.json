@@ -387,8 +387,8 @@
           "title": "アプレットストア"
         },
         "createWithRyosChat": {
-          "description": "ryOSチャットにカスタムアプリとアプレットの作成を依頼。アイデアを共有して即座に動作するアプリを取得。",
-          "title": "ryOSチャットで作成"
+          "description": "MaromOSチャットにカスタムアプリとアプレットの作成を依頼。アイデアを共有して即座に動作するアプリを取得。",
+          "title": "MaromOSチャットで作成"
         },
         "keepUpdated": {
           "description": "ストアメニューで更新を確認して、インストール済みアプレットの最新バージョンを取得。",
@@ -403,7 +403,7 @@
           "title": "アプレットを共有"
         },
         "viewApplets": {
-          "description": "ryOSチャットから保存したアプレットまたはストアからダウンロードしたアプレットを開いて実行。",
+          "description": "MaromOSチャットから保存したアプレットまたはストアからダウンロードしたアプレットを開いて実行。",
           "title": "アプレットを表示"
         }
       },
@@ -429,7 +429,7 @@
         "noAppletsOpen": "アプレットは開いていません",
         "open": "開く...",
         "openAppletStore": "アプレットストアを開く",
-        "ryosApp": "ryOSアプリ",
+        "ryosApp": "MaromOSアプリ",
         "shareApplet": "アプレットを共有...",
         "store": "ストア",
         "untitled": "無題",
@@ -642,7 +642,7 @@
       },
       "help": {
         "chatWithRyo": {
-          "description": "メッセージを入力してRyoとチャット、コードを生成、またはryOSのヘルプを取得。",
+          "description": "メッセージを入力してRyoとチャット、コードを生成、またはMaromOSのヘルプを取得。",
           "title": "Ryoとチャット"
         },
         "controlApps": {
@@ -720,7 +720,7 @@
         "loginRequired": "ログインが必要です",
         "loginToChat": "チャットにログイン",
         "loginToContinue": "Ryoとのチャットを続けるにはログインしてください。",
-        "loginToRyOS": "ryOSにログイン",
+        "loginToRyOS": "MaromOSにログイン",
         "newChat": "新しいチャット",
         "noTranscriptionText": "文字起こしテキストが受信されませんでした",
         "nudgeSent": "👋 *つつき送信済み*",
@@ -1081,7 +1081,7 @@
           "title": "詳細を編集"
         },
         "importVCards": {
-          "description": "ファイルメニューから.vcfファイルをインポートして、連絡先をryOSに取り込みます",
+          "description": "ファイルメニューから.vcfファイルをインポートして、連絡先をMaromOSに取り込みます",
           "title": "vCardをインポート"
         },
         "useWithRyo": {
@@ -1185,7 +1185,7 @@
         "confirmForceUpload": "クラウドにアップロードしますか？",
         "confirmForceUploadDesc": "有効な自動同期項目について、クラウドのデータがこのデバイスの現在のデータで上書きされます。",
         "confirmRestore": "クラウドから復元しますか？",
-        "confirmRestoreDesc": "現在の設定とファイルはすべてクラウドバックアップで置き換えられます。ryOS は再起動します。",
+        "confirmRestoreDesc": "現在の設定とファイルはすべてクラウドバックアップで置き換えられます。MaromOS は再起動します。",
         "description": "すべての設定とファイルをクラウドにバックアップまたは復元します。最大 {{limit}}MB。",
         "forceDownload": "ダウンロード",
         "forceDownloadFailed": "クラウドからのダウンロードに失敗しました",
@@ -1237,7 +1237,7 @@
       "errorBoundaries": "エラー境界",
       "errorBoundariesDescription": "テスト用に、アプリまたはデスクトップのクラッシュ時のフォールバックをトリガーします。",
       "formatFileSystem": "ファイルシステムをフォーマット",
-      "formatFileSystemDescription": "これにより、すべてのファイル（サンプルドキュメントを除く）、画像、カスタム壁紙が消去されます。フォーマット後、ryOSは再起動します。",
+      "formatFileSystemDescription": "これにより、すべてのファイル（サンプルドキュメントを除く）、画像、カスタム壁紙が消去されます。フォーマット後、MaromOSは再起動します。",
       "help": {
         "aiModel": {
           "description": "チャットとターミナルアシスタントで使用するAIモデルを選択",
@@ -1276,7 +1276,7 @@
       "logIn": "ログイン",
       "logOut": "ログアウト",
       "logOutOfAllDevices": "すべてのデバイスからログアウト",
-      "loggedInToRyOS": "ryOSにログイン済み",
+      "loggedInToRyOS": "MaromOSにログイン済み",
       "loggingOut": "ログアウト中...",
       "login": "ログイン",
       "loginToSendMessages": "メッセージの送信などにはログイン",
@@ -1304,7 +1304,7 @@
       "resetAllSettings": "すべての設定をリセット",
       "resetAllSettingsDescription": "これにより、保存されているすべての設定が消去され、初期設定に戻ります",
       "restore": "復元",
-      "ryOSAccount": "ryOS アカウント",
+      "ryOSAccount": "MaromOS アカウント",
       "screenSaver": "スクリーンセーバー",
       "screenSaverDescription": "一定時間操作がないと起動します",
       "screenSaverExitHint": "クリックまたは、いずれかのキーを押して終了",
@@ -1377,7 +1377,7 @@
         "linkPending": "連携準備完了 - Telegramで完了してください",
         "linkReady": "Telegram連携準備完了",
         "linkedAs": "{{account}}として連携済み",
-        "loggedOutDescription": "TelegramをryOSアカウントに連携するには、ログインしてください。",
+        "loggedOutDescription": "TelegramをMaromOSアカウントに連携するには、ログインしてください。",
         "loginRequired": "Telegramを連携するにはログインしてください",
         "manage": "管理",
         "openTelegram": "Telegramを開く",
@@ -3090,7 +3090,7 @@
     "aboutThisMac": {
       "builtInMemory": "内蔵メモリ",
       "clickToToggle": "クリックで切り替え",
-      "description": "このコンピュータのryOSについて",
+      "description": "このコンピュータのMaromOSについて",
       "largestUnusedBlock": "最大の未使用ブロック",
       "mb": "MB",
       "system": "システム",
@@ -3131,7 +3131,7 @@
     "auth": {
       "createAccount": "アカウントを作成",
       "creatingAccount": "作成中...",
-      "dialogTitle": "ryOSログイン",
+      "dialogTitle": "MaromOSログイン",
       "logIn": "ログイン",
       "logOut": "ログアウト",
       "logOutDescription": "ログアウトしますか？アカウントからサインアウトされます。",
@@ -3232,7 +3232,7 @@
     "errorBoundaries": {
       "appDescription": "新しいウィンドウを開くには再起動するか、このクラッシュしたウィンドウを終了してください。他の開いているアプリは引き続き動作します。",
       "appHeading": "{{appName}}は予期せず終了しました",
-      "desktopDescription": "Dock、デスクトップ、メニューバーを復元するには、ryOSをリロードしてください。",
+      "desktopDescription": "Dock、デスクトップ、メニューバーを復元するには、MaromOSをリロードしてください。",
       "desktopHeading": "デスクトップは予期せず終了しました",
       "relaunch": "再起動",
       "reloadDesktop": "デスクトップを再読み込み"
@@ -3247,8 +3247,8 @@
     },
     "htmlPreview": {
       "bannerFallbackTitle": "無題のアプレット",
-      "codePreviewTitle": "ryOSコードプレビュー",
-      "codePreviewTitleFullscreen": "ryOSコードプレビュー（フルスクリーン）",
+      "codePreviewTitle": "MaromOSコードプレビュー",
+      "codePreviewTitleFullscreen": "MaromOSコードプレビュー（フルスクリーン）",
       "copyHtml": "HTMLコードをコピー",
       "downloadHtml": "HTMLをダウンロード",
       "exitFullscreen": "全画面表示を終了",
@@ -3338,16 +3338,16 @@
     "system": {
       "debugBootScreenTest": "デバッグ起動画面テスト...",
       "formatFileSystem": "ファイルシステムをフォーマット",
-      "formatFileSystemDesc": "ファイルシステムをフォーマットしてもよろしいですか？これにより、すべての書類（サンプル書類を除く）、画像、カスタム壁紙が永久に削除されます。フォーマット後、ryOSが再起動します。",
+      "formatFileSystemDesc": "ファイルシステムをフォーマットしてもよろしいですか？これにより、すべての書類（サンプル書類を除く）、画像、カスタム壁紙が永久に削除されます。フォーマット後、MaromOSが再起動します。",
       "formattingFileSystem": "ファイルシステムをフォーマット中...",
       "rebooting": "再起動中...",
       "resetAllSettings": "すべての設定をリセット",
-      "resetAllSettingsDesc": "すべての設定をリセットしてもよろしいですか？これにより、保存されたすべての設定がクリアされ、デフォルト状態に復元されます。リセット後、ryOSが再起動します。",
+      "resetAllSettingsDesc": "すべての設定をリセットしてもよろしいですか？これにより、保存されたすべての設定がクリアされ、デフォルト状態に復元されます。リセット後、MaromOSが再起動します。",
       "resettingSystem": "システムをリセット中...",
       "restoringSystem": "システムを復元中...",
       "systemRestoring": "システムを復元中...",
-      "updatingToRyOS": "ryOS {{version}} にアップデート中...",
-      "updatingToRyOSWithBuild": "ryOS {{version}} ({{buildNumber}}) にアップデート中..."
+      "updatingToRyOS": "MaromOS {{version}} にアップデート中...",
+      "updatingToRyOSWithBuild": "MaromOS {{version}} ({{buildNumber}}) にアップデート中..."
     },
     "toast": {
       "alreadyLatestVersion": "最新バージョンです",
@@ -3358,7 +3358,7 @@
       "noAssetsToCache": "キャッシュするアセットがありません",
       "reboot": "再起動",
       "total": "合計",
-      "updateReady": "ryOS {{version}} ({{buildNumber}}) のアップデート準備完了",
+      "updateReady": "MaromOS {{version}} ({{buildNumber}}) のアップデート準備完了",
       "updatingAssets": "アセット更新中",
       "updatingIcons": "アイコン更新中",
       "updatingSounds": "サウンド更新中",
@@ -3384,7 +3384,7 @@
   "settings": {
     "language": {
       "chineseTraditional": "中文",
-      "description": "ryOSインターフェースの優先言語を選択",
+      "description": "MaromOSインターフェースの優先言語を選択",
       "english": "English",
       "french": "Français",
       "german": "Deutsch",
@@ -3407,7 +3407,7 @@
     "hintNavigate": "移動",
     "hintOpen": "開く",
     "noResults": "結果が見つかりません",
-    "placeholder": "ryOS を検索",
+    "placeholder": "MaromOS を検索",
     "sections": {
       "applets": "アプレット",
       "apps": "アプリケーション",

@@ -149,7 +149,7 @@ export function AboutFinderDialog({
                     : "font-apple-garamond text-2xl "
                 )}
               >
-                ryOS
+                MaromOS
                 {currentTheme === "system7"
                   ? " 7"
                   : currentTheme === "macosx"
