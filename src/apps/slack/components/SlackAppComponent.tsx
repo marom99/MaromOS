@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { startTransition, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { AppProps } from "@/apps/base/types";
 import { WindowFrame } from "@/components/layout/WindowFrame";
 import { useTranslatedHelpItems } from "@/hooks/useTranslatedHelpItems";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { useThemeStore } from "@/stores/useThemeStore";
+import { Sounds, useSound } from "@/hooks/useSound";
 import { isWindowsTheme } from "@/themes";
 import { appMetadata, helpItems } from "../metadata";
 import { SlackMenuBar } from "./SlackMenuBar";
@@ -42,6 +43,8 @@ function formatSlackTime(date: Date) {
   });
 }
 
+const emptySlackMessagesChange = () => {};
+
 export function SlackAppComponent({
   isWindowOpen,
   onClose,
@@ -58,6 +61,7 @@ export function SlackAppComponent({
   const isMacTheme = currentTheme === "macosx";
   const isMobile = useIsMobile();
   const shouldReduceMotion = useReducedMotion();
+  const { play: playSidebarSwitchSound } = useSound(Sounds.BUTTON_CLICK, 0.3);
 
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
@@ -131,13 +135,27 @@ export function SlackAppComponent({
     [isMobile]
   );
 
-  if (!isWindowOpen) return null;
-
   const baseActiveChannel = getSlackChannel(activeChannelId);
-  const activeChannel = {
-    ...baseActiveChannel,
-    messages: channelMessages[activeChannelId] ?? baseActiveChannel.messages,
-  };
+  const activeChannel = useMemo(
+    () => ({
+      ...baseActiveChannel,
+      messages: channelMessages[activeChannelId] ?? baseActiveChannel.messages,
+    }),
+    [activeChannelId, baseActiveChannel, channelMessages]
+  );
+
+  const dmChannel = useMemo(
+    () => ({
+      id: "marom" as SlackChannelId,
+      name: "Marom",
+      topic: "",
+      memberCount: 0,
+      members: [],
+      composerPlaceholder: "Message Marom",
+      messages: dmMessages,
+    }),
+    [dmMessages]
+  );
 
   const threadsForMarom = useMemo<ThreadEntry[]>(() => {
     const entries: ThreadEntry[] = [];
@@ -188,24 +206,53 @@ export function SlackAppComponent({
     ? getSlackChannel(selectedThreadChannelId)
     : activeChannel;
 
-  const handleSelectChannel = (channelId: SlackChannelId) => {
+  const playSelectionSound = useCallback(() => {
+    void playSidebarSwitchSound();
+  }, [playSidebarSwitchSound]);
+
+  const clearSelectedThread = useCallback(() => {
+    setSelectedThreadMessageId((current) => {
+      if (current === null) return current;
+      return null;
+    });
+    setSelectedThreadChannelId((current) => {
+      if (current === null) return current;
+      return null;
+    });
+  }, []);
+
+  const handleSelectChannel = useCallback((channelId: SlackChannelId) => {
+    const isSwitchingSelection =
+      activeNavItem !== null || activeDMId !== null || activeChannelId !== channelId;
+    if (isSwitchingSelection) playSelectionSound();
     setActiveChannelId(channelId);
     setActiveNavItem(null);
     setActiveDMId(null);
-    setSelectedThreadMessageId(null);
-    setSelectedThreadChannelId(null);
+    startTransition(() => {
+      if (isSwitchingSelection) clearSelectedThread();
+    });
     if (isMobile) setIsSidebarOpen(false);
-  };
+  }, [
+    activeChannelId,
+    activeDMId,
+    activeNavItem,
+    clearSelectedThread,
+    isMobile,
+    playSelectionSound,
+  ]);
 
-  const handleSelectDM = (id: string) => {
+  const handleSelectDM = useCallback((id: string) => {
+    const isSwitchingSelection = activeDMId !== id;
+    if (isSwitchingSelection) playSelectionSound();
     setActiveDMId(id);
-    setActiveNavItem(null);
-    setSelectedThreadMessageId(null);
-    setSelectedThreadChannelId(null);
+    startTransition(() => {
+      setActiveNavItem(null);
+      if (isSwitchingSelection) clearSelectedThread();
+    });
     if (isMobile) setIsSidebarOpen(false);
-  };
+  }, [activeDMId, clearSelectedThread, isMobile, playSelectionSound]);
 
-  const handleSendDMMessage = (content: string, imageData?: string | null) => {
+  const handleSendDMMessage = useCallback((content: string, imageData?: string | null) => {
     const trimmedContent = content.trim();
     if (!trimmedContent && !imageData) return false;
 
@@ -226,20 +273,23 @@ export function SlackAppComponent({
     ]);
 
     return true;
-  };
+  }, []);
 
-  const handleSelectNav = (item: SlackNavItem) => {
+  const handleSelectNav = useCallback((item: SlackNavItem) => {
+    const isSwitchingSelection = activeNavItem !== item;
+    if (isSwitchingSelection) playSelectionSound();
     setActiveNavItem((prev) => (prev === item ? null : item));
-    setSelectedThreadMessageId(null);
-    setSelectedThreadChannelId(null);
-  };
+    startTransition(() => {
+      if (isSwitchingSelection) clearSelectedThread();
+    });
+  }, [activeNavItem, clearSelectedThread, playSelectionSound]);
 
-  const handleOpenThreadMessage = (channelId: SlackChannelId, messageId: string) => {
+  const handleOpenThreadMessage = useCallback((channelId: SlackChannelId, messageId: string) => {
     setSelectedThreadChannelId(channelId);
     setSelectedThreadMessageId(messageId);
-  };
+  }, []);
 
-  const handleToggleSidebar = () => {
+  const handleToggleSidebar = useCallback(() => {
     setIsSidebarOpen((open) => {
       const next = !open;
       if (next) {
@@ -248,24 +298,24 @@ export function SlackAppComponent({
       }
       return next;
     });
-  };
+  }, []);
 
-  const handleOpenThread = (messageId: string | null) => {
+  const handleOpenThread = useCallback((messageId: string | null) => {
     setSelectedThreadMessageId(messageId);
     setSelectedThreadChannelId(null);
     if (messageId && isMobile) setIsSidebarOpen(false);
-  };
+  }, [isMobile]);
 
-  const updateChannelMessages = (
+  const updateChannelMessages = useCallback((
     updater: (messages: SlackMessageItem[]) => SlackMessageItem[]
   ) => {
     setChannelMessages((prev) => ({
       ...prev,
       [activeChannelId]: updater(prev[activeChannelId] ?? baseActiveChannel.messages),
     }));
-  };
+  }, [activeChannelId, baseActiveChannel.messages]);
 
-  const handleSendMessage = (content: string, imageData?: string | null) => {
+  const handleSendMessage = useCallback((content: string, imageData?: string | null) => {
     const trimmedContent = content.trim();
     if (!trimmedContent && !imageData) return false;
 
@@ -286,9 +336,9 @@ export function SlackAppComponent({
     ]);
 
     return true;
-  };
+  }, [activeChannelId, updateChannelMessages]);
 
-  const handleAddThreadReply = (channelId: SlackChannelId, messageId: string, content: string, imageData?: string | null) => {
+  const handleAddThreadReply = useCallback((channelId: SlackChannelId, messageId: string, content: string, imageData?: string | null) => {
     const trimmedContent = content.trim();
     if (!trimmedContent && !imageData) return false;
 
@@ -330,7 +380,7 @@ export function SlackAppComponent({
     });
 
     return true;
-  };
+  }, []);
 
   const menuBar = (
     <SlackMenuBar
@@ -375,6 +425,8 @@ export function SlackAppComponent({
     return `Slack — #${activeChannel.name}`;
   };
 
+  if (!isWindowOpen) return null;
+
   return (
     <>
       {!isXpTheme && isForeground && menuBar}
@@ -414,18 +466,10 @@ export function SlackAppComponent({
                 isSidebarOpen={isSidebarOpen}
               />
               <SlackMessages
-                channel={{
-                  id: "marom" as SlackChannelId,
-                  name: "Marom",
-                  topic: "",
-                  memberCount: 0,
-                  members: [],
-                  composerPlaceholder: "Message Marom",
-                  messages: dmMessages,
-                }}
+                channel={dmChannel}
                 selectedThreadMessageId={null}
-                onOpenThread={() => {}}
-                onMessagesChange={() => {}}
+                onOpenThread={emptySlackMessagesChange}
+                onMessagesChange={emptySlackMessagesChange}
               />
               <SlackComposer
                 isForeground={!!isForeground}
