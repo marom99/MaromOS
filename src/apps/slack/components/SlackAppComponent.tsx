@@ -5,6 +5,7 @@ import { WindowFrame } from "@/components/layout/WindowFrame";
 import { useTranslatedHelpItems } from "@/hooks/useTranslatedHelpItems";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { useThemeStore } from "@/stores/useThemeStore";
+import { Sounds, useSound } from "@/hooks/useSound";
 import { isWindowsTheme } from "@/themes";
 import { appMetadata, helpItems } from "../metadata";
 import { SlackMenuBar } from "./SlackMenuBar";
@@ -58,6 +59,7 @@ export function SlackAppComponent({
   const isMacTheme = currentTheme === "macosx";
   const isMobile = useIsMobile();
   const shouldReduceMotion = useReducedMotion();
+  const { play: playSidebarSwitchSound } = useSound(Sounds.INPUT_RADIO_CLICK, 0.28);
 
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
@@ -189,6 +191,9 @@ export function SlackAppComponent({
     : activeChannel;
 
   const handleSelectChannel = (channelId: SlackChannelId) => {
+    const isSwitchingSelection =
+      activeNavItem !== null || activeDMId !== null || activeChannelId !== channelId;
+    if (isSwitchingSelection) void playSidebarSwitchSound();
     setActiveChannelId(channelId);
     setActiveNavItem(null);
     setActiveDMId(null);
@@ -198,6 +203,8 @@ export function SlackAppComponent({
   };
 
   const handleSelectDM = (id: string) => {
+    const isSwitchingSelection = activeDMId !== id;
+    if (isSwitchingSelection) void playSidebarSwitchSound();
     setActiveDMId(id);
     setActiveNavItem(null);
     setSelectedThreadMessageId(null);
@@ -229,6 +236,8 @@ export function SlackAppComponent({
   };
 
   const handleSelectNav = (item: SlackNavItem) => {
+    const isSwitchingSelection = activeNavItem !== item;
+    if (isSwitchingSelection) void playSidebarSwitchSound();
     setActiveNavItem((prev) => (prev === item ? null : item));
     setSelectedThreadMessageId(null);
     setSelectedThreadChannelId(null);
