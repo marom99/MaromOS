@@ -62,8 +62,7 @@ export default defineConfig({
         "**/.terminals/**",
         "**/dist/**",
         "**/.vercel/**",
-        "**/src-tauri/**",
-        "**/api/**",
+"**/api/**",
         "**/public/**", // 500+ static files don't need HMR watching
         "**/node_modules/**",
         "**/.git/**",
