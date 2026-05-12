@@ -512,8 +512,6 @@ export default defineConfig({
           // Realtime chat
           pusher: ["pusher-js"],
 
-          // Winamp player - deferred until Winamp app opens
-          webamp: ["webamp"],
         },
       },
     },
