@@ -168,7 +168,7 @@ export function AboutFinderDialog({
                       : undefined,
                   }}
                 >
-                  <p>© Ryo Lu. 1992-{new Date().getFullYear()}</p>
+                  <p>MaromOS build with Ryos</p>
                 </div>
               </div>
             </div>
