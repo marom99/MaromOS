@@ -41,50 +41,6 @@ export function AboutFinderDialog({
   const buildTime = useAppStore((state) => state.ryOSBuildTime);
   const isXpTheme = currentTheme === "xp" || currentTheme === "win98";
   const [versionDisplayMode, setVersionDisplayMode] = useState(0); // 0: version, 1: commit, 2: date
-  const [desktopVersion, setDesktopVersion] = useState<string | null>(null);
-  const isMac = useMemo(() => 
-    typeof navigator !== 'undefined' && navigator.platform.toLowerCase().includes('mac'), 
-    []
-  );
-
-  // Fetch desktop version for download link
-  useEffect(() => {
-    if (!isMac) return;
-
-    const abortController = new AbortController();
-    let isActive = true;
-
-    const loadDesktopVersion = async () => {
-      try {
-        const response = await abortableFetch("/version.json", {
-          cache: "no-store",
-          timeout: 15000,
-          throwOnHttpError: false,
-          retry: { maxAttempts: 1, initialDelayMs: 250 },
-          signal: abortController.signal,
-        });
-        const data = await response.json();
-
-        if (!isActive || abortController.signal.aborted) return;
-        setDesktopVersion(
-          typeof data?.desktopVersion === "string" ? data.desktopVersion : "1.0.1"
-        );
-      } catch (error) {
-        if (error instanceof Error && error.name === "AbortError") {
-          return;
-        }
-        if (!isActive || abortController.signal.aborted) return;
-        setDesktopVersion("1.0.1"); // fallback
-      }
-    };
-
-    void loadDesktopVersion();
-
-    return () => {
-      isActive = false;
-      abortController.abort();
-    };
-  }, [isMac]);
 
   // Get current username for admin check
   const username = useChatsStore((state) => state.username);
@@ -213,31 +169,6 @@ export function AboutFinderDialog({
                   }}
                 >
                   <p>© Ryo Lu. 1992-{new Date().getFullYear()}</p>
-                  {isMac && desktopVersion && (
-                    <p>
-                      <a 
-                        href={`https://github.com/ryokun6/ryos/releases/download/v${desktopVersion}/ryOS_${desktopVersion}_aarch64.dmg`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline"
-                      >
-                        {t("apps.control-panels.downloadMacApp")}
-                      </a>
-                    </p>
-                  )}
-                  <p>
-                    <a
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        launchApp("internet-explorer", { url: "os.ryo.lu/docs/changelog", year: "current" });
-                        onOpenChange(false);
-                      }}
-                      className="text-blue-600 hover:underline"
-                    >
-                      {t("common.aboutThisMac.viewChangelog")}
-                    </a>
-                  </p>
                 </div>
               </div>
             </div>

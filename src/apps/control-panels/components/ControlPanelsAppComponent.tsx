@@ -61,17 +61,6 @@ function VersionDisplay() {
     <p className="text-[11px] text-neutral-600 font-geneva-12">
       ryOS {displayVersion}
       {displayBuild}
-      {" · "}
-      <a
-        href="#"
-        onClick={(e) => {
-          e.preventDefault();
-          launchApp("internet-explorer", { url: "os.ryo.lu/docs/changelog", year: "current" });
-        }}
-        className="text-blue-600 hover:underline"
-      >
-        {t("apps.control-panels.viewChangelog")}
-      </a>
     </p>
   );
 }
