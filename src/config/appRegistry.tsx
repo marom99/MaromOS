@@ -1,4 +1,4 @@
-import { type AppId } from "./appRegistryData";
+import { type AppId, isAppHidden as _isAppHidden } from "./appRegistryData";
 import type {
   BaseApp,
   ChatsInitialData,
@@ -11,6 +11,7 @@ import type { AppletViewerInitialData } from "@/apps/applet-viewer";
 import { createLazyComponent } from "./lazyAppComponent";
 
 export type { AppId };
+export const isAppHidden = _isAppHidden;
 
 export interface WindowSize {
   width: number;
@@ -167,6 +168,7 @@ export const appRegistry = {
     component: LazyChatsApp,
     helpItems: chatsHelpItems,
     metadata: chatsMetadata,
+    hidden: true, // Hidden from UI (dock, desktop, applications menu)
     windowConfig: {
       defaultSize: { width: 390, height: 520 },
       minSize: { width: 300, height: 400 },
@@ -347,6 +349,8 @@ export const getNonFinderApps = (isAdmin: boolean = false): Array<{
   return Object.entries(appRegistry)
     .filter(([id, app]) => {
       if (id === "finder") return false;
+      // Filter out hidden apps
+      if ((app as { hidden?: boolean }).hidden) return false;
       // Filter out admin-only apps for non-admin users
       if ((app as { adminOnly?: boolean }).adminOnly && !isAdmin) return false;
       return true;

@@ -47,7 +47,19 @@ export const appNames: Record<AppId, string> = {
   "github-contributions": "GitHub Daily Streak",
 };
 
+/**
+ * Hidden app IDs - apps that are hidden from the UI but still registered.
+ * These apps won't appear in the dock, desktop, or applications menu.
+ * They can still be referenced by code and will continue to work.
+ */
+export const hiddenAppIds = new Set<AppId>(["chats"]);
+
+/** Check if an app is hidden */
+export const isAppHidden = (appId: AppId): boolean => {
+  return hiddenAppIds.has(appId);
+};
+
 /** Get list of apps with basic info for stores */
 export function getAppBasicInfoList(): AppBasicInfo[] {
-  return appIds.map(id => ({ id, name: appNames[id] }));
+  return appIds.filter(id => !isAppHidden(id)).map(id => ({ id, name: appNames[id] }));
 }
