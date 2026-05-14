@@ -44,7 +44,7 @@ export const appNames: Record<AppId, string> = {
   "stickies": "Stickies",
   "dashboard": "Dashboard",
   "slack": "Slack",
-  "github-contributions": "GitHub Daily Streak",
+  "github-contributions": "Keep Building",
 };
 
 /**
