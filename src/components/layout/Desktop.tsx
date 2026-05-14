@@ -52,6 +52,7 @@ const DEFAULT_SHORTCUT_ORDER: AppId[] = [
   "paint",
   "dashboard",
   "github-contributions",
+  "about-me",
 ];
 
 type DesktopItemId = string;

@@ -19,6 +19,7 @@ export const appIds = [
   "dashboard",
   "slack",
   "github-contributions",
+  "about-me",
 ] as const;
 
 export type AppId = (typeof appIds)[number];
@@ -45,6 +46,7 @@ export const appNames: Record<AppId, string> = {
   "dashboard": "Dashboard",
   "slack": "Slack",
   "github-contributions": "GitHub Daily Streak",
+  "about-me": "About Me",
 };
 
 /**
