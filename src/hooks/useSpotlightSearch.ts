@@ -100,7 +100,7 @@ const SEARCHABLE_SETTINGS: Array<{
       "german",
       "spanish",
     ],
-    tab: "system",
+    tab: "appearance",
     icon: "🌐",
   },
   {
