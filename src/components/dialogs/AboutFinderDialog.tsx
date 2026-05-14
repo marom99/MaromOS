@@ -11,12 +11,10 @@ import { useThemeStore } from "@/stores/useThemeStore";
 import { useAppStore } from "@/stores/useAppStore";
 import { useChatsStore } from "@/stores/useChatsStore";
 import { cn } from "@/lib/utils";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { ThemedIcon } from "@/components/shared/ThemedIcon";
 import { getTranslatedAppName } from "@/utils/i18n";
 import type { AppId } from "@/config/appRegistry";
-import { abortableFetch } from "@/utils/abortableFetch";
-
 interface AboutFinderDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
@@ -34,7 +32,6 @@ export function AboutFinderDialog({
 }: AboutFinderDialogProps) {
   const { t } = useTranslation();
   const instances = useAppStore((state) => state.instances);
-  const launchApp = useAppStore((state) => state.launchApp);
   const currentTheme = useThemeStore((state) => state.current);
   const version = useAppStore((state) => state.ryOSVersion);
   const buildNumber = useAppStore((state) => state.ryOSBuildNumber);
