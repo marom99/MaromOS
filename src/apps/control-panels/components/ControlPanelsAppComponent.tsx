@@ -23,7 +23,7 @@ import { ScreenSaverPicker } from "./ScreenSaverPicker";
 import { AppProps, ControlPanelsInitialData } from "@/apps/base/types";
 import { SYNTH_PRESETS } from "@/hooks/useChatSynth";
 import { VolumeMixer } from "./VolumeMixer";
-import { themes } from "@/themes";
+import { enabledThemeIds, themes } from "@/themes";
 import { OsThemeId } from "@/themes/types";
 import type { LanguageCode } from "@/stores/useLanguageStore";
 import { useControlPanelsLogic } from "../hooks/useControlPanelsLogic";
@@ -155,11 +155,14 @@ export function ControlPanelsAppComponent({
                       </SelectValue>
                     </SelectTrigger>
                     <SelectContent>
-                      {Object.entries(themes).map(([id, theme]) => (
-                        <SelectItem key={id} value={id}>
-                          {theme.name}
-                        </SelectItem>
-                      ))}
+                      {enabledThemeIds.map((id) => {
+                        const theme = themes[id];
+                        return (
+                          <SelectItem key={id} value={id}>
+                            {theme.name}
+                          </SelectItem>
+                        );
+                      })}
                     </SelectContent>
                   </Select>
                 </div>
