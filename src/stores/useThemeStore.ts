@@ -1,9 +1,9 @@
 import { create } from "zustand";
-import { themes } from "@/themes";
+import { enabledThemeIds, themes } from "@/themes";
 import type { OsThemeId } from "@/themes/types";
 
 function sanitizeStoredTheme(id: string | null | undefined): OsThemeId {
-  if (id && id in themes) {
+  if (id && id in themes && enabledThemeIds.includes(id as OsThemeId)) {
     return id as OsThemeId;
   }
   return "macosx";

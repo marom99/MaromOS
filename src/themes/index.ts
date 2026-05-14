@@ -38,4 +38,12 @@ export function isMacTheme(id: OsThemeId): boolean {
   return themes[id].metadata.isMac;
 }
 
+/**
+ * Theme IDs that are currently enabled for user selection.
+ * Disabled themes stay in the codebase for backward compatibility
+ * but are hidden from the theme selector UI.
+ */
+export const enabledThemeIds: OsThemeId[] = ["macosx"];
+export const disabledThemeIds: OsThemeId[] = ["system7", "xp", "win98"];
+
 export type { OsTheme, OsThemeId, ThemeMetadata } from "./types";
