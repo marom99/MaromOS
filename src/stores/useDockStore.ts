@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { appIds } from "@/config/appRegistryData";
+import { appIds, hiddenAppIds } from "@/config/appRegistryData";
 
 // Dock item can be an app or a file/applet
 export interface DockItem {
@@ -29,6 +29,7 @@ const sanitizeDockItems = (items: DockItem[]): DockItem[] => {
   const seen = new Set<string>();
   const sanitized = items.filter((item) => {
     if (item.type === "app" && !validAppIds.has(item.id)) return false;
+    if (item.type === "app" && hiddenAppIds.has(item.id as never)) return false;
     if (seen.has(item.id)) return false;
     seen.add(item.id);
     return true;

@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 import { useThemeStore } from "@/stores/useThemeStore";
 import { useAppStoreShallow } from "@/stores/helpers";
 import { ThemedIcon } from "@/components/shared/ThemedIcon";
-import { AppId, getAppIconPath, appRegistry, getNonFinderApps } from "@/config/appRegistry";
+import { AppId, getAppIconPath, appRegistry, getNonFinderApps, isAppHidden } from "@/config/appRegistry";
 import { getTranslatedAppName, getTranslatedFolderNameFromName } from "@/utils/i18n";
 import { useLaunchApp } from "@/hooks/useLaunchApp";
 import { useFinderStore } from "@/stores/useFinderStore";
@@ -951,6 +951,7 @@ function MacDock() {
   const pinnedLeft: AppId[] = useMemo(
     () => pinnedItems
       .filter(item => item.type === "app" && appRegistry[item.id as AppId])
+      .filter(item => !isAppHidden(item.id as AppId))
       .map(item => item.id as AppId),
     [pinnedItems]
   );
@@ -1296,6 +1297,8 @@ function MacDock() {
 
     // For each app, either add individual applet instances or a single app entry
     Object.entries(openByApp).forEach(([appId, instancesList]) => {
+      // Skip hidden apps
+      if (isAppHidden(appId as AppId)) return;
       if (appId === "applet-viewer") {
         // Add each applet instance separately
         instancesList.forEach((inst) => {

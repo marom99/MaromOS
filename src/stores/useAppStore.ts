@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { AppId, getWindowConfig, getMobileWindowSize } from "@/config/appRegistry";
+import { isAppHidden } from "@/config/appRegistryData";
 import { useAppletStore } from "@/stores/useAppletStore";
 import { AppState } from "@/apps/base/types";
 import { AIModel } from "@/types/aiModels";
@@ -579,6 +580,11 @@ const createUseAppStore = () =>
       },
       launchApp: (appId, initialData, title, multiWindow = false, launchOrigin) => {
         const state = get();
+        // Block launching hidden apps
+        if (isAppHidden(appId)) {
+          console.warn(`[AppStore] Blocked launch of hidden app: ${appId}`);
+          return "";
+        }
         const shouldRequestSync = shouldRequestCloudSyncOnAppLaunch(appId);
 
         if (shouldRequestSync) {

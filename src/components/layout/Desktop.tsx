@@ -1,5 +1,5 @@
 import { AnyApp } from "@/apps/base/types";
-import { AppId } from "@/config/appRegistry";
+import { AppId, isAppHidden } from "@/config/appRegistry";
 import { useState, useRef, useCallback, useMemo, useEffect } from "react";
 import { FileIcon } from "@/apps/finder/components/FileIcon";
 import { getAppIconPath } from "@/config/appRegistry";
@@ -530,7 +530,8 @@ export function Desktop({
       (app) =>
         app.id !== "finder" &&
         app.id !== "control-panels" &&
-        app.id !== "applet-viewer"
+        app.id !== "applet-viewer" &&
+        !isAppHidden(app.id)
     )
     .sort((a, b) => {
       switch (sortType) {
