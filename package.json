@@ -4,7 +4,9 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "NODE_OPTIONS='--max-old-space-size=4096' vite --port ${PORT:-5173}",
+    "dev": "STANDALONE_API_PROXY_TARGET=http://localhost:3000 NODE_OPTIONS='--max-old-space-size=4096' vite --port ${PORT:-5173}",
+    "dev:api": "bun run --watch server.ts",
+    "dev:vite": "NODE_OPTIONS='--max-old-space-size=4096' vite --port ${PORT:-5173}",
     "dev:check": "bun run scripts/check-dev-readiness.ts",
     "version:bump": "bun run scripts/generate-build-version.ts --bump",
     "prebuild": "bun run scripts/generate-build-version.ts",
@@ -114,7 +116,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@types/youtube": "^0.1.2",
-    "@vercel/node": "^5.8.0",
+
     "@vitejs/plugin-react-swc": "^4.2.2",
     "esbuild": "0.27.0",
     "eslint": "^9.39.2",

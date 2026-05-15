@@ -1,7 +1,4 @@
-import type { VercelRequest, VercelResponse } from "@vercel/node";
-
-export const runtime = "nodejs";
-export const maxDuration = 30;
+import type { IncomingMessage, ServerResponse } from "node:http";
 
 const GITHUB_GRAPHQL_URL = "https://api.github.com/graphql";
 
@@ -32,7 +29,14 @@ const CONTRIBUTIONS_QUERY = `
   }
 `;
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+type ApiResponse = ServerResponse & {
+  status(code: number): ApiResponse;
+  json(body: any): ApiResponse;
+  send(body: any): ApiResponse;
+  redirect(statusOrUrl: string | number, url?: string): ApiResponse;
+};
+
+export default async function handler(req: IncomingMessage, res: ApiResponse) {
   if (req.method !== "GET") {
     res.status(405).json({ error: "Method not allowed" });
     return;
