@@ -51,7 +51,6 @@ const DEFAULT_SHORTCUT_ORDER: AppId[] = [
   "videos",
   "paint",
   "dashboard",
-  "github-contributions",
   "about-me",
 ];
 

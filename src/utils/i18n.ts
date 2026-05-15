@@ -28,7 +28,6 @@ export type AppId =
   | "dashboard"
   | "candybar"
   | "slack"
-  | "github-contributions"
   | "about-me";
 
 /**
@@ -164,7 +163,6 @@ export function getTranslatedHelpItems(appId: AppId): Array<{
     dashboard: ["openDashboard", "clockWidget", "calendarWidget", "weatherWidget", "moveWidgets", "closeDashboard"],
     candybar: ["browseIconPacks", "iconPackDetails", "applyIconPacks", "favorites", "search", "cloudLibrary"],
     slack: ["browseChannels", "readDiscussion", "reviewPins", "addNotes"],
-    "github-contributions": [],
     "about-me": [],
   };
 
