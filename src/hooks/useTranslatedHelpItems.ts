@@ -167,6 +167,7 @@ const HELP_KEYS: Record<AppId, string[]> = {
   ],
   slack: ["browseChannels", "readDiscussion", "reviewPins", "addNotes"],
   "github-contributions": [],
+  "about-me": [],
 };
 
 /**

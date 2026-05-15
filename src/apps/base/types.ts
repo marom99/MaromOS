@@ -34,7 +34,8 @@ export interface BaseApp<TInitialData = unknown> {
     | "stickies"
     | "dashboard"
     | "slack"
-    | "github-contributions";
+    | "github-contributions"
+    | "about-me";
   name: string;
   icon: string | { type: "image"; src: string };
   description: string;

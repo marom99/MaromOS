@@ -108,6 +108,11 @@ const LazyGitHubContributionsApp = createLazyComponent<unknown>(
   "github-contributions"
 );
 
+const LazyAboutMeApp = createLazyComponent<unknown>(
+  () => import("@/apps/about-me/components/AboutMeAppComponent").then(m => ({ default: m.AboutMeAppComponent })),
+  "about-me"
+);
+
 // ============================================================================
 // APP METADATA (loaded eagerly - small, isolated from components)
 // Import from metadata.ts files to avoid eager loading of components
@@ -127,6 +132,7 @@ import { appMetadata as stickiesMetadata, helpItems as stickiesHelpItems } from 
 import { appMetadata as dashboardMetadata, helpItems as dashboardHelpItems } from "@/apps/dashboard/metadata";
 import { appMetadata as slackMetadata, helpItems as slackHelpItems } from "@/apps/slack/metadata";
 import { appMetadata as githubContributionsMetadata, helpItems as githubContributionsHelpItems } from "@/apps/github-contributions/metadata";
+import { appMetadata as aboutMeMetadata, helpItems as aboutMeHelpItems } from "@/apps/about-me/metadata";
 
 // ============================================================================
 // APP REGISTRY
@@ -319,6 +325,20 @@ export const appRegistry = {
     windowConfig: {
       defaultSize: { width: 760, height: 220 },
       minSize: { width: 580, height: 200 },
+    } as WindowConstraints,
+  },
+  ["about-me"]: {
+    id: "about-me",
+    name: "About Me",
+    icon: { type: "image", src: aboutMeMetadata.icon },
+    description: "Personal information and contact details",
+    component: LazyAboutMeApp,
+    helpItems: aboutMeHelpItems,
+    metadata: aboutMeMetadata,
+    windowConfig: {
+      defaultSize: { width: 280, height: 389 },
+      minSize: { width: 280, height: 420 },
+      maxSize: { width: 420, height: 560 },
     } as WindowConstraints,
   },
 } as const;

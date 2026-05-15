@@ -28,7 +28,8 @@ export type AppId =
   | "dashboard"
   | "candybar"
   | "slack"
-  | "github-contributions";
+  | "github-contributions"
+  | "about-me";
 
 /**
  * Get translated app name with theme-awareness
@@ -164,6 +165,7 @@ export function getTranslatedHelpItems(appId: AppId): Array<{
     candybar: ["browseIconPacks", "iconPackDetails", "applyIconPacks", "favorites", "search", "cloudLibrary"],
     slack: ["browseChannels", "readDiscussion", "reviewPins", "addNotes"],
     "github-contributions": [],
+    "about-me": [],
   };
 
   const keys = helpKeys[appId] || [];
