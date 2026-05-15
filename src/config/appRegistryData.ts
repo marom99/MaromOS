@@ -18,7 +18,6 @@ export const appIds = [
   "stickies",
   "dashboard",
   "slack",
-  "github-contributions",
   "about-me",
 ] as const;
 
@@ -45,7 +44,6 @@ export const appNames: Record<AppId, string> = {
   "stickies": "Stickies",
   "dashboard": "Dashboard",
   "slack": "Slack",
-  "github-contributions": "Keep Building",
   "about-me": "About Me",
 };
 

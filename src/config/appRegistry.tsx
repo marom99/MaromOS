@@ -103,11 +103,6 @@ const LazySlackApp = createLazyComponent<unknown>(
   "slack"
 );
 
-const LazyGitHubContributionsApp = createLazyComponent<unknown>(
-  () => import("@/apps/github-contributions/components/GitHubContributionsAppComponent").then(m => ({ default: m.GitHubContributionsAppComponent })),
-  "github-contributions"
-);
-
 const LazyAboutMeApp = createLazyComponent<unknown>(
   () => import("@/apps/about-me/components/AboutMeAppComponent").then(m => ({ default: m.AboutMeAppComponent })),
   "about-me"
@@ -131,7 +126,6 @@ import { appMetadata as adminMetadata, helpItems as adminHelpItems } from "@/app
 import { appMetadata as stickiesMetadata, helpItems as stickiesHelpItems } from "@/apps/stickies";
 import { appMetadata as dashboardMetadata, helpItems as dashboardHelpItems } from "@/apps/dashboard/metadata";
 import { appMetadata as slackMetadata, helpItems as slackHelpItems } from "@/apps/slack/metadata";
-import { appMetadata as githubContributionsMetadata, helpItems as githubContributionsHelpItems } from "@/apps/github-contributions/metadata";
 import { appMetadata as aboutMeMetadata, helpItems as aboutMeHelpItems } from "@/apps/about-me/metadata";
 
 // ============================================================================
@@ -312,19 +306,6 @@ export const appRegistry = {
     windowConfig: {
       defaultSize: { width: 1100, height: 720 },
       minSize: { width: 720, height: 520 },
-    } as WindowConstraints,
-  },
-  ["github-contributions"]: {
-    id: "github-contributions",
-    name: "Keep Building",
-    icon: { type: "image", src: githubContributionsMetadata.icon },
-    description: "Showcase GitHub contributions",
-    component: LazyGitHubContributionsApp,
-    helpItems: githubContributionsHelpItems,
-    metadata: githubContributionsMetadata,
-    windowConfig: {
-      defaultSize: { width: 760, height: 220 },
-      minSize: { width: 580, height: 200 },
     } as WindowConstraints,
   },
   ["about-me"]: {

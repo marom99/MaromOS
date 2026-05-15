@@ -13,7 +13,7 @@ import {
   ContributionDay,
   ContributionWeek,
   useGitHubContributionsLogic,
-} from "@/apps/github-contributions/hooks/useGitHubContributionsLogic";
+} from "@/hooks/useGitHubContributionsLogic";
 import {
   Tooltip,
   TooltipContent,

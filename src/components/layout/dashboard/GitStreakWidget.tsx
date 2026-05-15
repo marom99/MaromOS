@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useGitHubContributionsLogic } from "@/apps/github-contributions/hooks/useGitHubContributionsLogic";
+import { useGitHubContributionsLogic } from "@/hooks/useGitHubContributionsLogic";
 
 const BG = "oklch(0.16 0.05 145)";
 const DIVIDER = "oklch(0.28 0.05 145)";
