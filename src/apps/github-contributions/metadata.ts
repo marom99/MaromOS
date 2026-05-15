@@ -1,5 +1,5 @@
 export const appMetadata = {
-  name: "GitHub Daily Streak",
+  name: "Keep Building",
   version: "1.0.0",
   creator: {
     name: "Ryo Lu",

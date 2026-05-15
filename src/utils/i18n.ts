@@ -1,5 +1,6 @@
 import i18n from "@/lib/i18n";
 import { useThemeStore } from "@/stores/useThemeStore";
+import { appRegistry } from "@/config/appRegistry";
 
 export type AppId =
   | "finder"
@@ -52,8 +53,11 @@ export function getTranslatedAppName(appId: AppId): string {
   
   const key = `apps.${appId}.name`;
   const translated = i18n.t(key);
-  // If translation doesn't exist, return the key (fallback)
-  return translated !== key ? translated : appId;
+  if (translated !== key) return translated;
+
+  // Fall back to app registry name
+  const entry = (appRegistry as Record<string, { name?: string }>)[appId];
+  return entry?.name ?? appId;
 }
 
 /**

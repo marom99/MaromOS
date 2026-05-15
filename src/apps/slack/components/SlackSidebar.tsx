@@ -2,7 +2,8 @@ import {
   ChatCircleDots,
   Bookmark,
 } from "@phosphor-icons/react";
-import dmAvatar from "../assets/dm-avatar.png";
+import { ProfileAvatar } from "@/components/shared/ProfileAvatar";
+import { SLACK_PROFILE_PICTURES, getSlackInitials } from "./slackAvatarUtils";
 import { slackChannels, type SlackChannelId } from "../data/channelContent";
 import {
   Tooltip,
@@ -122,7 +123,12 @@ export function SlackSidebar({
                     aria-label={`Open direct message with ${name}`}
                   >
                     <div className="dm-avatar">
-                      <img src={dmAvatar} alt={name} />
+                      <ProfileAvatar
+                        picture={SLACK_PROFILE_PICTURES[0]}
+                        fallback={getSlackInitials(name)}
+                        label={name}
+                        className="w-full h-full"
+                      />
                       <div className="presence"></div>
                     </div>
                     <div className="dm-name">{name}</div>

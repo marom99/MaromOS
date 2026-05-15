@@ -316,7 +316,7 @@ export const appRegistry = {
   },
   ["github-contributions"]: {
     id: "github-contributions",
-    name: "GitHub",
+    name: "Keep Building",
     icon: { type: "image", src: githubContributionsMetadata.icon },
     description: "Showcase GitHub contributions",
     component: LazyGitHubContributionsApp,
