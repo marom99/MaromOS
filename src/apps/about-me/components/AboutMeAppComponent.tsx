@@ -10,10 +10,18 @@ import { ProfileAvatar } from "@/components/shared/ProfileAvatar";
 import { ALL_USER_PICTURES } from "@/utils/userPictures";
 import { cn } from "@/lib/utils";
 
-function InfoRow({ label, value, href }: { label: string; value: string; href?: string }) {
+function InfoRow({
+  label,
+  value,
+  href,
+}: {
+  label: string;
+  value: string;
+  href?: string;
+}) {
   return (
     <div className="flex items-baseline gap-2">
-      <span className="font-bold text-right shrink-0" style={{ minWidth: 80 }}>
+      <span className="font-bold text-left shrink-0" style={{ minWidth: 80 }}>
         {label}
       </span>
       {href ? (
@@ -29,40 +37,6 @@ function InfoRow({ label, value, href }: { label: string; value: string; href?: 
         <span>{value}</span>
       )}
     </div>
-  );
-}
-
-function BeveledButton({
-  children,
-  onClick,
-  href,
-}: {
-  children: React.ReactNode;
-  onClick?: () => void;
-  href?: string;
-}) {
-  const currentTheme = useThemeStore((state) => state.current);
-  const isXpTheme = currentTheme === "xp" || currentTheme === "win98";
-
-  const className = cn(
-    "px-4 py-1 rounded text-[11px] cursor-pointer transition-colors",
-    isXpTheme
-      ? "border border-[#ACA899] bg-[#ECE9D8] hover:bg-[#F5F3EC] active:bg-[#D9D6C9]"
-      : "border border-[#B4B4B4] bg-[#F0F0F0] hover:bg-[#F7F7F7] active:bg-[#E0E0E0] shadow-sm"
-  );
-
-  if (href) {
-    return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
-        {children}
-      </a>
-    );
-  }
-
-  return (
-    <button type="button" onClick={onClick} className={className}>
-      {children}
-    </button>
   );
 }
 
@@ -101,90 +75,137 @@ export const AboutMeAppComponent: React.FC<AppProps> = ({
         skipInitialSound={skipInitialSound}
         menuBar={isXpTheme ? menuBarEl : undefined}
         windowConstraints={{
-          minWidth: 320,
-          minHeight: 420,
+          minWidth: 280,
+          minHeight: 280,
           maxWidth: 420,
           maxHeight: 560,
         }}
       >
-        <div data-impeccable-variants="b26ab670" data-impeccable-variant-count="3" style={{ display: "contents" }}>
-          {/* impeccable-variants-start b26ab670 */}
-          {/* Original */}
-          <div data-impeccable-variant="original">
-            <div
-              className={cn(
-                "flex-1 flex flex-col items-center overflow-auto select-none",
-                isXpTheme ? "bg-[#ECE9D8]" : "bg-[#E8E8E8]"
-              )}
-              style={{
-                padding: "24px 20px 16px",
-              }}
-            >
-              {/* Avatar */}
-              <ProfileAvatar
-                picture={ALL_USER_PICTURES[37]?.path}
-                fallback="M"
-                label="Marom"
-                className="w-[54px] h-[54px] mb-3 shadow-[0_2px_8px_rgba(0,0,0,0.15)]"
-              />
+        <style>{`
+          .about-profile {
+            --profile-density: 1;
+            --profile-gap: calc(var(--profile-density) * 12px);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: calc(var(--profile-density) * 15px);
+            padding: calc(var(--profile-density) * 18px) calc(var(--profile-density) * 22px) calc(var(--profile-density) * 16px);
+            color: var(--os-color-text-primary);
+            font-family: var(--font-geneva-12);
+          }
 
-              {/* Name */}
+          .about-profile__hero {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+            gap: calc(var(--profile-density) * 13px);
+            padding-bottom: calc(var(--profile-density) * 12px);
+            border-bottom: 0.5px solid var(--os-color-separator);
+          }
+
+          .about-profile__avatar {
+            width: calc(var(--profile-density) * 48px);
+            height: calc(var(--profile-density) * 48px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+          }
+
+          .about-profile__identity {
+            min-width: 0;
+            text-align: left;
+          }
+
+          .about-profile__name {
+            font-size: calc(var(--profile-density) * 25px);
+            line-height: 1.05;
+          }
+
+          .about-profile__location {
+            margin-top: 2px;
+            font-size: 12px;
+            color: var(--os-color-text-secondary);
+          }
+
+          .about-profile__facts {
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--profile-density) * 6px);
+            width: 100%;
+            margin: 0;
+            font-size: 12px;
+            color: #333333;
+          }
+
+          .about-profile__facts > div {
+            display: grid;
+            grid-template-columns: calc(var(--profile-density) * 70px) 1fr;
+            gap: calc(var(--profile-density) * 10px);
+            align-items: baseline;
+          }
+
+          .about-profile__facts span:first-child {
+            min-width: 0 !important;
+            text-align: left;
+          }
+
+          .about-profile__footer {
+            width: 100%;
+            margin-top: calc(var(--profile-density) * 2px);
+            text-align: left;
+            font-family: var(--font-geneva-12);
+            font-size: 11px;
+            color: #888888;
+          }
+
+          .about-profile a {
+            color: rgb(37, 99, 235);
+            text-decoration: none;
+          }
+
+          .about-profile a:hover {
+            text-decoration: underline;
+          }
+        `}</style>
+        <div
+          className={cn(
+            "about-profile about-profile--left-ledger flex-1 overflow-auto select-none",
+            isXpTheme ? "bg-[#ECE9D8]" : "bg-[#E8E8E8]",
+          )}
+        >
+          <div className="about-profile__hero">
+            <ProfileAvatar
+              picture={ALL_USER_PICTURES[37]?.path}
+              fallback="M"
+              label="Marom"
+              className="about-profile__avatar"
+            />
+            <div className="about-profile__identity">
               <h1
                 className={cn(
-                  "text-center font-medium",
-                  isXpTheme ? "text-[17px] font-['Trebuchet_MS']" : "text-2xl"
+                  "about-profile__name font-medium",
+                  isXpTheme ? "font-['Trebuchet_MS']" : "",
                 )}
-                style={isXpTheme ? undefined : { fontFamily: "var(--font-apple-garamond)" }}
+                style={
+                  isXpTheme
+                    ? undefined
+                    : { fontFamily: "var(--font-apple-garamond)" }
+                }
               >
                 Marom
               </h1>
-
-              {/* Location */}
-              <p
-                className="text-center mt-0.5 mb-3"
-                style={{
-                  fontSize: isXpTheme ? "11px" : "12px",
-                  color: "#666",
-                }}
-              >
-                Jakarta, ID
-              </p>
-
-              {/* Info rows */}
-              <div
-                className="flex flex-col gap-1.5 w-full"
-                style={{
-                  fontSize: isXpTheme ? "11px" : "12px",
-                  color: "#333",
-                  fontFamily: isXpTheme ? '"Pixelated MS Sans Serif", Arial' : "var(--font-geneva-12)",
-                  maxWidth: 280,
-                }}
-              >
-                <InfoRow label="Process" value="Software Engineer" />
-                <InfoRow label="Version" value="2026" />
-              </div>
-
-              {/* Footer */}
-              <div
-                className="text-center mt-4"
-                style={{
-                  fontSize: isXpTheme ? "10px" : "11px",
-                  color: "#888",
-                  fontFamily: isXpTheme ? '"Pixelated MS Sans Serif", Arial' : "var(--font-geneva-12)",
-                }}
-              >
-                <p>&copy; Marom 1999-2026</p>
-                <a
-                  href="mailto:hi@marom.id"
-                  className="text-blue-600 hover:underline"
-                >
-                  hi@marom.id
-                </a>
-              </div>
+              <p className="about-profile__location">Jakarta, ID 🇮🇩</p>
             </div>
           </div>
-          {/* Variants: insert below this line */}
-          {/* impeccable-variants-end b26ab670 */}
+
+          <div className="about-profile__facts">
+            <InfoRow label="Process" value="Software Designer" />
+            <InfoRow label="Version" value="2026" />
+          </div>
+
+          <div className="about-profile__footer">
+            <p>&copy; Marom 1999-2026</p>
+            <a href="mailto:hi@marom.id">hi@marom.id</a>
+          </div>
         </div>
       </WindowFrame>
 

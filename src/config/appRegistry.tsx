@@ -336,8 +336,8 @@ export const appRegistry = {
     helpItems: aboutMeHelpItems,
     metadata: aboutMeMetadata,
     windowConfig: {
-      defaultSize: { width: 340, height: 480 },
-      minSize: { width: 320, height: 420 },
+      defaultSize: { width: 280, height: 480 },
+      minSize: { width: 280, height: 420 },
       maxSize: { width: 420, height: 560 },
     } as WindowConstraints,
   },
