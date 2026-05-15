@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ThemedIcon } from "@/components/shared/ThemedIcon";
-import { useState, useRef, useEffect, memo, useCallback } from "react";
+import { useState, useRef, useEffect, memo, useCallback, useMemo } from "react";
 import { useLongPress } from "@/hooks/useLongPress";
 import { isTouchDevice } from "@/utils/device";
 import { getFinderDisplayName } from "@/utils/finderDisplay";
@@ -23,6 +23,7 @@ import {
   hasToggleModifier,
   mergeSelectionIds,
   resolveMultiSelection,
+  type SelectableRect,
   type SelectionPoint,
 } from "@/utils/selection";
 
@@ -381,6 +382,7 @@ export function FileList({
     start: SelectionPoint;
     end: SelectionPoint;
   } | null>(null);
+  const selectableRectsRef = useRef<SelectableRect<string>[]>([]);
   const currentTheme = useThemeStore((state) => state.current);
   const isMacOSXTheme = currentTheme === "macosx";
   const isXpTheme = currentTheme === "xp" || currentTheme === "win98";
@@ -409,7 +411,7 @@ export function FileList({
     onFileSelect(undefined, { selectedPaths: [], anchorPath: null });
   };
 
-  const orderedPaths = files.map((file) => file.path);
+  const orderedPaths = useMemo(() => files.map((file) => file.path), [files]);
 
   const applySelection = useCallback(
     (
@@ -435,17 +437,7 @@ export function FileList({
 
       const intersectingPaths = getIntersectingSelectionIds(
         createSelectionRect(start, end),
-        Array.from(
-          container.querySelectorAll<HTMLElement>("[data-file-path]")
-        ).map((element) => ({
-          id: element.dataset.filePath || "",
-          rect: {
-            left: element.getBoundingClientRect().left,
-            top: element.getBoundingClientRect().top,
-            right: element.getBoundingClientRect().right,
-            bottom: element.getBoundingClientRect().bottom,
-          },
-        }))
+        selectableRectsRef.current
       ).filter(Boolean);
 
       const nextSelectedPaths = marqueeAdditiveRef.current
@@ -468,6 +460,25 @@ export function FileList({
       if (event.button !== 0 || isTouchDevice()) return;
       const target = event.target as HTMLElement;
       if (target.closest("[data-file-item]")) return;
+
+      const container = containerRef.current;
+      if (container) {
+        // Cache rectangles once when selection starts to avoid layout thrashing during mouse move
+        selectableRectsRef.current = Array.from(
+          container.querySelectorAll<HTMLElement>("[data-file-path]")
+        ).map((element) => {
+          const rect = element.getBoundingClientRect();
+          return {
+            id: element.dataset.filePath || "",
+            rect: {
+              left: rect.left,
+              top: rect.top,
+              right: rect.right,
+              bottom: rect.bottom,
+            },
+          };
+        });
+      }
 
       const start = { x: event.clientX, y: event.clientY };
       marqueeStartRef.current = start;

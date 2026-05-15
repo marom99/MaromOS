@@ -150,7 +150,13 @@ export const rectanglesIntersect = (
 export const getIntersectingSelectionIds = <Id extends string>(
   selectionRect: SelectionRect,
   selectableRects: readonly SelectableRect<Id>[]
-): Id[] =>
-  selectableRects
-    .filter((item) => rectanglesIntersect(selectionRect, item.rect))
-    .map((item) => item.id);
+): Id[] => {
+  const result: Id[] = [];
+  for (let i = 0; i < selectableRects.length; i++) {
+    const item = selectableRects[i];
+    if (rectanglesIntersect(selectionRect, item.rect)) {
+      result.push(item.id);
+    }
+  }
+  return result;
+};

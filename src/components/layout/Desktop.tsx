@@ -25,6 +25,7 @@ import {
   hasToggleModifier,
   mergeSelectionIds,
   resolveMultiSelection,
+  type SelectableRect,
   type SelectionPoint,
 } from "@/utils/selection";
 
@@ -86,6 +87,7 @@ export function Desktop({
     start: SelectionPoint;
     end: SelectionPoint;
   } | null>(null);
+  const selectableRectsRef = useRef<SelectableRect<DesktopItemId>[]>([]);
   const [sortType, setSortType] = useState<SortType>("name");
   const [contextMenuPos, setContextMenuPos] = useState<{
     x: number;
@@ -606,17 +608,7 @@ export function Desktop({
 
       const intersectingIds = getIntersectingSelectionIds(
         createSelectionRect(start, end),
-        Array.from(
-          desktop.querySelectorAll<HTMLElement>("[data-desktop-item-id]")
-        ).map((element) => ({
-          id: element.dataset.desktopItemId || "",
-          rect: {
-            left: element.getBoundingClientRect().left,
-            top: element.getBoundingClientRect().top,
-            right: element.getBoundingClientRect().right,
-            bottom: element.getBoundingClientRect().bottom,
-          },
-        }))
+        selectableRectsRef.current
       ).filter(Boolean);
 
       const nextSelectedIds = marqueeAdditiveRef.current
@@ -696,6 +688,25 @@ export function Desktop({
     if (event.button !== 0) return;
     const target = event.target as HTMLElement;
     if (target.closest("[data-desktop-icon]")) return;
+
+    const desktop = desktopRef.current;
+    if (desktop) {
+      // Cache rectangles once when selection starts to avoid layout thrashing during mouse move
+      selectableRectsRef.current = Array.from(
+        desktop.querySelectorAll<HTMLElement>("[data-desktop-item-id]")
+      ).map((element) => {
+        const rect = element.getBoundingClientRect();
+        return {
+          id: element.dataset.desktopItemId || "",
+          rect: {
+            left: rect.left,
+            top: rect.top,
+            right: rect.right,
+            bottom: rect.bottom,
+          },
+        };
+      });
+    }
 
     const start = { x: event.clientX, y: event.clientY };
     marqueeStartRef.current = start;
