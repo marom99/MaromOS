@@ -22,6 +22,7 @@ import { useAutoCloudSync } from "@/hooks/useAutoCloudSync";
 import { useFilesStore } from "@/stores/useFilesStore";
 import { ReactScanDebug } from "@/components/ReactScanDebug";
 import { Agentation } from "agentation";
+import { useAppStore } from "@/stores/useAppStore";
 
 // Convert registry to array
 const apps: AnyApp[] = Object.values(appRegistry);
@@ -93,6 +94,7 @@ export function App() {
   }, []);
 
   useEffect(() => {
+    console.log("[App] Main useEffect running, isFirstBoot =", isFirstBoot);
     // Only show boot screen for system operations (reset/restore/format/debug)
     const persistedMessage = getNextBootMessage();
     if (persistedMessage) {
@@ -103,7 +105,59 @@ export function App() {
 
     // Set first boot flag without showing boot screen
     if (isFirstBoot) {
+      console.log("[App] isFirstBoot is true, launching default apps...");
       setHasBooted();
+      
+      const appStore = useAppStore.getState();
+      const isMobileDevice = window.innerWidth < 768;
+      
+      // Launch initial apps
+      const slackId = appStore.launchApp("slack");
+      const aboutMeId = appStore.launchApp("about-me");
+      
+      console.log(`[App] Launched apps: slack=${slackId}, about-me=${aboutMeId}`);
+      
+      // Wait for next tick so that instances are fully created in the store
+      setTimeout(() => {
+        if (slackId && aboutMeId) {
+          console.log("[App] Updating instance window states...");
+          if (isMobileDevice) {
+            appStore.bringInstanceToForeground(slackId);
+          } else {
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            
+            // Get current instance configs, or fallback to defaults
+            const currentAboutMe = useAppStore.getState().instances[aboutMeId];
+            const aboutMeConfig = currentAboutMe?.size || { width: 280, height: 389 };
+            
+            const gap = 16;
+            const topMargin = 40;
+            const sideMargin = 16;
+            
+            // Position About Me on the left
+            appStore.updateInstanceWindowState(
+              aboutMeId,
+              { x: sideMargin, y: topMargin },
+              aboutMeConfig
+            );
+            
+            // Position Slack on the right
+            const slackX = sideMargin + aboutMeConfig.width + gap;
+            const slackWidth = viewportWidth - slackX - sideMargin;
+            const slackHeight = Math.max(520, viewportHeight - topMargin - 60);
+            
+            appStore.updateInstanceWindowState(
+              slackId,
+              { x: slackX, y: topMargin },
+              { width: slackWidth, height: slackHeight }
+            );
+            
+            appStore.bringInstanceToForeground(slackId);
+            console.log("[App] Positioned windows and brought slack to front.");
+          }
+        }
+      }, 0);
     }
   }, [isFirstBoot, setHasBooted]);
 

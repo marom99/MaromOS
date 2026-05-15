@@ -65,7 +65,7 @@ export function SlackAppComponent({
 
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
-  const [activeChannelId, setActiveChannelId] = useState<SlackChannelId>("prototype-playground");
+  const [activeChannelId, setActiveChannelId] = useState<SlackChannelId>("welcome");
   const [channelMessages, setChannelMessages] = useState(createInitialChannelMessages);
   const [selectedThreadMessageId, setSelectedThreadMessageId] = useState<string | null>(null);
   const [selectedThreadChannelId, setSelectedThreadChannelId] = useState<SlackChannelId | null>(null);

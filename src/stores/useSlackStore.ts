@@ -5,5 +5,5 @@ interface SlackStoreState {
 }
 
 export const useSlackStore = create<SlackStoreState>()(() => ({
-  activeChannelId: "prototype-playground",
+  activeChannelId: "welcome",
 }));
