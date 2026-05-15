@@ -6,7 +6,7 @@ export const appMetadata = {
     url: "https://marom.id",
   },
   github: "https://github.com/ryokun6/ryos",
-  icon: "/icons/default/info.png",
+  icon: "/icons/macosx/contacts.png",
 };
 
 export const helpItems = [

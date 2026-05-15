@@ -177,8 +177,7 @@ function GitHubStreakGrid() {
                         align="start"
                         className="about-profile__streak-tooltip"
                       >
-                        {formatContributionDate(day.date)} ·{" "}
-                        {formatContributionCount(day.contributionCount)}
+                        {formatContributionDate(day.date)} · {formatContributionCount(day.contributionCount)}
                       </TooltipContent>
                     </Tooltip>
                   );
@@ -404,8 +403,8 @@ export const AboutMeAppComponent: React.FC<AppProps> = ({
           }
 
           .about-profile__footer-icon {
-            width: 44px;
-            height: 44px;
+            width: 34px;
+            height: 34px;
             flex-shrink: 0;
           }
 
