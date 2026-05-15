@@ -338,7 +338,7 @@ export const AboutMeAppComponent: React.FC<AppProps> = ({
             width: ${CONTRIBUTION_CELL_SIZE}px;
             height: ${CONTRIBUTION_CELL_SIZE}px;
             border: 0;
-            border-radius: 0;
+            border-radius: 2px;
             padding: 0;
             appearance: none;
             flex-shrink: 0;
@@ -353,10 +353,15 @@ export const AboutMeAppComponent: React.FC<AppProps> = ({
           .about-profile__streak-cell:not(.about-profile__streak-cell--empty):hover,
           .about-profile__streak-cell:not(.about-profile__streak-cell--empty):focus-visible {
             transform: translateY(-1px);
-            box-shadow: 0 0 0 1px #333333, 0 1px 2px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.05), inset 0 0 0 0.5px rgba(0, 0, 0, 0.1);
             outline: none;
             position: relative;
             z-index: 1;
+          }
+
+          .about-profile__streak-cell:not(.about-profile__streak-cell--empty):active {
+            transform: scale(0.96);
+            transition-duration: 40ms;
           }
 
           .about-profile__streak-cell--empty {
@@ -457,7 +462,7 @@ export const AboutMeAppComponent: React.FC<AppProps> = ({
           <div className="about-profile__footer">
             <div className="about-profile__footer-text">
               <p>&copy; Marom 1999-2026</p>
-              <a href="mailto:hi@marom.id">hi@marom.id</a>
+              <a href="mailto:marom.nailul@gmail.com">marom.nailul@gmail.com</a>
             </div>
             <img
               src="/icons/macosx/file-text.png"
