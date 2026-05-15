@@ -62,7 +62,7 @@ export const useDockStore = create<DockStoreState>()(
   persist(
     (set, get) => ({
       pinnedItems: DEFAULT_PINNED_ITEMS,
-      scale: 1, // Default scale
+      scale: 0.75, // Default scale (smaller for macOS style)
       hiding: false, // Default: dock always visible
       magnification: true, // Default: magnification enabled
 
@@ -157,7 +157,7 @@ export const useDockStore = create<DockStoreState>()(
       },
 
       reset: () => {
-        set({ pinnedItems: DEFAULT_PINNED_ITEMS, scale: 1, hiding: false, magnification: true });
+        set({ pinnedItems: DEFAULT_PINNED_ITEMS, scale: 0.75, hiding: false, magnification: true });
       },
     }),
     {
