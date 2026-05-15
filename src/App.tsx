@@ -166,7 +166,6 @@ export function App() {
   // For Tauri: only show on updates (not first time)
   useEffect(() => {
     const isMacOS = navigator.platform.toLowerCase().includes("mac");
-    const isInTauri = isTauri();
 
     if (!isMacOS) {
       return;
@@ -192,26 +191,8 @@ export function App() {
             },
           },
         });
-      } else if (result.type === 'first-time' && result.version && !isInTauri) {
+      } else if (result.type === 'first-time' && result.version) {
         // Mark as seen immediately so dismissing the toast won't show it again
-        setLastSeenDesktopVersion(result.version);
-        // First time user on web - show initial download toast (not in Tauri)
-        toast("MaromOS is available as a Mac app", {
-          id: 'desktop-update',
-          icon: <DownloadSimple className="h-4 w-4" weight="bold" />,
-          duration: Infinity,
-          action: {
-            label: "Download",
-            onClick: () => {
-              window.open(
-                `https://github.com/ryokun6/ryos/releases/download/v${result.version}/ryOS_${result.version}_aarch64.dmg`,
-                "_blank"
-              );
-            },
-          },
-        });
-      } else if (result.type === 'first-time' && result.version && isInTauri) {
-        // First time in Tauri - just store the version without showing toast
         setLastSeenDesktopVersion(result.version);
       }
     };
