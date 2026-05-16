@@ -357,10 +357,14 @@ function setupAudioContextListeners() {
 
       // iOS Safari requires gesture-based resume/unlock (persistent, not one-time)
       attachUnlockListeners();
-    } else {
-      // Keep non-Safari lean: no persistent gesture listeners.
-      detachUnlockListeners();
     }
+
+    // Chrome/Firefox/Edge also block AudioContext until a user gesture; the
+    // unlock handler is idempotent and cheap (passive+capture listeners) so we
+    // attach it unconditionally. Without this, programmatic resume() inside
+    // async callbacks loses the gesture stack and sounds play into a suspended
+    // context (silent on production deploys).
+    attachUnlockListeners();
 
     // Safari-specific: periodic health check for stuck audio context
     // Safari can get into states where the context appears suspended but won't resume
