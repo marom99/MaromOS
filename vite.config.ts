@@ -456,21 +456,24 @@ export default defineConfig({
           // Core React - loaded immediately
           react: ["react", "react-dom"],
           
-          // UI primitives - loaded early
-          "ui-core": [
+          // Radix UI primitives - kept in a single chunk to avoid circular
+          // dependencies across shared internals (react-primitive, react-context, etc.)
+          // which manifest as "Cannot access X before initialization" TDZ errors when split.
+          "ui-radix": [
             "@radix-ui/react-dialog",
             "@radix-ui/react-dropdown-menu",
             "@radix-ui/react-menubar",
             "@radix-ui/react-scroll-area",
             "@radix-ui/react-tooltip",
-          ],
-          "ui-form": [
             "@radix-ui/react-label",
             "@radix-ui/react-select",
             "@radix-ui/react-slider",
             "@radix-ui/react-switch",
             "@radix-ui/react-checkbox",
             "@radix-ui/react-tabs",
+            "@radix-ui/react-popover",
+            "@radix-ui/react-slot",
+            "@radix-ui/react-visually-hidden",
           ],
           
           // Heavy audio libs - deferred until Soundboard/iPod/Synth opens

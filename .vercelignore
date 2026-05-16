@@ -4,9 +4,9 @@ dist/
 .vercel/cache/
 
 # Backend (frontend-only showcase, except GitHub contributions API)
-api/
-!api/github-contributions.ts
-middleware.ts
+/api/
+!/api/github-contributions.ts
+/middleware.ts
 
 # Dependencies
 node_modules/
