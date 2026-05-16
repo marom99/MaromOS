@@ -26,6 +26,7 @@ import {
   mergeSelectionIds,
   resolveMultiSelection,
   type SelectionPoint,
+  type SelectableRect,
 } from "@/utils/selection";
 
 interface DesktopStyles {
@@ -79,6 +80,7 @@ export function Desktop({
   const desktopRef = useRef<HTMLDivElement>(null);
   const marqueeStartRef = useRef<SelectionPoint | null>(null);
   const marqueeBaseSelectionRef = useRef<DesktopItemId[]>([]);
+  const selectableRectsRef = useRef<SelectableRect<DesktopItemId>[]>([]);
   const marqueeAdditiveRef = useRef(false);
   const suppressClickAfterMarqueeRef = useRef(false);
   const [selectionRect, setSelectionRect] = useState<{
@@ -600,22 +602,10 @@ export function Desktop({
 
   const updateSelectionFromMarquee = useCallback(
     (start: SelectionPoint, end: SelectionPoint) => {
-      const desktop = desktopRef.current;
-      if (!desktop) return;
-
+      // Use cached rectangles to avoid layout thrashing during marquee move
       const intersectingIds = getIntersectingSelectionIds(
         createSelectionRect(start, end),
-        Array.from(
-          desktop.querySelectorAll<HTMLElement>("[data-desktop-item-id]")
-        ).map((element) => ({
-          id: element.dataset.desktopItemId || "",
-          rect: {
-            left: element.getBoundingClientRect().left,
-            top: element.getBoundingClientRect().top,
-            right: element.getBoundingClientRect().right,
-            bottom: element.getBoundingClientRect().bottom,
-          },
-        }))
+        selectableRectsRef.current
       ).filter(Boolean);
 
       const nextSelectedIds = marqueeAdditiveRef.current
@@ -695,6 +685,22 @@ export function Desktop({
     if (event.button !== 0) return;
     const target = event.target as HTMLElement;
     if (target.closest("[data-desktop-icon]")) return;
+
+    // Cache item rectangles at the start of the marquee interaction to avoid layout thrashing
+    const desktop = desktopRef.current;
+    if (desktop) {
+      selectableRectsRef.current = Array.from(
+        desktop.querySelectorAll<HTMLElement>("[data-desktop-item-id]")
+      ).map((element) => ({
+        id: element.dataset.desktopItemId || "",
+        rect: {
+          left: element.getBoundingClientRect().left,
+          top: element.getBoundingClientRect().top,
+          right: element.getBoundingClientRect().right,
+          bottom: element.getBoundingClientRect().bottom,
+        },
+      }));
+    }
 
     const start = { x: event.clientX, y: event.clientY };
     marqueeStartRef.current = start;

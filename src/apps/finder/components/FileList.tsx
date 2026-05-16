@@ -24,6 +24,7 @@ import {
   mergeSelectionIds,
   resolveMultiSelection,
   type SelectionPoint,
+  type SelectableRect,
 } from "@/utils/selection";
 
 export interface FileItem {
@@ -376,6 +377,7 @@ export function FileList({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const marqueeStartRef = useRef<SelectionPoint | null>(null);
   const marqueeBaseSelectionRef = useRef<string[]>([]);
+  const selectableRectsRef = useRef<SelectableRect<string>[]>([]);
   const marqueeAdditiveRef = useRef(false);
   const [selectionRect, setSelectionRect] = useState<{
     start: SelectionPoint;
@@ -430,22 +432,10 @@ export function FileList({
 
   const updateSelectionFromMarquee = useCallback(
     (start: SelectionPoint, end: SelectionPoint) => {
-      const container = containerRef.current;
-      if (!container) return;
-
+      // Use cached rectangles to avoid layout thrashing during marquee move
       const intersectingPaths = getIntersectingSelectionIds(
         createSelectionRect(start, end),
-        Array.from(
-          container.querySelectorAll<HTMLElement>("[data-file-path]")
-        ).map((element) => ({
-          id: element.dataset.filePath || "",
-          rect: {
-            left: element.getBoundingClientRect().left,
-            top: element.getBoundingClientRect().top,
-            right: element.getBoundingClientRect().right,
-            bottom: element.getBoundingClientRect().bottom,
-          },
-        }))
+        selectableRectsRef.current
       ).filter(Boolean);
 
       const nextSelectedPaths = marqueeAdditiveRef.current
@@ -468,6 +458,22 @@ export function FileList({
       if (event.button !== 0 || isTouchDevice()) return;
       const target = event.target as HTMLElement;
       if (target.closest("[data-file-item]")) return;
+
+      // Cache item rectangles at the start of the marquee interaction to avoid layout thrashing
+      const container = containerRef.current;
+      if (container) {
+        selectableRectsRef.current = Array.from(
+          container.querySelectorAll<HTMLElement>("[data-file-path]")
+        ).map((element) => ({
+          id: element.dataset.filePath || "",
+          rect: {
+            left: element.getBoundingClientRect().left,
+            top: element.getBoundingClientRect().top,
+            right: element.getBoundingClientRect().right,
+            bottom: element.getBoundingClientRect().bottom,
+          },
+        }));
+      }
 
       const start = { x: event.clientX, y: event.clientY };
       marqueeStartRef.current = start;
