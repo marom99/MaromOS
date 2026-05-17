@@ -96,6 +96,13 @@ export const USER_PICTURE_CATEGORIES: UserPictureCategory[] = [
       pic("sports", "tennis", "Tennis"),
     ],
   },
+  {
+    id: "Personal",
+    label: "Personal",
+    pictures: [
+      pic("Personal", "NM", "NM"),
+    ],
+  },
 ];
 
 export const ALL_USER_PICTURES = USER_PICTURE_CATEGORIES.flatMap((c) => c.pictures);

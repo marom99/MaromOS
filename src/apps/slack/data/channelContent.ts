@@ -442,7 +442,7 @@ export const slackChannels: SlackChannelContent[] = [
         reactions: [
           { emoji: "🙌", count: 3, hasReacted: false },
         ],
-        avatarIndex: 4,
+        avatarIndex: 0,
       },
       {
         id: "testimonial-5",
@@ -454,7 +454,7 @@ export const slackChannels: SlackChannelContent[] = [
           { emoji: "⚡", count: 4, hasReacted: false },
           { emoji: "💪", count: 2, hasReacted: false },
         ],
-        avatarIndex: 5,
+        avatarIndex: 0,
       },
     ],
   },
