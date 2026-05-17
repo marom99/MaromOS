@@ -10,7 +10,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import type { SlackChannelContent, SlackMessageItem } from "../data/channelContent";
+import type {
+  SlackChannelContent,
+  SlackChannelId,
+  SlackChannelPreviewItem,
+  SlackMessageItem,
+} from "../data/channelContent";
 import { SLACK_PROFILE_PICTURES, getSlackInitials } from "./slackAvatarUtils";
 
 const COMMON_EMOJIS = ["👍", "❤️", "😂", "😮", "😢", "🔥", "🙏", "👀"];
@@ -22,6 +27,7 @@ interface SlackMessagesProps {
   onMessagesChange: (
     updater: (messages: SlackMessageItem[]) => SlackMessageItem[]
   ) => void;
+  onSelectChannel?: (channelId: SlackChannelId) => void;
 }
 
 interface SlackMessageRowProps {
@@ -29,6 +35,50 @@ interface SlackMessageRowProps {
   isThreadSelected: boolean;
   onOpenThread: (messageId: string | null) => void;
   onToggleReaction: (messageId: string, emoji: string) => void;
+  onSelectChannel?: (channelId: SlackChannelId) => void;
+}
+
+function ChannelPreviewCard({
+  preview,
+  onSelectChannel,
+}: {
+  preview: SlackChannelPreviewItem;
+  onSelectChannel?: (channelId: SlackChannelId) => void;
+}) {
+  const content = (
+    <>
+      <span className="channel-preview-image-wrap">
+        <img
+          src={preview.imageSrc}
+          alt={preview.imageAlt}
+          className="channel-preview-image"
+        />
+      </span>
+      <span className="channel-preview-meta">
+        <span className="channel-preview-name">#{preview.name}</span>
+        <span className="channel-preview-description">{preview.description}</span>
+      </span>
+    </>
+  );
+
+  if (!onSelectChannel) {
+    return (
+      <div className="channel-preview-card" aria-label={`#${preview.name}`}>
+        {content}
+      </div>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      className="channel-preview-card"
+      onClick={() => onSelectChannel(preview.channelId)}
+      aria-label={`Open #${preview.name}`}
+    >
+      {content}
+    </button>
+  );
 }
 
 const SlackMessageRow = memo(function SlackMessageRow({
@@ -36,7 +86,10 @@ const SlackMessageRow = memo(function SlackMessageRow({
   isThreadSelected,
   onOpenThread,
   onToggleReaction,
+  onSelectChannel,
 }: SlackMessageRowProps) {
+  const channelPreview = message.channelPreview;
+
   return (
     <div className="msg group" data-self={message.isSelf ? "true" : undefined}>
       <div className="avatar">
@@ -67,6 +120,12 @@ const SlackMessageRow = memo(function SlackMessageRow({
               previewTitle={message.imageAlt ?? "Image preview"}
             />
           </div>
+        )}
+        {channelPreview && (
+          <ChannelPreviewCard
+            preview={channelPreview}
+            onSelectChannel={onSelectChannel}
+          />
         )}
         <div
           className="reactions"
@@ -154,6 +213,7 @@ export function SlackMessages({
   selectedThreadMessageId,
   onOpenThread,
   onMessagesChange,
+  onSelectChannel,
 }: SlackMessagesProps) {
   const messagesRef = useRef<HTMLDivElement>(null);
   const previousChannelIdRef = useRef(channel.id);
@@ -229,6 +289,7 @@ export function SlackMessages({
           isThreadSelected={selectedThreadMessageId === msg.id}
           onOpenThread={onOpenThread}
           onToggleReaction={toggleReaction}
+          onSelectChannel={onSelectChannel}
         />
       ))}
     </div>
