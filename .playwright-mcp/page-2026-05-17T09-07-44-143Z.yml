@@ -1,0 +1,209 @@
+- generic [active] [ref=e1]:
+  - generic:
+    - generic [ref=e2]:
+      - button "Finder" [ref=e4]:
+        - generic [ref=e5]:
+          - img "Finder"
+      - button "Dashboard" [ref=e7]:
+        - generic [ref=e8]:
+          - img "Dashboard"
+      - button "Chats" [ref=e10]:
+        - generic [ref=e11]:
+          - img "Chats"
+      - button "Internet Explorer" [ref=e13]:
+        - generic [ref=e14]:
+          - img "Internet Explorer"
+      - button "Slack" [ref=e16]:
+        - generic [ref=e17]:
+          - img "Slack"
+      - button "About Me" [ref=e22]:
+        - generic [ref=e23]:
+          - img "About Me"
+      - button "Applications" [ref=e28]:
+        - generic [ref=e29]:
+          - img "Applications"
+      - button "Trash" [ref=e32]:
+        - generic [ref=e33]:
+          - img "Trash"
+    - generic [ref=e34]:
+      - menubar [ref=e36]:
+        - menuitem "Apple Menu" [ref=e37]:
+          - img "Apple Menu" [ref=e38]
+        - menuitem "About Me" [ref=e39]
+        - menuitem "File" [ref=e40]
+        - menuitem "Help" [ref=e41]
+      - generic [ref=e42]:
+        - button "Mission Control (F3)" [ref=e43]:
+          - img [ref=e44]
+        - button [ref=e47]:
+          - img
+        - text: Sun May 17 4:07 PM
+        - button "Spotlight Search (⌘+Space)" [ref=e48]:
+          - img [ref=e49]
+    - generic [ref=e61]:
+      - generic [ref=e62]:
+        - generic [ref=e63]:
+          - generic [ref=e64]:
+            - generic [ref=e65]:
+              - generic:
+                - img
+            - button "Close" [ref=e66]
+          - generic [ref=e67]:
+            - generic [ref=e68]:
+              - generic:
+                - img
+            - button "Minimize" [ref=e69]
+          - generic [ref=e70]:
+            - generic [ref=e71]:
+              - generic:
+                - img
+            - button "Maximize" [ref=e72]
+        - generic:
+          - generic: About Me
+      - generic [ref=e74]:
+        - generic [ref=e75]:
+          - img "Marom" [ref=e76]:
+            - img [ref=e77]
+          - generic [ref=e78]:
+            - heading "Marom" [level=1] [ref=e79]
+            - paragraph [ref=e80]: Jakarta, ID 🇮🇩
+        - generic [ref=e81]:
+          - generic [ref=e82]:
+            - generic [ref=e83]: Process
+            - generic [ref=e84]: Software Designer
+          - generic [ref=e85]:
+            - generic [ref=e86]: Version
+            - generic [ref=e87]: "2026"
+          - generic [ref=e88]:
+            - generic [ref=e89]:
+              - generic [ref=e90]: Github
+              - generic [ref=e91]: 0 Contributions
+            - generic "GitHub contribution streak" [ref=e92]
+        - generic [ref=e93]:
+          - generic [ref=e94]:
+            - paragraph [ref=e95]: © Marom 1999-2026
+            - link "marom.nailul@gmail.com" [ref=e96] [cursor=pointer]:
+              - /url: mailto:marom.nailul@gmail.com
+          - img [ref=e97]
+    - generic [ref=e100]:
+      - generic [ref=e102]:
+        - img "Directory" [ref=e104]
+        - generic [ref=e106]: Macintosh HD
+      - generic [ref=e108]:
+        - img "File" [ref=e110]
+        - generic [ref=e112]: Applet Store
+    - region "Notifications alt+T"
+  - button "v3.0.2 Output Detail Standard React Components Hide Until Restart Marker Color Clear on copy/send Block page interactions Manage MCP & Webhooks Manage MCP & Webhooks MCP Connection MCP connection allows agents to receive and act on annotations. Learn more Webhooks Auto-Send The webhook URL will receive live annotation changes and annotation data." [ref=e114] [cursor=pointer]:
+    - img [ref=e116]
+    - generic:
+      - generic:
+        - button:
+          - img
+      - generic:
+        - button:
+          - img
+      - generic:
+        - button [disabled]:
+          - img
+      - generic:
+        - button [disabled]:
+          - img
+      - generic:
+        - button [disabled]:
+          - img
+      - generic:
+        - button [disabled]:
+          - img
+      - generic:
+        - button:
+          - img
+      - generic:
+        - button:
+          - img
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - link:
+              - /url: https://agentation.com
+              - img
+            - paragraph: v3.0.2
+            - button "Switch to light mode":
+              - generic:
+                - generic:
+                  - img
+          - generic:
+            - generic:
+              - generic:
+                - text: Output Detail
+                - generic:
+                  - img
+              - button "Standard":
+                - generic: Standard
+            - generic:
+              - generic:
+                - text: React Components
+                - generic:
+                  - img
+              - generic:
+                - checkbox [checked]
+            - generic:
+              - generic:
+                - text: Hide Until Restart
+                - generic:
+                  - img
+              - generic:
+                - checkbox
+          - generic:
+            - generic: Marker Color
+            - generic:
+              - button "Indigo"
+              - button "Blue"
+              - button "Cyan"
+              - button "Green"
+              - button "Yellow"
+              - button "Orange"
+              - button "Red"
+          - generic:
+            - generic:
+              - generic:
+                - checkbox "Clear on copy/send"
+                - img
+              - generic: Clear on copy/send
+              - generic:
+                - img
+            - generic:
+              - generic:
+                - checkbox "Block page interactions" [checked]
+                - img
+              - generic: Block page interactions
+          - button "Manage MCP & Webhooks":
+            - generic: Manage MCP & Webhooks
+            - generic:
+              - img
+        - generic:
+          - button "Manage MCP & Webhooks":
+            - img
+            - generic: Manage MCP & Webhooks
+          - generic:
+            - generic:
+              - generic:
+                - text: MCP Connection
+                - generic:
+                  - img
+            - paragraph:
+              - text: MCP connection allows agents to receive and act on annotations.
+              - link "Learn more":
+                - /url: https://agentation.dev/mcp
+          - generic:
+            - generic:
+              - generic:
+                - text: Webhooks
+                - generic:
+                  - img
+              - generic:
+                - generic: Auto-Send
+                - generic:
+                  - checkbox "Auto-Send" [checked] [disabled]
+            - paragraph: The webhook URL will receive live annotation changes and annotation data.
+            - textbox "Webhook URL"
