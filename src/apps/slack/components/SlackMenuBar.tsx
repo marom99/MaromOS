@@ -42,11 +42,11 @@ export function SlackMenuBar({
         </MenubarTrigger>
         <MenubarContent align="start" sideOffset={1} className="px-0">
           <MenubarItem onClick={onShowHelp} className="text-md h-6 px-3">
-            Slack Help
+            Workspace Help
           </MenubarItem>
           {!isMacOsxTheme && (
             <MenubarItem onClick={onShowAbout} className="text-md h-6 px-3">
-              About Slack
+              About Workspace
             </MenubarItem>
           )}
         </MenubarContent>

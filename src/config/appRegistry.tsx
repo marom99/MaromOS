@@ -297,7 +297,7 @@ export const appRegistry = {
   },
   ["slack"]: {
     id: "slack",
-    name: "Slack",
+    name: "Workspace",
     icon: { type: "image", src: slackMetadata.icon },
     description: "Case study workspace",
     component: LazySlackApp,
