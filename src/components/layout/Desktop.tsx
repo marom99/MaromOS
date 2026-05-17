@@ -23,6 +23,7 @@ import {
   createSelectionRect,
   getIntersectingSelectionIds,
   hasToggleModifier,
+  type SelectableRect,
   mergeSelectionIds,
   resolveMultiSelection,
   type SelectionPoint,
@@ -80,6 +81,7 @@ export function Desktop({
   const marqueeStartRef = useRef<SelectionPoint | null>(null);
   const marqueeBaseSelectionRef = useRef<DesktopItemId[]>([]);
   const marqueeAdditiveRef = useRef(false);
+  const selectableRectsRef = useRef<SelectableRect<DesktopItemId>[]>([]);
   const suppressClickAfterMarqueeRef = useRef(false);
   const [selectionRect, setSelectionRect] = useState<{
     start: SelectionPoint;
@@ -600,22 +602,9 @@ export function Desktop({
 
   const updateSelectionFromMarquee = useCallback(
     (start: SelectionPoint, end: SelectionPoint) => {
-      const desktop = desktopRef.current;
-      if (!desktop) return;
-
       const intersectingIds = getIntersectingSelectionIds(
         createSelectionRect(start, end),
-        Array.from(
-          desktop.querySelectorAll<HTMLElement>("[data-desktop-item-id]")
-        ).map((element) => ({
-          id: element.dataset.desktopItemId || "",
-          rect: {
-            left: element.getBoundingClientRect().left,
-            top: element.getBoundingClientRect().top,
-            right: element.getBoundingClientRect().right,
-            bottom: element.getBoundingClientRect().bottom,
-          },
-        }))
+        selectableRectsRef.current
       ).filter(Boolean);
 
       const nextSelectedIds = marqueeAdditiveRef.current
@@ -695,6 +684,22 @@ export function Desktop({
     if (event.button !== 0) return;
     const target = event.target as HTMLElement;
     if (target.closest("[data-desktop-icon]")) return;
+
+    const desktop = desktopRef.current;
+    if (desktop) {
+      // Cache item rects on start to avoid layout thrashing during mousemove
+      selectableRectsRef.current = Array.from(
+        desktop.querySelectorAll<HTMLElement>("[data-desktop-item-id]")
+      ).map((element) => ({
+        id: (element.dataset.desktopItemId || "") as DesktopItemId,
+        rect: {
+          left: element.getBoundingClientRect().left,
+          top: element.getBoundingClientRect().top,
+          right: element.getBoundingClientRect().right,
+          bottom: element.getBoundingClientRect().bottom,
+        },
+      }));
+    }
 
     const start = { x: event.clientX, y: event.clientY };
     marqueeStartRef.current = start;

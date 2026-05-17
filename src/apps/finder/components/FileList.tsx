@@ -21,6 +21,7 @@ import {
   createSelectionRect,
   getIntersectingSelectionIds,
   hasToggleModifier,
+  type SelectableRect,
   mergeSelectionIds,
   resolveMultiSelection,
   type SelectionPoint,
@@ -377,6 +378,7 @@ export function FileList({
   const marqueeStartRef = useRef<SelectionPoint | null>(null);
   const marqueeBaseSelectionRef = useRef<string[]>([]);
   const marqueeAdditiveRef = useRef(false);
+  const selectableRectsRef = useRef<SelectableRect<string>[]>([]);
   const [selectionRect, setSelectionRect] = useState<{
     start: SelectionPoint;
     end: SelectionPoint;
@@ -430,22 +432,9 @@ export function FileList({
 
   const updateSelectionFromMarquee = useCallback(
     (start: SelectionPoint, end: SelectionPoint) => {
-      const container = containerRef.current;
-      if (!container) return;
-
       const intersectingPaths = getIntersectingSelectionIds(
         createSelectionRect(start, end),
-        Array.from(
-          container.querySelectorAll<HTMLElement>("[data-file-path]")
-        ).map((element) => ({
-          id: element.dataset.filePath || "",
-          rect: {
-            left: element.getBoundingClientRect().left,
-            top: element.getBoundingClientRect().top,
-            right: element.getBoundingClientRect().right,
-            bottom: element.getBoundingClientRect().bottom,
-          },
-        }))
+        selectableRectsRef.current
       ).filter(Boolean);
 
       const nextSelectedPaths = marqueeAdditiveRef.current
@@ -468,6 +457,22 @@ export function FileList({
       if (event.button !== 0 || isTouchDevice()) return;
       const target = event.target as HTMLElement;
       if (target.closest("[data-file-item]")) return;
+
+      const container = containerRef.current;
+      if (container) {
+        // Cache item rects on start to avoid layout thrashing during mousemove
+        selectableRectsRef.current = Array.from(
+          container.querySelectorAll<HTMLElement>("[data-file-path]")
+        ).map((element) => ({
+          id: element.dataset.filePath || "",
+          rect: {
+            left: element.getBoundingClientRect().left,
+            top: element.getBoundingClientRect().top,
+            right: element.getBoundingClientRect().right,
+            bottom: element.getBoundingClientRect().bottom,
+          },
+        }));
+      }
 
       const start = { x: event.clientX, y: event.clientY };
       marqueeStartRef.current = start;
