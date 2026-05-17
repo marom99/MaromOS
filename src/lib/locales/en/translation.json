@@ -3070,8 +3070,8 @@
       }
     },
     "slack": {
-      "name": "Slack",
-      "title": "Slack",
+      "name": "Workspace",
+      "title": "Workspace",
       "description": "Case study workspace",
       "help": {
         "browseChannels": {

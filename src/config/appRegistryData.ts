@@ -43,7 +43,7 @@ export const appNames: Record<AppId, string> = {
   "admin": "Admin",
   "stickies": "Stickies",
   "dashboard": "Dashboard",
-  "slack": "Slack",
+  "slack": "Workspace",
   "about-me": "About Me",
 };
 

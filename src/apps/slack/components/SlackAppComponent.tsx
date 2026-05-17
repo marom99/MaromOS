@@ -418,11 +418,11 @@ export function SlackAppComponent({
   );
 
   const getWindowTitle = () => {
-    if (activeDMId === MAROM_DM_ID) return "Slack — Marom";
-    if (activeNavItem === "threads") return "Slack — Threads";
-    if (activeNavItem === "bookmarks") return "Slack — Bookmarks";
-    if (activeNavItem === "drafts") return "Slack — Drafts";
-    return `Slack — #${activeChannel.name}`;
+    if (activeDMId === MAROM_DM_ID) return "Workspace — Marom";
+    if (activeNavItem === "threads") return "Workspace — Threads";
+    if (activeNavItem === "bookmarks") return "Workspace — Bookmarks";
+    if (activeNavItem === "drafts") return "Workspace — Drafts";
+    return `Workspace — #${activeChannel.name}`;
   };
 
   if (!isWindowOpen) return null;

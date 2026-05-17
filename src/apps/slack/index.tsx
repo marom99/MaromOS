@@ -6,7 +6,7 @@ export { appMetadata, helpItems } from "./metadata";
 
 export const SlackApp: BaseApp = {
   id: "slack",
-  name: "Slack",
+  name: "Workspace",
   icon: { type: "image", src: appMetadata.icon },
   description: "Case study workspace",
   component: SlackAppComponent,

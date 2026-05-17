@@ -1,5 +1,5 @@
 export const appMetadata = {
-  name: "Slack",
+  name: "Workspace",
   version: "2.0.0",
   creator: {
     name: "Marom",

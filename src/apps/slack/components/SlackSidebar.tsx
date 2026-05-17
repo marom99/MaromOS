@@ -46,7 +46,7 @@ export function SlackSidebar({
     <TooltipProvider delayDuration={100}>
       <aside
         className="sidebar"
-        aria-label={isCollapsed ? "Slack workspace navigation, collapsed" : "Slack workspace navigation"}
+        aria-label={isCollapsed ? "Workspace navigation, collapsed" : "Workspace navigation"}
       >
         <div className="ws-head">
           <div className="ws-logo">

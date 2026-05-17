@@ -13,9 +13,9 @@
       - button "Internet Explorer" [ref=e13]:
         - generic [ref=e14]:
           - img "Internet Explorer"
-      - button "Slack" [ref=e16]:
+      - button "Workspace" [ref=e16]:
         - generic [ref=e17]:
-          - img "Slack"
+          - img "Workspace"
       - button "Applications" [ref=e22]:
         - generic [ref=e23]:
           - img "Applications"
@@ -26,7 +26,7 @@
       - menubar [ref=e30]:
         - menuitem "Apple Menu" [ref=e31]:
           - img "Apple Menu" [ref=e32]
-        - menuitem "Slack" [ref=e33]
+        - menuitem "Workspace" [ref=e33]
         - menuitem "File" [ref=e34]
         - menuitem "Help" [ref=e35]
       - generic [ref=e36]:
@@ -54,9 +54,9 @@
                 - img
             - button "Maximize" [ref=e61]
         - generic:
-          - generic: "Slack — #welcome"
+          - generic: "Workspace — #welcome"
       - generic [ref=e63]:
-        - complementary "Slack workspace navigation" [ref=e64]:
+        - complementary "Workspace navigation" [ref=e64]:
           - generic [ref=e65]:
             - img "Workspace" [ref=e67]
             - generic [ref=e68]:
@@ -144,7 +144,7 @@
                 - generic [ref=e163]:
                   - generic [ref=e164]: Marom
                   - generic [ref=e165]: 9:18 AM
-                - generic [ref=e166]: Try sending a note from the composer below. Your messages show up as You, so the Slack app feels like you are inside the workspace, not impersonating me.
+                - generic [ref=e166]: Try sending a note from the composer below. Your messages show up as You, so the Workspace app feels like you are inside the workspace, not impersonating me.
                 - generic [ref=e167]:
                   - button "Add 💬 reaction, 2 people" [ref=e168]:
                     - generic [ref=e169]: 💬
