@@ -89,6 +89,26 @@ function getWeekDays(week: ContributionWeek) {
   return days;
 }
 
+function ArrowUpRightIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="inline-block ml-0.5 -mt-px"
+    >
+      <path d="M7 7h10v10" />
+      <path d="M7 17 17 7" />
+    </svg>
+  );
+}
+
 function InfoRow({
   label,
   value,
@@ -111,6 +131,7 @@ function InfoRow({
           className="text-blue-600 hover:underline"
         >
           {value}
+          <ArrowUpRightIcon />
         </a>
       ) : (
         <span>{value}</span>
@@ -120,7 +141,7 @@ function InfoRow({
 }
 
 function GitHubStreakGrid() {
-  const { calendar, isLoading, error } = useGitHubContributionsLogic();
+  const { calendar, isLoading, error, githubUsername } = useGitHubContributionsLogic();
   const { ref, weekCount } = useFittedWeekCount<HTMLDivElement>();
 
   const visibleWeeks = useMemo(
@@ -135,9 +156,13 @@ function GitHubStreakGrid() {
       ? "Unavailable"
       : `${contributionTotal.toLocaleString()} Contributions`;
 
+  const githubProfileHref = githubUsername
+    ? `https://github.com/${githubUsername}`
+    : undefined;
+
   return (
     <div className="about-profile__github">
-      <InfoRow label="Github" value={totalLabel} />
+      <InfoRow label="Github" value={totalLabel} href={githubProfileHref} />
       <TooltipProvider delayDuration={120}>
         <div
           ref={ref}
