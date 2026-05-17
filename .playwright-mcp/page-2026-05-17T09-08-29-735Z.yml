@@ -1,0 +1,285 @@
+- generic [active] [ref=e1]:
+  - generic:
+    - generic [ref=e2]:
+      - button "Finder" [ref=e4]:
+        - generic [ref=e5]:
+          - img "Finder"
+      - button "Dashboard" [ref=e7]:
+        - generic [ref=e8]:
+          - img "Dashboard"
+      - button "Chats" [ref=e10]:
+        - generic [ref=e11]:
+          - img "Chats"
+      - button "Internet Explorer" [ref=e13]:
+        - generic [ref=e14]:
+          - img "Internet Explorer"
+      - button "Slack" [ref=e16]:
+        - generic [ref=e17]:
+          - img "Slack"
+      - button "Applications" [ref=e22]:
+        - generic [ref=e23]:
+          - img "Applications"
+      - button "Trash" [ref=e26]:
+        - generic [ref=e27]:
+          - img "Trash"
+    - generic [ref=e28]:
+      - menubar [ref=e30]:
+        - menuitem "Apple Menu" [ref=e31]:
+          - img "Apple Menu" [ref=e32]
+        - menuitem "Slack" [ref=e33]
+        - menuitem "File" [ref=e34]
+        - menuitem "Help" [ref=e35]
+      - generic [ref=e36]:
+        - button "Mission Control (F3)" [ref=e37]:
+          - img [ref=e38]
+        - text: 4:08 PM
+        - button "Spotlight Search (⌘+Space)" [ref=e40]:
+          - img [ref=e41]
+    - generic [ref=e50]:
+      - generic [ref=e51]:
+        - generic [ref=e52]:
+          - generic [ref=e53]:
+            - generic [ref=e54]:
+              - generic:
+                - img
+            - button "Close" [ref=e55]
+          - generic [ref=e56]:
+            - generic [ref=e57]:
+              - generic:
+                - img
+            - button "Minimize" [ref=e58]
+          - generic [ref=e59]:
+            - generic [ref=e60]:
+              - generic:
+                - img
+            - button "Maximize" [ref=e61]
+        - generic:
+          - generic: "Slack — #welcome"
+      - generic [ref=e63]:
+        - complementary "Slack workspace navigation" [ref=e64]:
+          - generic [ref=e65]:
+            - img "Workspace" [ref=e67]
+            - generic [ref=e68]:
+              - generic [ref=e69]: Marom's Workspace
+              - generic [ref=e70]: Active
+          - navigation [ref=e72]:
+            - button "Threads" [ref=e73] [cursor=pointer]:
+              - img [ref=e74]
+              - generic [ref=e76]: Threads
+            - button "Bookmarks" [ref=e77] [cursor=pointer]:
+              - img [ref=e78]
+              - generic [ref=e80]: Bookmarks
+          - generic [ref=e81]:
+            - generic [ref=e83]: Channels
+            - generic [ref=e84]:
+              - 'button "Open #welcome" [pressed] [ref=e85] [cursor=pointer]':
+                - generic [ref=e86]: "#"
+                - generic [ref=e87]: welcome
+              - 'button "Open #prototype-playground" [ref=e88] [cursor=pointer]':
+                - generic [ref=e89]: "#"
+                - generic [ref=e90]: prototype-playground
+              - 'button "Open #transporter-app" [ref=e91] [cursor=pointer]':
+                - generic [ref=e92]: "#"
+                - generic [ref=e93]: transporter-app
+              - 'button "Open #driver-app" [ref=e94] [cursor=pointer]':
+                - generic [ref=e95]: "#"
+                - generic [ref=e96]: driver-app
+              - 'button "Open #testimonial" [ref=e97] [cursor=pointer]':
+                - generic [ref=e98]: "#"
+                - generic [ref=e99]: testimonial
+          - generic [ref=e100]:
+            - generic [ref=e102]: Direct Messages
+            - button "Open direct message with Marom" [ref=e104] [cursor=pointer]:
+              - img "Marom" [ref=e106]:
+                - img [ref=e107]
+              - generic [ref=e109]: Marom
+        - main [ref=e110]:
+          - generic [ref=e111]:
+            - button "Open channel list" [ref=e112] [cursor=pointer]:
+              - img [ref=e114]
+            - generic [ref=e117]: "# welcome"
+            - button "View 1 members" [ref=e120] [cursor=pointer]:
+              - img [ref=e123]:
+                - img [ref=e124]
+              - generic [ref=e125]: "1"
+          - generic [ref=e126]:
+            - generic [ref=e128]:
+              - text: Today, May 18
+              - img
+            - generic [ref=e129]:
+              - img "Marom" [ref=e131]:
+                - img [ref=e132]
+              - generic [ref=e133]:
+                - generic [ref=e134]:
+                  - generic [ref=e135]: Marom
+                  - generic [ref=e136]: 9:12 AM
+                - generic [ref=e137]: Welcome to MaromOS. I’m Marom, and this workspace is set up so you can explore the projects from inside the OS instead of reading a flat portfolio page.
+                - generic [ref=e138]:
+                  - button "Add 👋 reaction, 4 people" [ref=e139]:
+                    - generic [ref=e140]: 👋
+                    - generic [ref=e141]: "4"
+                  - button "Add ✨ reaction, 2 people" [ref=e142]:
+                    - generic [ref=e143]: ✨
+                    - generic [ref=e144]: "2"
+                  - button "Add reaction to Marom's message":
+                    - img
+            - generic [ref=e145]:
+              - img "Marom" [ref=e147]:
+                - img [ref=e148]
+              - generic [ref=e149]:
+                - generic [ref=e150]:
+                  - generic [ref=e151]: Marom
+                  - generic [ref=e152]: 9:14 AM
+                - generic [ref=e153]: "You’re the visitor here. The channels work like a guided studio tour: product notes, design thinking, interaction details, and the implementation choices behind the interface."
+                - generic [ref=e154]:
+                  - button "Add 🎯 reaction, 3 people" [ref=e155]:
+                    - generic [ref=e156]: 🎯
+                    - generic [ref=e157]: "3"
+                  - button "Add reaction to Marom's message":
+                    - img
+            - generic [ref=e158]:
+              - img "Marom" [ref=e160]:
+                - img [ref=e161]
+              - generic [ref=e162]:
+                - generic [ref=e163]:
+                  - generic [ref=e164]: Marom
+                  - generic [ref=e165]: 9:18 AM
+                - generic [ref=e166]: Try sending a note from the composer below. Your messages show up as You, so the Slack app feels like you are inside the workspace, not impersonating me.
+                - generic [ref=e167]:
+                  - button "Add 💬 reaction, 2 people" [ref=e168]:
+                    - generic [ref=e169]: 💬
+                    - generic [ref=e170]: "2"
+                  - button "Add 🖥️ reaction, 1 person" [ref=e171]:
+                    - generic [ref=e172]: 🖥️
+                    - generic [ref=e173]: "1"
+                  - button "Add reaction to Marom's message":
+                    - img
+          - generic [ref=e176]:
+            - button [ref=e179]:
+              - img [ref=e180]
+            - generic [ref=e182]:
+              - textbox "Type a message..." [ref=e183]
+              - button "Attach image" [ref=e185]:
+                - img [ref=e186]
+    - generic [ref=e190]:
+      - generic [ref=e192]:
+        - img "Directory" [ref=e194]
+        - generic [ref=e196]: Macintosh HD
+      - generic [ref=e198]:
+        - img "File" [ref=e200]
+        - generic [ref=e202]: Applet Store
+    - region "Notifications alt+T"
+  - button "v3.0.2 Output Detail Standard React Components Hide Until Restart Marker Color Clear on copy/send Block page interactions Manage MCP & Webhooks Manage MCP & Webhooks MCP Connection MCP connection allows agents to receive and act on annotations. Learn more Webhooks Auto-Send The webhook URL will receive live annotation changes and annotation data." [ref=e204] [cursor=pointer]:
+    - img [ref=e206]
+    - generic:
+      - generic:
+        - button:
+          - img
+      - generic:
+        - button:
+          - img
+      - generic:
+        - button [disabled]:
+          - img
+      - generic:
+        - button [disabled]:
+          - img
+      - generic:
+        - button [disabled]:
+          - img
+      - generic:
+        - button [disabled]:
+          - img
+      - generic:
+        - button:
+          - img
+      - generic:
+        - button:
+          - img
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - link:
+              - /url: https://agentation.com
+              - img
+            - paragraph: v3.0.2
+            - button "Switch to light mode":
+              - generic:
+                - generic:
+                  - img
+          - generic:
+            - generic:
+              - generic:
+                - text: Output Detail
+                - generic:
+                  - img
+              - button "Standard":
+                - generic: Standard
+            - generic:
+              - generic:
+                - text: React Components
+                - generic:
+                  - img
+              - generic:
+                - checkbox [checked]
+            - generic:
+              - generic:
+                - text: Hide Until Restart
+                - generic:
+                  - img
+              - generic:
+                - checkbox
+          - generic:
+            - generic: Marker Color
+            - generic:
+              - button "Indigo"
+              - button "Blue"
+              - button "Cyan"
+              - button "Green"
+              - button "Yellow"
+              - button "Orange"
+              - button "Red"
+          - generic:
+            - generic:
+              - generic:
+                - checkbox "Clear on copy/send"
+                - img
+              - generic: Clear on copy/send
+              - generic:
+                - img
+            - generic:
+              - generic:
+                - checkbox "Block page interactions" [checked]
+                - img
+              - generic: Block page interactions
+          - button "Manage MCP & Webhooks":
+            - generic: Manage MCP & Webhooks
+            - generic:
+              - img
+        - generic:
+          - button "Manage MCP & Webhooks":
+            - img
+            - generic: Manage MCP & Webhooks
+          - generic:
+            - generic:
+              - generic:
+                - text: MCP Connection
+                - generic:
+                  - img
+            - paragraph:
+              - text: MCP connection allows agents to receive and act on annotations.
+              - link "Learn more":
+                - /url: https://agentation.dev/mcp
+          - generic:
+            - generic:
+              - generic:
+                - text: Webhooks
+                - generic:
+                  - img
+              - generic:
+                - generic: Auto-Send
+                - generic:
+                  - checkbox "Auto-Send" [checked] [disabled]
+            - paragraph: The webhook URL will receive live annotation changes and annotation data.
+            - textbox "Webhook URL"
