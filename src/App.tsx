@@ -9,6 +9,8 @@ import { BootScreen } from "./components/dialogs/BootScreen";
 import { getNextBootMessage, clearNextBootMessage, isBootDebugMode } from "./utils/bootMessage";
 import { AnyApp } from "./apps/base/types";
 import { useThemeStore } from "./stores/useThemeStore";
+import { useDockStore } from "./stores/useDockStore";
+import { getThemeMetadata } from "./themes";
 import { useIsMobile } from "./hooks/useIsMobile";
 import { useOffline } from "./hooks/useOffline";
 import { useTranslation } from "react-i18next";
@@ -110,19 +112,54 @@ export function App() {
       const appStore = useAppStore.getState();
       const isMobileDevice = window.innerWidth < 768;
       
-      // Launch initial apps
-      const slackId = appStore.launchApp("slack");
-      const aboutMeId = appStore.launchApp("about-me");
-      
-      console.log(`[App] Launched apps: slack=${slackId}, about-me=${aboutMeId}`);
-      
-      // Wait for next tick so that instances are fully created in the store
-      setTimeout(() => {
-        if (slackId && aboutMeId) {
-          console.log("[App] Updating instance window states...");
-          if (isMobileDevice) {
+      if (isMobileDevice) {
+        const slackId = appStore.launchApp("slack");
+        console.log(`[App] Launched app: slack=${slackId}`);
+        
+        setTimeout(() => {
+          if (slackId) {
+            console.log("[App] Positioning Slack for mobile...");
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            
+            const currentTheme = useThemeStore.getState().current;
+            const themeMetadata = getThemeMetadata(currentTheme);
+            const dockState = useDockStore.getState();
+            
+            const safeAreaBottom = (() => {
+              const val = parseInt(
+                getComputedStyle(document.documentElement).getPropertyValue("--sat-safe-area-bottom")
+              );
+              return !isNaN(val) ? val : 20;
+            })();
+            
+            const dockHeight = (themeMetadata.hasDock && !dockState.hiding)
+              ? Math.round(themeMetadata.baseDockHeight * dockState.scale)
+              : 0;
+            
+            const topInset = themeMetadata.menuBarHeight;
+            const bottomInset = themeMetadata.taskbarHeight + dockHeight + safeAreaBottom;
+            
+            const slackHeight = viewportHeight - topInset - bottomInset;
+            
+            appStore.updateInstanceWindowState(
+              slackId,
+              { x: 0, y: topInset },
+              { width: viewportWidth, height: slackHeight }
+            );
+            
             appStore.bringInstanceToForeground(slackId);
-          } else {
+            console.log("[App] Positioned Slack for mobile.");
+          }
+        }, 0);
+      } else {
+        const slackId = appStore.launchApp("slack");
+        const aboutMeId = appStore.launchApp("about-me");
+        console.log(`[App] Launched apps: slack=${slackId}, about-me=${aboutMeId}`);
+        
+        setTimeout(() => {
+          if (slackId && aboutMeId) {
+            console.log("[App] Updating instance window states...");
             const viewportWidth = window.innerWidth;
             const viewportHeight = window.innerHeight;
             
@@ -155,8 +192,8 @@ export function App() {
             appStore.bringInstanceToForeground(slackId);
             console.log("[App] Positioned windows and brought slack to front.");
           }
-        }
       }, 0);
+      }
     }
   }, [isFirstBoot, setHasBooted]);
 
