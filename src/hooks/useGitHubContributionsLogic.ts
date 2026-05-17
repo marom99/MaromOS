@@ -25,6 +25,7 @@ export interface ContributionCalendar {
   totalContributions: number;
   weeks: ContributionWeek[];
   months: ContributionMonth[];
+  githubUsername?: string;
 }
 
 export interface GitHubContributionsState {
@@ -34,6 +35,7 @@ export interface GitHubContributionsState {
   currentStreak: number;
   longestStreak: number;
   maxInDay: number;
+  githubUsername: string | null;
   refetch: () => Promise<void>;
 }
 
@@ -145,6 +147,7 @@ export function useGitHubContributionsLogic(): GitHubContributionsState {
     currentStreak: streaks.currentStreak,
     longestStreak: streaks.longestStreak,
     maxInDay: streaks.maxInDay,
+    githubUsername: calendar?.githubUsername ?? null,
     refetch: fetchContributions,
   };
 }

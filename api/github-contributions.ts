@@ -105,7 +105,7 @@ export default async function handler(req: IncomingMessage, res: ApiResponse) {
 
     const calendar =
       result.data.user.contributionsCollection.contributionCalendar;
-    res.status(200).json(calendar);
+    res.status(200).json({ ...calendar, githubUsername: GITHUB_USERNAME });
   } catch {
     res.status(500).json({ error: "Internal server error" });
   }
