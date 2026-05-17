@@ -185,7 +185,7 @@ export const slackChannels: SlackChannelContent[] = [
         user: "Marom",
         time: "9:12 AM",
         content:
-          "Welcome to MaromOS. I’m Marom, and this workspace is set up so you can explore the projects from inside the OS instead of reading a flat portfolio page.",
+          "👋 Hi there! I'm Marom, A designer who bridges the gap between intention and exceptional user experience through a continuous cycle of acting, reflecting, and adapting.",
         reactions: [
           { emoji: "👋", count: 4, hasReacted: false },
           { emoji: "✨", count: 2, hasReacted: false },
@@ -195,31 +195,17 @@ export const slackChannels: SlackChannelContent[] = [
       {
         id: "welcome-2",
         user: "Marom",
-        time: "9:14 AM",
-        content:
-          "You’re the visitor here. The channels work like a guided studio tour: product notes, design thinking, interaction details, and the implementation choices behind the interface.",
-        reactions: [{ emoji: "🎯", count: 3, hasReacted: false }],
+        time: "9:13 AM",
+        content: "Explore my portfolio through these channels:",
+        reactions: [{ emoji: "👇", count: 2, hasReacted: false }],
         avatarIndex: 3,
       },
       {
         id: "welcome-3",
         user: "Marom",
-        time: "9:18 AM",
-        content:
-          "Try sending a note from the composer below. Your messages show up as You, so the Slack app feels like you are inside the workspace, not impersonating me.",
-        reactions: [
-          { emoji: "💬", count: 2, hasReacted: false },
-          { emoji: "🖥️", count: 1, hasReacted: false },
-        ],
-        avatarIndex: 3,
-      },
-      {
-        id: "welcome-4",
-        user: "Marom",
-        time: "9:21 AM",
-        content:
-          "A good next stop is #prototype-playground, where the work gets less like a portfolio page and more like a live studio wall.",
-        reactions: [{ emoji: "🧪", count: 2, hasReacted: false }],
+        time: "9:14 AM",
+        content: "Portfolio description",
+        reactions: [],
         avatarIndex: 3,
         channelPreview: {
           channelId: "prototype-playground",
@@ -228,6 +214,44 @@ export const slackChannels: SlackChannelContent[] = [
           imageSrc: "/wallpapers/photos/aqua/abstract-7.jpg",
           imageAlt: "Aqua abstract wallpaper placeholder for prototype playground",
         },
+      },
+      {
+        id: "welcome-4",
+        user: "Marom",
+        time: "9:14 AM",
+        content: "Portfolio description",
+        reactions: [],
+        avatarIndex: 3,
+        channelPreview: {
+          channelId: "transporter-app",
+          name: "transporter-app",
+          description: "Notes, critiques, and iteration requests",
+          imageSrc: "/wallpapers/photos/aqua/ripples-blue.jpg",
+          imageAlt: "Blue ripples wallpaper placeholder for transporter app",
+        },
+      },
+      {
+        id: "welcome-5",
+        user: "Marom",
+        time: "9:15 AM",
+        content: "Portfolio description",
+        reactions: [],
+        avatarIndex: 3,
+        channelPreview: {
+          channelId: "driver-app",
+          name: "driver-app",
+          description: "Loose ideas, references, and side notes",
+          imageSrc: "/wallpapers/photos/aqua/abstract-3.jpg",
+          imageAlt: "Abstract wallpaper placeholder for driver app",
+        },
+      },
+      {
+        id: "welcome-6",
+        user: "Marom",
+        time: "9:16 AM",
+        content: "It's nice to meet you!",
+        reactions: [{ emoji: "🤝", count: 3, hasReacted: false }],
+        avatarIndex: 3,
       },
     ],
   },
