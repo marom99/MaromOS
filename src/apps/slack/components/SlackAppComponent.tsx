@@ -497,6 +497,7 @@ export function SlackAppComponent({
                 selectedThreadMessageId={selectedThreadMessageId}
                 onOpenThread={handleOpenThread}
                 onMessagesChange={updateChannelMessages}
+                onSelectChannel={handleSelectChannel}
               />
               <SlackComposer
                 isForeground={!!isForeground}

@@ -806,6 +806,10 @@
   justify-content: flex-end;
 }
 
+.msg[data-self="true"] .channel-preview-card {
+  align-self: flex-end;
+}
+
 .msg[data-self="true"] .reactions {
   justify-content: flex-end;
   align-self: flex-end;
@@ -876,6 +880,83 @@
   stroke: #555;
   stroke-width: 2;
   fill: none;
+}
+
+/* ---- Channel preview card ---------------------------------------- */
+
+.channel-preview-card {
+  width: min(100%, 420px);
+  margin-top: 8px;
+  margin-bottom: 2px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #c8ccd1;
+  border-radius: 8px;
+  background: linear-gradient(to bottom, #ffffff, #f7f7f8);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05), inset 0 1px 0 #fff;
+}
+
+button.channel-preview-card {
+  cursor: pointer;
+  transition: border-color 0.15s ease-out, box-shadow 0.15s ease-out, transform 0.12s ease-out;
+}
+
+button.channel-preview-card:hover {
+  border-color: #aeb4bc;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08), inset 0 1px 0 #fff;
+}
+
+button.channel-preview-card:active {
+  transform: scale(0.995);
+}
+
+button.channel-preview-card:focus-visible {
+  outline: 2px solid rgba(52, 106, 227, 0.45);
+  outline-offset: 2px;
+}
+
+.channel-preview-image-wrap {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #eceff3;
+  border-bottom: 1px solid #d6d9de;
+}
+
+.channel-preview-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.channel-preview-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 11px 14px 13px;
+  min-width: 0;
+}
+
+.channel-preview-name {
+  color: #1f1f1f;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.channel-preview-description {
+  color: #4f5358;
+  font-size: 12px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
 }
 
 /* ---- Reactions ---------------------------------------------------- */

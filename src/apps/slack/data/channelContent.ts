@@ -30,6 +30,14 @@ export interface SlackThreadItem {
   replies: SlackThreadReplyItem[];
 }
 
+export interface SlackChannelPreviewItem {
+  channelId: SlackChannelId;
+  name: string;
+  description: string;
+  imageSrc: string;
+  imageAlt: string;
+}
+
 export interface SlackMessageItem {
   id: string;
   user: string;
@@ -40,6 +48,7 @@ export interface SlackMessageItem {
   hasImage?: boolean;
   imageSrc?: string;
   imageAlt?: string;
+  channelPreview?: SlackChannelPreviewItem;
   isSelf?: boolean;
   thread?: SlackThreadItem;
 }
@@ -203,6 +212,22 @@ export const slackChannels: SlackChannelContent[] = [
           { emoji: "🖥️", count: 1, hasReacted: false },
         ],
         avatarIndex: 3,
+      },
+      {
+        id: "welcome-4",
+        user: "Marom",
+        time: "9:21 AM",
+        content:
+          "A good next stop is #prototype-playground, where the work gets less like a portfolio page and more like a live studio wall.",
+        reactions: [{ emoji: "🧪", count: 2, hasReacted: false }],
+        avatarIndex: 3,
+        channelPreview: {
+          channelId: "prototype-playground",
+          name: "prototype-playground",
+          description: "Ideas, UI explorations, and design feedback",
+          imageSrc: "/wallpapers/photos/aqua/abstract-7.jpg",
+          imageAlt: "Aqua abstract wallpaper placeholder for prototype playground",
+        },
       },
     ],
   },
