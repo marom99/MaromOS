@@ -124,7 +124,7 @@ export function SlackSidebar({
                   >
                     <div className="dm-avatar">
                       <ProfileAvatar
-                        picture={SLACK_PROFILE_PICTURES[0]}
+                        picture={SLACK_PROFILE_PICTURES[3]}
                         fallback={getSlackInitials(name)}
                         label={name}
                         className="w-full h-full"

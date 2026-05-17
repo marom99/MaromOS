@@ -8,6 +8,7 @@ import { AboutDialog } from "@/components/dialogs/AboutDialog";
 import { appMetadata, helpItems } from "../metadata";
 import { ProfileAvatar } from "@/components/shared/ProfileAvatar";
 import { ALL_USER_PICTURES } from "@/utils/userPictures";
+import { MAROM_PICTURE_INDEX } from "@/apps/slack/components/slackAvatarUtils";
 import { cn } from "@/lib/utils";
 import {
   ContributionDay,
@@ -455,7 +456,7 @@ export const AboutMeAppComponent: React.FC<AppProps> = ({
         >
           <div className="about-profile__hero">
             <ProfileAvatar
-              picture={ALL_USER_PICTURES[37]?.path}
+              picture={ALL_USER_PICTURES[MAROM_PICTURE_INDEX]?.path}
               fallback="M"
               label="Marom"
               className="about-profile__avatar"

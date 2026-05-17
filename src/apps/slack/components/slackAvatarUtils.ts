@@ -1,10 +1,12 @@
 import { ALL_USER_PICTURES } from "@/utils/userPictures";
 
+export const MAROM_PICTURE_INDEX = 37;
+
 export const SLACK_PROFILE_PICTURES = [
   ALL_USER_PICTURES[1]?.path,
   ALL_USER_PICTURES[9]?.path,
   ALL_USER_PICTURES[23]?.path,
-  ALL_USER_PICTURES[37]?.path,
+  ALL_USER_PICTURES[MAROM_PICTURE_INDEX]?.path,
 ];
 
 export function getSlackInitials(name: string) {
