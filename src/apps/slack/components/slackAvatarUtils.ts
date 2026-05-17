@@ -1,6 +1,6 @@
 import { ALL_USER_PICTURES } from "@/utils/userPictures";
 
-export const MAROM_PICTURE_INDEX = 37;
+export const MAROM_PICTURE_INDEX = 43;
 
 export const SLACK_PROFILE_PICTURES = [
   ALL_USER_PICTURES[1]?.path,
