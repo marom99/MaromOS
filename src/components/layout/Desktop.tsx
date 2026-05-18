@@ -26,6 +26,7 @@ import {
   mergeSelectionIds,
   resolveMultiSelection,
   type SelectionPoint,
+  type SelectableRect,
 } from "@/utils/selection";
 
 interface DesktopStyles {
@@ -80,6 +81,7 @@ export function Desktop({
   const marqueeStartRef = useRef<SelectionPoint | null>(null);
   const marqueeBaseSelectionRef = useRef<DesktopItemId[]>([]);
   const marqueeAdditiveRef = useRef(false);
+  const selectableRectsRef = useRef<SelectableRect<DesktopItemId>[] | null>(null);
   const suppressClickAfterMarqueeRef = useRef(false);
   const [selectionRect, setSelectionRect] = useState<{
     start: SelectionPoint;
@@ -603,19 +605,24 @@ export function Desktop({
       const desktop = desktopRef.current;
       if (!desktop) return;
 
-      const intersectingIds = getIntersectingSelectionIds(
-        createSelectionRect(start, end),
+      // Use cached rectangles if available to avoid layout thrashing
+      const rects =
+        selectableRectsRef.current ||
         Array.from(
           desktop.querySelectorAll<HTMLElement>("[data-desktop-item-id]")
         ).map((element) => ({
-          id: element.dataset.desktopItemId || "",
+          id: (element.dataset.desktopItemId || "") as DesktopItemId,
           rect: {
             left: element.getBoundingClientRect().left,
             top: element.getBoundingClientRect().top,
             right: element.getBoundingClientRect().right,
             bottom: element.getBoundingClientRect().bottom,
           },
-        }))
+        }));
+
+      const intersectingIds = getIntersectingSelectionIds(
+        createSelectionRect(start, end),
+        rects
       ).filter(Boolean);
 
       const nextSelectedIds = marqueeAdditiveRef.current
@@ -659,6 +666,7 @@ export function Desktop({
 
       suppressClickAfterMarqueeRef.current = movedEnough;
       marqueeStartRef.current = null;
+      selectableRectsRef.current = null; // Clear cache
       setSelectionRect(null);
     };
 
@@ -700,6 +708,24 @@ export function Desktop({
     marqueeStartRef.current = start;
     marqueeBaseSelectionRef.current = selectedItemIds;
     marqueeAdditiveRef.current = event.shiftKey || hasToggleModifier(event);
+
+    // Cache rectangles on start to avoid layout thrashing during mousemove
+    if (desktopRef.current) {
+      selectableRectsRef.current = Array.from(
+        desktopRef.current.querySelectorAll<HTMLElement>(
+          "[data-desktop-item-id]"
+        )
+      ).map((element) => ({
+        id: (element.dataset.desktopItemId || "") as DesktopItemId,
+        rect: {
+          left: element.getBoundingClientRect().left,
+          top: element.getBoundingClientRect().top,
+          right: element.getBoundingClientRect().right,
+          bottom: element.getBoundingClientRect().bottom,
+        },
+      }));
+    }
+
     setSelectionRect({ start, end: start });
   };
 

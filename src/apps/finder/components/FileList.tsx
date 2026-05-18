@@ -24,6 +24,7 @@ import {
   mergeSelectionIds,
   resolveMultiSelection,
   type SelectionPoint,
+  type SelectableRect,
 } from "@/utils/selection";
 
 export interface FileItem {
@@ -377,6 +378,7 @@ export function FileList({
   const marqueeStartRef = useRef<SelectionPoint | null>(null);
   const marqueeBaseSelectionRef = useRef<string[]>([]);
   const marqueeAdditiveRef = useRef(false);
+  const selectableRectsRef = useRef<SelectableRect<string>[] | null>(null);
   const [selectionRect, setSelectionRect] = useState<{
     start: SelectionPoint;
     end: SelectionPoint;
@@ -433,8 +435,9 @@ export function FileList({
       const container = containerRef.current;
       if (!container) return;
 
-      const intersectingPaths = getIntersectingSelectionIds(
-        createSelectionRect(start, end),
+      // Use cached rectangles if available to avoid layout thrashing
+      const rects =
+        selectableRectsRef.current ||
         Array.from(
           container.querySelectorAll<HTMLElement>("[data-file-path]")
         ).map((element) => ({
@@ -445,7 +448,11 @@ export function FileList({
             right: element.getBoundingClientRect().right,
             bottom: element.getBoundingClientRect().bottom,
           },
-        }))
+        }));
+
+      const intersectingPaths = getIntersectingSelectionIds(
+        createSelectionRect(start, end),
+        rects
       ).filter(Boolean);
 
       const nextSelectedPaths = marqueeAdditiveRef.current
@@ -473,6 +480,24 @@ export function FileList({
       marqueeStartRef.current = start;
       marqueeBaseSelectionRef.current = selectedFiles;
       marqueeAdditiveRef.current = event.shiftKey || hasToggleModifier(event);
+
+      // Cache rectangles on start to avoid layout thrashing during mousemove
+      if (containerRef.current) {
+        selectableRectsRef.current = Array.from(
+          containerRef.current.querySelectorAll<HTMLElement>(
+            "[data-file-path]"
+          )
+        ).map((element) => ({
+          id: element.dataset.filePath || "",
+          rect: {
+            left: element.getBoundingClientRect().left,
+            top: element.getBoundingClientRect().top,
+            right: element.getBoundingClientRect().right,
+            bottom: element.getBoundingClientRect().bottom,
+          },
+        }));
+      }
+
       setSelectionRect({ start, end: start });
     },
     [selectedFiles]
@@ -503,6 +528,7 @@ export function FileList({
       }
 
       marqueeStartRef.current = null;
+      selectableRectsRef.current = null; // Clear cache
       setSelectionRect(null);
     };
 
