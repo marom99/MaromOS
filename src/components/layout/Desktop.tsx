@@ -77,6 +77,7 @@ export function Desktop({
   const { wallpaperSource, isVideoWallpaper } = useWallpaper();
   const videoRef = useRef<HTMLVideoElement>(null);
   const desktopRef = useRef<HTMLDivElement>(null);
+  const selectableItemsRef = useRef<Array<{ id: DesktopItemId; rect: DOMRect }> | null>(null);
   const marqueeStartRef = useRef<SelectionPoint | null>(null);
   const marqueeBaseSelectionRef = useRef<DesktopItemId[]>([]);
   const marqueeAdditiveRef = useRef(false);
@@ -600,20 +601,17 @@ export function Desktop({
 
   const updateSelectionFromMarquee = useCallback(
     (start: SelectionPoint, end: SelectionPoint) => {
-      const desktop = desktopRef.current;
-      if (!desktop) return;
+      if (!selectableItemsRef.current) return;
 
       const intersectingIds = getIntersectingSelectionIds(
         createSelectionRect(start, end),
-        Array.from(
-          desktop.querySelectorAll<HTMLElement>("[data-desktop-item-id]")
-        ).map((element) => ({
-          id: element.dataset.desktopItemId || "",
+        selectableItemsRef.current.map((item) => ({
+          id: item.id,
           rect: {
-            left: element.getBoundingClientRect().left,
-            top: element.getBoundingClientRect().top,
-            right: element.getBoundingClientRect().right,
-            bottom: element.getBoundingClientRect().bottom,
+            left: item.rect.left,
+            top: item.rect.top,
+            right: item.rect.right,
+            bottom: item.rect.bottom,
           },
         }))
       ).filter(Boolean);
@@ -659,6 +657,7 @@ export function Desktop({
 
       suppressClickAfterMarqueeRef.current = movedEnough;
       marqueeStartRef.current = null;
+      selectableItemsRef.current = null;
       setSelectionRect(null);
     };
 
@@ -695,6 +694,16 @@ export function Desktop({
     if (event.button !== 0) return;
     const target = event.target as HTMLElement;
     if (target.closest("[data-desktop-icon]")) return;
+
+    const desktop = desktopRef.current;
+    if (desktop) {
+      selectableItemsRef.current = Array.from(
+        desktop.querySelectorAll<HTMLElement>("[data-desktop-item-id]")
+      ).map((element) => ({
+        id: element.dataset.desktopItemId || "",
+        rect: element.getBoundingClientRect(),
+      }));
+    }
 
     const start = { x: event.clientX, y: event.clientY };
     marqueeStartRef.current = start;

@@ -374,6 +374,7 @@ export function FileList({
   const [dropTargetPath, setDropTargetPath] = useState<string | null>(null);
   const draggedFileRef = useRef<FileItem | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const selectableItemsRef = useRef<Array<{ id: string; rect: DOMRect }> | null>(null);
   const marqueeStartRef = useRef<SelectionPoint | null>(null);
   const marqueeBaseSelectionRef = useRef<string[]>([]);
   const marqueeAdditiveRef = useRef(false);
@@ -430,20 +431,17 @@ export function FileList({
 
   const updateSelectionFromMarquee = useCallback(
     (start: SelectionPoint, end: SelectionPoint) => {
-      const container = containerRef.current;
-      if (!container) return;
+      if (!selectableItemsRef.current) return;
 
       const intersectingPaths = getIntersectingSelectionIds(
         createSelectionRect(start, end),
-        Array.from(
-          container.querySelectorAll<HTMLElement>("[data-file-path]")
-        ).map((element) => ({
-          id: element.dataset.filePath || "",
+        selectableItemsRef.current.map((item) => ({
+          id: item.id,
           rect: {
-            left: element.getBoundingClientRect().left,
-            top: element.getBoundingClientRect().top,
-            right: element.getBoundingClientRect().right,
-            bottom: element.getBoundingClientRect().bottom,
+            left: item.rect.left,
+            top: item.rect.top,
+            right: item.rect.right,
+            bottom: item.rect.bottom,
           },
         }))
       ).filter(Boolean);
@@ -468,6 +466,16 @@ export function FileList({
       if (event.button !== 0 || isTouchDevice()) return;
       const target = event.target as HTMLElement;
       if (target.closest("[data-file-item]")) return;
+
+      const container = containerRef.current;
+      if (container) {
+        selectableItemsRef.current = Array.from(
+          container.querySelectorAll<HTMLElement>("[data-file-path]")
+        ).map((element) => ({
+          id: element.dataset.filePath || "",
+          rect: element.getBoundingClientRect(),
+        }));
+      }
 
       const start = { x: event.clientX, y: event.clientY };
       marqueeStartRef.current = start;
@@ -503,6 +511,7 @@ export function FileList({
       }
 
       marqueeStartRef.current = null;
+      selectableItemsRef.current = null;
       setSelectionRect(null);
     };
 

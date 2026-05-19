@@ -1,5 +1,5 @@
 import { useSound, Sounds } from "@/hooks/useSound";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, memo } from "react";
 import { useTranslation } from "react-i18next";
 import { isTouchDevice } from "@/utils/device";
 import { useLongPress } from "@/hooks/useLongPress";
@@ -22,7 +22,7 @@ interface FileIconProps {
   context?: "desktop" | "finder";
 }
 
-export function FileIcon({
+export const FileIcon = memo(function FileIcon({
   name,
   isDirectory,
   icon,
@@ -336,4 +336,4 @@ export function FileIcon({
       </div>
     </div>
   );
-}
+});
